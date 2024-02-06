@@ -5,7 +5,6 @@ from django.db import models
 class Player(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
-    handicap_index = models.DecimalField(decimal_places=1,max_digits=3)
     handedness = models.CharField(max_length=20)
     championships = models.IntegerField()
 
@@ -26,6 +25,11 @@ class Holiday(models.Model):
 
     def __str__(self) -> str:
         return f"Holiday {self.tournament_number}: {self.resort}"
+    
+class Handicap(models.Model):
+    handicap_index = models.DecimalField(decimal_places=1,max_digits=3)
+    player = models.ForeignKey(Player,on_delete=models.CASCADE)
+    holiday = models.ForeignKey(Holiday,on_delete=models.CASCADE)
 
 class Course(models.Model):
     course_name = models.CharField(max_length=20)
