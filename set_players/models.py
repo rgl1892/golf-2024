@@ -31,13 +31,18 @@ class Handicap(models.Model):
     player = models.ForeignKey(Player,on_delete=models.CASCADE)
     holiday = models.ForeignKey(Holiday,on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"{self.player}'s Handicap Index for {self.holiday}"
+
 class Course(models.Model):
     course_name = models.CharField(max_length=20)
+    resort = models.ForeignKey(Resort,on_delete=models.CASCADE)
     tee = models.CharField(max_length=20)
     slope_rating = models.IntegerField()
+    course_rating = models.DecimalField(decimal_places=1,max_digits=3)
 
     def __str__(self) -> str:
-        return f"{self.course_name} {self.tee} tees"
+        return f"{self.course_name} {self.tee} Tees"
     
 class Hole(models.Model):
 
@@ -54,7 +59,13 @@ class Hole(models.Model):
 class Score(models.Model):
     player = models.ForeignKey(Player,on_delete=models.CASCADE)
     hole = models.ForeignKey(Hole,on_delete=models.CASCADE)
+    holiday = models.ForeignKey(Holiday,on_delete=models.CASCADE)
+    round = models.IntegerField()
     strokes = models.IntegerField()
     stableford_score = models.IntegerField()
+    sandy = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.player} {self.hole} Score"
 
     
