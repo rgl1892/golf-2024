@@ -1,2 +1,4 @@
 */migrations
-__pychache
+*/__pychache__
+
+.sqlite
