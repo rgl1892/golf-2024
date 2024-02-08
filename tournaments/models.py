@@ -4,6 +4,7 @@ from django.db import models
 
 class Tournament(models.Model):
     name = models.CharField(max_length=20)
+    slug = models.SlugField(default="", null=False)
 
     def __str__(self):
         return f'{self.name}'
@@ -57,6 +58,7 @@ class Hole(models.Model):
     par = models.IntegerField(choices=[(3,3),(4,4),(5,5)])
     stroke_index = models.IntegerField(choices=[(x+1,x+1) for x in range(18)])
     hole_number = models.IntegerField(choices=[(x+1,x+1) for x in range(18)])
+    hole_name = models.CharField(max_length=20)
 
     def __str__(self) -> str:
         return f"{self.course} Hole {self.hole_number}"
@@ -66,7 +68,7 @@ class Score(models.Model):
     player = models.ForeignKey(Player,on_delete=models.CASCADE)
     hole = models.ForeignKey(Hole,on_delete=models.CASCADE)
     holiday = models.ForeignKey(Holiday,on_delete=models.CASCADE)
-    round = models.IntegerField()
+    round_number = models.IntegerField()
     strokes = models.IntegerField()
     stableford_score = models.IntegerField()
     sandy = models.BooleanField(default=False)

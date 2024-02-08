@@ -1,0 +1,10 @@
+Now
+
+{% for row in data %}
+
+<h1>
+  <a href="{% url 'tournament' row.slug %}">{{row}}</a> 
+</h1>
+{% endfor %}
+
+
