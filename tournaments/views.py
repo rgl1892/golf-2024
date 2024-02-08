@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Tournament
+from .models import Tournament,Holiday
 from django.views.generic import View
 from django.http import HttpResponse
 
@@ -14,11 +14,13 @@ class Home(View):
         return render(request,self.template_name,{'data':data})
         
     
-class Tournament(View):
+class TournamentView(View):
     
-    model = Tournament
+
     template_name = 'tournaments/tournament.html'
     
     def get(self,request,slug):
-        data = model.objects
-        return render(request,self.template_name,{'data':slug})
+        selected_tournament = Tournament.objects.filter(slug=slug).get()
+        holidays = Holiday.objects.filter(tournament=selected_tournament)
+        
+        return render(request,self.template_name,{'data':holidays})
