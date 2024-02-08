@@ -1,3 +1,11 @@
 Hi there!
 
-{{data}}
+
+{% for row in data %}
+    
+{{row.resort}}
+<a href="{% url 'rounds' slug=slug id=row.id %}">{{row}}</a> 
+
+<br>
+{% endfor %}
+    
