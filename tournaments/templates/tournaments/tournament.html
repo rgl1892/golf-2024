@@ -3,8 +3,8 @@ Hi there!
 
 {% for row in data %}
     
-{{row.resort}}
-<a href="{% url 'rounds' slug=slug id=row.id %}">{{row}}</a> 
+{{row.slug}}
+<a href="{% url 'rounds' slug=slug holiday=row.slug %}">{{row}}</a> 
 
 <br>
 {% endfor %}

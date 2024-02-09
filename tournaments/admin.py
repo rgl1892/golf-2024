@@ -7,9 +7,14 @@ from .models import Player, Holiday, Course, Resort,Score,Hole,Handicap,Tourname
 class TournamentAdmin(admin.ModelAdmin):
     list_display = ["name"]
     prepopulated_fields = {"slug":["name"]}
+
+class HolidayAdmin(admin.ModelAdmin):
+    list_display = ["resort","tournament","holiday_number"]
+    prepopulated_fields = {"slug":["resort","holiday_number"]}
+    
     
 admin.site.register(Player)
-admin.site.register(Holiday)
+admin.site.register(Holiday,HolidayAdmin)
 admin.site.register(Course)
 admin.site.register(Resort)
 admin.site.register(Score)

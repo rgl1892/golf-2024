@@ -29,6 +29,7 @@ class RoundsView(View):
     
     template_name = "tournaments/rounds.html"
     
-    def get(self,request,slug,id):
-        selected_holiday = Holiday.objects.filter(id=id)
-        return render(request,self.template_name)
+    def get(self,request,slug,holiday):
+        selected_tournament = Tournament.objects.filter(slug=slug).get()
+        selected_holiday = Holiday.objects.filter(slug=holiday,tournament=selected_tournament)
+        return render(request,self.template_name,{'data':selected_holiday})
