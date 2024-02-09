@@ -10,7 +10,7 @@ class Tournament(models.Model):
         return f'{self.name}'
 
 class Player(models.Model):
-    first_name = models.CharField(max_length=20)
+    first_name = models.CharField(max_length=20) 
     last_name = models.CharField(max_length=20)
     handedness = models.CharField(max_length=20)
     championships = models.IntegerField()
@@ -27,11 +27,14 @@ class Resort(models.Model):
 
 class Holiday(models.Model):
     resort = models.ForeignKey(Resort,on_delete=models.CASCADE)
-    tournament_number = models.IntegerField()
     tournament = models.ForeignKey(Tournament,on_delete=models.CASCADE,null=True,blank=True)
+    holiday_number = models.IntegerField()
 
     def __str__(self) -> str:
         return f"Holiday {self.tournament_number}: {self.resort} in {self.tournament}"
+    
+class GolfRound(models.Model):
+    round_number = models.IntegerField()
     
 class Handicap(models.Model):
     handicap_index = models.DecimalField(decimal_places=1,max_digits=3)
