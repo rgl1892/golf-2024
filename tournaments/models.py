@@ -29,6 +29,7 @@ class Holiday(models.Model):
     resort = models.ForeignKey(Resort,on_delete=models.CASCADE)
     tournament = models.ForeignKey(Tournament,on_delete=models.CASCADE)
     holiday_number = models.IntegerField()
+    resort_visit = models.IntegerField(null=True)
     slug = models.SlugField(default="", null=False)
 
     def __str__(self) -> str:
@@ -36,6 +37,7 @@ class Holiday(models.Model):
     
 class GolfRound(models.Model):
     round_number = models.IntegerField()
+    holiday = models.ForeignKey(Holiday,on_delete=models.CASCADE)
     
 class Handicap(models.Model):
     handicap_index = models.DecimalField(decimal_places=1,max_digits=3)
@@ -68,11 +70,11 @@ class Hole(models.Model):
         return f"{self.course} Hole {self.hole_number}"
     
     
-class Score(models.Model):
+class Score(models.Model): 
     player = models.ForeignKey(Player,on_delete=models.CASCADE)
     hole = models.ForeignKey(Hole,on_delete=models.CASCADE)
-    holiday = models.ForeignKey(Holiday,on_delete=models.CASCADE)
-    round_number = models.IntegerField()
+    
+    golf_round = models.ForeignKey(GolfRound,on_delete=models.CASCADE)
     strokes = models.IntegerField()
     stableford_score = models.IntegerField()
     sandy = models.BooleanField(default=False)

@@ -1,10 +1,7 @@
-Now
+<h1>Home</h1>
 
 {% for row in data %}
-
-<h1>
-  <a href="{% url 'tournament' row.slug %}">{{row}}</a> 
-</h1>
+  <a href="{% url 'tournament' row.slug %}">{{row}}</a> <br>
 {% endfor %}
 
 
