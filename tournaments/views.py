@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Tournament,Holiday,GolfRound
+from .models import Tournament,Holiday,GolfRound,Score
 from django.views.generic import View
 from django.http import HttpResponse
 
@@ -32,5 +32,11 @@ class RoundsView(View):
     def get(self,request,slug,holiday):
         selected_tournament = Tournament.objects.filter(slug=slug).get()
         selected_holiday = Holiday.objects.filter(slug=holiday,tournament=selected_tournament)
-        # rounds = GolfRound.objects.filter()
-        return render(request,self.template_name,{'holidays':selected_holiday})
+        holiday_filter = selected_holiday.get()
+        rounds = GolfRound.objects.filter(holiday=holiday_filter)
+        # score = Score.objects.all().values()
+        # print(score)
+        for row in rounds.values():
+            score = Score.objects.filter(golf_round_id=row['round_number'])
+            print(score)
+        return render(request,self.template_name,{'holidays':selected_holiday,'rounds':rounds})

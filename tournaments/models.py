@@ -29,11 +29,10 @@ class Holiday(models.Model):
     resort = models.ForeignKey(Resort,on_delete=models.CASCADE)
     tournament = models.ForeignKey(Tournament,on_delete=models.CASCADE)
     holiday_number = models.IntegerField()
-    resort_visit = models.IntegerField(null=True)
     slug = models.SlugField(default="", null=False)
 
     def __str__(self) -> str:
-        return f"{self.resort} in {self.tournament}"
+        return f"{self.tournament} {self.holiday_number}"
     
 class GolfRound(models.Model):
     round_number = models.IntegerField()
