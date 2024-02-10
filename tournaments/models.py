@@ -77,7 +77,7 @@ class Score(models.Model):
     
     golf_round = models.ForeignKey(GolfRound,on_delete=models.CASCADE)
     strokes = models.IntegerField()
-    stableford_score = models.IntegerField()
+    stableford_score = models.IntegerField(blank=True,null=True)
     sandy = models.BooleanField(default=False)
 
     def __str__(self):
