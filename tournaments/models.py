@@ -37,6 +37,9 @@ class Holiday(models.Model):
 class GolfRound(models.Model):
     round_number = models.IntegerField()
     holiday = models.ForeignKey(Holiday,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.holiday} {self.round_number}"
     
 class Handicap(models.Model):
     handicap_index = models.DecimalField(decimal_places=1,max_digits=3)
@@ -63,7 +66,6 @@ class Hole(models.Model):
     par = models.IntegerField(choices=[(3,3),(4,4),(5,5)])
     stroke_index = models.IntegerField(choices=[(x+1,x+1) for x in range(18)])
     hole_number = models.IntegerField(choices=[(x+1,x+1) for x in range(18)])
-    hole_name = models.CharField(max_length=20)
 
     def __str__(self) -> str:
         return f"{self.course} Hole {self.hole_number}"
