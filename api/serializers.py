@@ -4,7 +4,7 @@ from tournaments.models import *
 class TournamentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tournament
-        fields = '__all__'
+        fields = ['id','name']
         
 class HoleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,5 +15,5 @@ class HoleSerializer(serializers.ModelSerializer):
 class ScoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Score
-        fields = '__all__'
+        fields =['strokes','hole','player','sandy']
         depth = 1
