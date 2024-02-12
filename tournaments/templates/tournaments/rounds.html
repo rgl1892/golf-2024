@@ -8,10 +8,11 @@
 {% endfor %}
     
 {% for round in data %}
-<br>
+    <br>
     {{ round.holiday }}
+
 {% endfor %}
 
-{{data}}
-
-{{rounds}}
+{% for round in rounds %}
+    <a href="{% url 'scores' slug=slug holiday=row.slug round=round.round_number %}">{{round}}<a>
+{% endfor %}
