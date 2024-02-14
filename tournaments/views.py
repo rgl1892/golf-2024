@@ -1,7 +1,9 @@
 from django.shortcuts import render
-from .models import Tournament,Holiday,GolfRound,Score
+from .models import Tournament,Holiday,GolfRound,Score, Player
 from django.views.generic import View
 from django.http import HttpResponse
+import pandas as pd
+
 
 # Create your views here.
 
@@ -53,5 +55,19 @@ class ScoresView(View):
         holiday_filter = Holiday.objects.filter(slug=holiday,tournament=selected_tournament).get()
         round = GolfRound.objects.filter(round_number=round,holiday=holiday_filter).get()
         scores = Score.objects.filter(golf_round=round)
+        players = scores.values('player_id').distinct()
 
-        return render(request,self.template_name,{'holiday':holiday_filter,'round':round,'tournament':tournament,'scores':scores})
+        df = pd.DataFrame(scores.filter(player = players[1]['player_id']).values())
+
+        print(df)
+            
+
+        context = {
+            'holiday':holiday_filter,
+            'round':round,
+            'tournament':tournament,
+            'scores':scores,
+            "players":players
+        }
+
+        return render(request,self.template_name,context)

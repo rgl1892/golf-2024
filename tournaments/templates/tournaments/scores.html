@@ -2,9 +2,24 @@
 
 {{scores.items}}
 
-{% for score in scores %}
-<br>
-    {{score.player.id}} {{score.strokes}} {{score.hole.hole_number}}
-    {% comment %} {% if score.player != "Rich Longdon" %} jhgsdfhgj{% endif %} {% endcomment %}
-{% endfor %} 
+{{ players.0.player_id }}
+{{ players.1.player_id }}
+{{ players.2.player_id }}
+{{ players.3.player_id }}
 
+
+
+<table>
+    {% for score in scores %}
+    <tr>
+        <td>
+            {% comment %} {{score.player.id}} {{score.strokes}} {{score.hole.hole_number}} {% endcomment %}
+            {% if score.player.id == players.0.player_id %} jhgsdfhgj{% endif %}  
+        </td>
+        <td>
+            {% comment %} {{score.player.id}} {{score.strokes}} {{score.hole.hole_number}} {% endcomment %}
+            {% if score.player.id == players.1.player_id %} jgg{% endif %}  
+        </td>
+    </tr>
+    {% endfor %} 
+</table>
