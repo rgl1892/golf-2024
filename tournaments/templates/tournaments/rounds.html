@@ -1,18 +1,12 @@
 <h1>Rounds</h1>
 
 
-{% for holiday in holidays %}
-    {{holiday.resort}}
-    {{holiday.holiday_number}}
-    {{holiday.tournament}}
-{% endfor %}
-    
-{% for round in data %}
-    <br>
-    {{ round.holiday }}
+<h1>{{holiday}}</h1>
 
-{% endfor %}
+
 
 {% for round in rounds %}
-    <a href="{% url 'scores' slug=slug holiday=row.slug round=round.round_number %}">{{round}}<a>
+    <br>
+    <a href="{% url 'scores' tournament=tournament holiday=holiday.slug round=round.round_number %}">{{round}}<a>
+       
 {% endfor %}

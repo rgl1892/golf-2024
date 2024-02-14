@@ -6,16 +6,20 @@ from django.http import HttpResponse
 # Create your views here.
 
 class Home(View):
+
+    """The Homepage"""
+
     model = Tournament
     template_name = 'tournaments/home.html'
     
     def get(self,request):
-        data = self.model.objects.all()
-        return render(request,self.template_name,{'data':data})
+        tournaments = Tournament.objects.all()
+        return render(request,self.template_name,{'tournaments':tournaments})
         
     
 class TournamentView(View):
     
+    """Lists all the holidays within a tournament"""
 
     template_name = 'tournaments/tournament.html'
     
@@ -23,10 +27,14 @@ class TournamentView(View):
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
         holidays = Holiday.objects.filter(tournament=selected_tournament)
         
-        return render(request,self.template_name,{'data':holidays,'tournament':tournament,'nest':{'layer':8}})
+        
+        
+        return render(request,self.template_name,{'holidays':holidays,'tournament':tournament,'nest':{'layer':8}})
     
 class RoundsView(View):
     
+    """Lists all the rounds from a holiday"""
+
     template_name = "tournaments/rounds.html"
     
     def get(self,request,tournament,holiday):
@@ -34,16 +42,16 @@ class RoundsView(View):
         selected_holiday = Holiday.objects.filter(slug=holiday,tournament=selected_tournament)
         holiday_filter = selected_holiday.get()
         rounds = GolfRound.objects.filter(holiday=holiday_filter)
-        for row in rounds.values():
-            score = Score.objects.filter(golf_round_id=row['round_number'])
-            print(score)
-        return render(request,self.template_name,{'holidays':selected_holiday,'rounds':rounds,'tournament':tournament})
+        
+        return render(request,self.template_name,{'holiday':holiday_filter,'rounds':rounds,'tournament':tournament})
     
 class ScoresView(View):
     template_name = 'tournaments/scores.html'
 
-    def get(self,request,slug,holiday,round):
-        selected_tournament = Tournament.objects.filter(slug=slug).get()
-        selected_holiday = Holiday.objects.filter(slug=holiday,tournament=selected_tournament)
-        holiday_filter = selected_holiday.get()
-        rounds = GolfRound.objects.filter(holiday=holiday_filter)
+    def get(self,request,tournament,holiday,round):
+        selected_tournament = Tournament.objects.filter(slug=tournament).get()
+        holiday_filter = Holiday.objects.filter(slug=holiday,tournament=selected_tournament).get()
+        round = GolfRound.objects.filter(round_number=round,holiday=holiday_filter).get()
+        scores = Score.objects.filter(golf_round=round)
+
+        return render(request,self.template_name,{'holiday':holiday_filter,'round':round,'tournament':tournament,'scores':scores})

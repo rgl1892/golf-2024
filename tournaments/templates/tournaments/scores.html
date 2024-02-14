@@ -1,1 +1,10 @@
 <h1>Scores</h1>
+
+{{scores.items}}
+
+{% for score in scores %}
+<br>
+    {{score.player.id}} {{score.strokes}} {{score.hole.hole_number}}
+    {% comment %} {% if score.player != "Rich Longdon" %} jhgsdfhgj{% endif %} {% endcomment %}
+{% endfor %} 
+

@@ -1,7 +1,7 @@
 <h1>Home</h1>
 
-{% for row in data %}
-  <a href="{% url 'tournament' row.slug %}">{{row}}</a> <br>
+{% for tournament in tournaments %}
+  <a href="{% url 'tournament' tournament.slug %}">{{tournament}}</a> <br>
 {% endfor %}
 
 
