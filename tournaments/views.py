@@ -55,27 +55,19 @@ class ScoresView(View):
         holiday_filter = Holiday.objects.filter(slug=holiday,tournament=selected_tournament).get()
         round = GolfRound.objects.filter(round_number=round,holiday=holiday_filter).get()
         scores = Score.objects.filter(golf_round=round)
-        players = scores.values('player_id').distinct()
-
-        player_1_score = scores.filter(player=players[0]['player_id'])
-        player_2_score = scores.filter(player=players[1]['player_id'])
-        player_3_score = scores.filter(player=players[2]['player_id'])
-        player_4_score = scores.filter(player=players[3]['player_id'])
+        players = scores.order_by('player__first_name').values('player_id').distinct()
         
         hole_numbers = [x for x in range(1,19)]
+        player_scores = [scores.filter(player=players[x]['player_id']) for x in range(len(players))]
             
-
         context = {
             'holiday':holiday_filter,
             'round':round,
             'tournament':tournament,
             'scores':scores,
             "players":players,
-            "player_1":player_1_score,
-            "player_2":player_2_score,
-            "player_3":player_3_score,
-            "player_4":player_4_score,
             "hole_numbers": hole_numbers,
+            "player_scores":player_scores
         }
 
         return render(request,self.template_name,context)

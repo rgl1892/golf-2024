@@ -1,18 +1,22 @@
+:root{
+--font_color:yellow
+}
+
 td,th {
     height: 20px;
     width: 20px;
     vertical-align: bottom;
     text-align: left;
-    color: yellow;
+    color: var(--font_color);
   }
-h1 {
-  color: yellow;
+h1,h2,h3 {
+  color: var(--font_color);
 }
 
 body {
   background-color:#228B22
 }
 
-a:visited {
-  color: darkgoldenrod
+a {
+  color: var(--font_color);
 }
