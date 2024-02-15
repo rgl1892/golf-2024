@@ -57,9 +57,12 @@ class ScoresView(View):
         scores = Score.objects.filter(golf_round=round)
         players = scores.values('player_id').distinct()
 
-        df = pd.DataFrame(scores.filter(player = players[1]['player_id']).values())
-
-        print(df)
+        player_1_score = scores.filter(player=players[0]['player_id'])
+        player_2_score = scores.filter(player=players[1]['player_id'])
+        player_3_score = scores.filter(player=players[2]['player_id'])
+        player_4_score = scores.filter(player=players[3]['player_id'])
+        
+        hole_numbers = [x for x in range(1,19)]
             
 
         context = {
@@ -67,7 +70,12 @@ class ScoresView(View):
             'round':round,
             'tournament':tournament,
             'scores':scores,
-            "players":players
+            "players":players,
+            "player_1":player_1_score,
+            "player_2":player_2_score,
+            "player_3":player_3_score,
+            "player_4":player_4_score,
+            "hole_numbers": hole_numbers,
         }
 
         return render(request,self.template_name,context)

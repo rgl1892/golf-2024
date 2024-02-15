@@ -1,25 +1,47 @@
+{% extends 'tournaments/base.html' %}
+
+{% block title %}{{player_1.0.hole.course}}{% endblock %}
+{% block content %}
+    
+
+    
 <h1>Scores</h1>
 
-{{scores.items}}
-
-{{ players.0.player_id }}
-{{ players.1.player_id }}
-{{ players.2.player_id }}
-{{ players.3.player_id }}
 
 
-
-<table>
-    {% for score in scores %}
+<table class="scores">
     <tr>
-        <td>
-            {% comment %} {{score.player.id}} {{score.strokes}} {{score.hole.hole_number}} {% endcomment %}
-            {% if score.player.id == players.0.player_id %} jhgsdfhgj{% endif %}  
-        </td>
-        <td>
-            {% comment %} {{score.player.id}} {{score.strokes}} {{score.hole.hole_number}} {% endcomment %}
-            {% if score.player.id == players.1.player_id %} jgg{% endif %}  
-        </td>
+        <th>Hole</th>
+        {% for hole in hole_numbers %}
+        <th>{{hole}}</th>
+        {% endfor %}
+        
     </tr>
-    {% endfor %} 
+    <tr>
+        <th>{{player_1.0.player.first_name}}</th>
+        {% for stroke in player_1 %}
+        <td>{{stroke.strokes}}</td>
+        {% endfor %}
+    </tr>
+    <tr>
+        <th>{{player_2.0.player.first_name}}</th>
+        {% for stroke in player_2 %}
+        <td>{{stroke.strokes}}</td>
+        {% endfor %}
+    </tr>
+    <tr>
+        <th>{{player_3.0.player.first_name}}</th>
+        {% for stroke in player_3 %}
+        <td>{{stroke.strokes}}</td>
+        {% endfor %}
+    </tr>
+    <tr>
+        <th>{{player_4.0.player.first_name}}</th>
+        {% for stroke in player_4 %}
+        <td>{{stroke.strokes}}</td>
+        {% endfor %}
+    </tr>
 </table>
+
+
+{% endblock content %}

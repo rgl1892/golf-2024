@@ -1,0 +1,18 @@
+td,th {
+    height: 20px;
+    width: 20px;
+    vertical-align: bottom;
+    text-align: left;
+    color: yellow;
+  }
+h1 {
+  color: yellow;
+}
+
+body {
+  background-color:#228B22
+}
+
+a:visited {
+  color: darkgoldenrod
+}

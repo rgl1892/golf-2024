@@ -1,3 +1,7 @@
+{% extends 'tournaments/base.html' %}
+{% block content %}
+
+
 <h1>{{tournament}}</h1>
 
 {% for holiday in holidays %}
@@ -7,3 +11,4 @@
 <br>
 {% endfor %}
     
+{% endblock content%}
