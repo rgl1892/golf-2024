@@ -31,15 +31,19 @@
     {% endfor %}
     <tr>
         <th></th>
+        
         {% for hole in hole_numbers %}
         <td>
-        <button class="btn" label="{{hole}}">
+        <a class='btn' href={% url 'edit_scores' tournament=tournament holiday=holiday.slug round=round.round_number hole=hole %}>
             Edit
-        </button>
+        </a> 
         </td>
         {% endfor %}
+    
     </tr>
 </table>
 </div>
+
+{{round.round_number}}
 
 {% endblock content %}
