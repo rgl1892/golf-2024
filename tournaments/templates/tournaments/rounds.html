@@ -11,7 +11,7 @@
 
 {% for round in rounds %}
     <br>
-    <a href="{% url 'scores' tournament=tournament holiday=holiday.slug round=round.round_number %}">{{round}}<a>
+    <a href="{% url 'scores' tournament=tournament holiday=holiday.slug round=round.round_number %}">Round {{round.round_number}}<a>
        
 {% endfor %}
 

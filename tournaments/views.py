@@ -31,7 +31,7 @@ class TournamentView(View):
         
         
         
-        return render(request,self.template_name,{'holidays':holidays,'tournament':tournament,'nest':{'layer':8}})
+        return render(request,self.template_name,{'holidays':holidays,'tournament':tournament,'selected_tournament':selected_tournament})
     
 class RoundsView(View):
     

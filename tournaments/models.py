@@ -79,6 +79,7 @@ class Score(models.Model):
     strokes = models.IntegerField()
     stableford_score = models.IntegerField(blank=True,null=True)
     sandy = models.BooleanField(default=False)
+    
 
     def __str__(self):
         return f"{self.player} {self.hole} Score"

@@ -14,17 +14,22 @@
 <table class = "table table-hover">
     <tr>
         <th scope="col" style="position: sticky;">Hole</th>
-        {% for hole in hole_numbers %}
-            <th scope="col">{{hole}}</th>
-        {% endfor %}
-        
+        {% for hole in player_scores.0 %}
+            <th scope="col">{{hole.hole.hole_number}}</th>
+        {% endfor %}   
+    </tr>
+    <tr>
+        <th scope="col" style="position: sticky;">Par<sub>S.I.</sub></th>
+        {% for hole in player_scores.0 %}
+            <th scope="col">{{hole.hole.par}}<sub>{{hole.hole.stroke_index}}</sub></th>
+        {% endfor %}   
     </tr>
     {% for player in player_scores %}
         <tr>
             <th scope="row" style="position: sticky;">{{player.0.player.first_name}}</th>
             {% for score in player %}
             <td>
-                {{score.strokes}}
+                {{score.strokes}}<sub>{{score.stableford_score}}</sub>
             </td>
             {% endfor %}
         </tr>
@@ -43,7 +48,5 @@
     </tr>
 </table>
 </div>
-
-{{round.round_number}}
 
 {% endblock content %}
