@@ -4,8 +4,10 @@
 <h1>Home</h1>
 
 {% for tournament in tournaments %}
-  <a href="{% url 'tournament' tournament.slug %}">{{tournament}}</a> <br>
-{% endfor %}
+  <ul class="list-group">
+  <a class="list-group-item list-group-item-action" href="{% url 'tournament' tournament.slug %}">{{tournament}}</a>
+  </ul>
+  {% endfor %}
 
 
 {% endblock content%}

@@ -1,18 +1,25 @@
 {% extends 'tournaments/base.html' %}
 {% block content %}
 
-
+<div class="container">
+    <div class="row">
+        <div class="col-5">
 <h1>Rounds</h1>
 
 
 <h1>{{holiday}}</h1>
 
-
-
+</div></div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-3">
 {% for round in rounds %}
-    <br>
-    <a href="{% url 'scores' tournament=tournament holiday=holiday.slug round=round.round_number %}">Round {{round.round_number}}<a>
-       
-{% endfor %}
+    <ul class="list-group">
+        
+    <a class="list-group-item list-group-item-action" href="{% url 'scores' tournament=tournament holiday=holiday.slug round=round.round_number %}">Round {{round.round_number}}<a>
 
+{% endfor %}
+</div></div>
+    </div>
 {% endblock content%}
