@@ -79,6 +79,7 @@ class Score(models.Model):
     strokes = models.IntegerField()
     stableford_score = models.IntegerField(blank=True,null=True)
     sandy = models.BooleanField(default=False)
+    handicap = models.ForeignKey(Handicap,on_delete=models.CASCADE,blank=True,null=True)
     
 
     def __str__(self):

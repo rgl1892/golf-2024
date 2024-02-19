@@ -9,4 +9,5 @@ urlpatterns = [
     path('<slug:tournament>/<slug:holiday>/<int:round>',views.ScoresView.as_view(),name='scores'),
     path('<slug:tournament>/<slug:holiday>/<int:round>/<int:hole>',views.EditScoresView.as_view(),name='edit_scores'),
 
+
 ]

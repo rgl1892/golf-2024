@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Tournament,Holiday,GolfRound,Score, Player
+from .models import Tournament,Holiday,GolfRound,Score, Player,Hole,Handicap
 from django.views.generic import View
 from django.http import HttpResponse
 import pandas as pd
@@ -51,6 +51,7 @@ class ScoresView(View):
     template_name = 'tournaments/scores.html'
 
     def get(self,request,tournament,holiday,round):
+        
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
         holiday_filter = Holiday.objects.filter(slug=holiday,tournament=selected_tournament).get()
         round = GolfRound.objects.filter(round_number=round,holiday=holiday_filter).get()
@@ -69,14 +70,33 @@ class ScoresView(View):
             "hole_numbers": hole_numbers,
             "player_scores":player_scores
         }
-
+        
+        
         return render(request,self.template_name,context)
     
     def post(self,request,tournament,holiday,round):
+        selected_tournament = Tournament.objects.filter(slug=tournament).get()
+        holiday_filter = Holiday.objects.filter(slug=holiday,tournament=selected_tournament).get()
+        round = GolfRound.objects.filter(round_number=round,holiday=holiday_filter).get()
+        scores = Score.objects.filter(golf_round=round)
+        players = scores.order_by('player__first_name').values('player_id').distinct()
+        hole_numbers = [x for x in range(1,19)]
+        player_scores = [scores.filter(player=players[x]['player_id']) for x in range(len(players))]
 
-        print(request.POST)
-
-        return HttpResponse('HELLO')
+        for player in players:
+            scores.filter(player=player['player_id'],hole=request.POST['hole']).update(strokes=request.POST[f'{player['player_id']}'])
+            
+        # test.update(strokes=7)
+        context = {
+            'holiday':holiday_filter,
+            'round':round,
+            'tournament':tournament,
+            'scores':scores,
+            "players":players,
+            "hole_numbers": hole_numbers,
+            "player_scores":player_scores
+        }
+        return render(request,self.template_name,context)
 
 class EditScoresView(View):
     template_name = 'tournaments/edit_scores.html'
@@ -91,6 +111,7 @@ class EditScoresView(View):
         
         hole_numbers = [x for x in range(1,19)]
         player_scores = [scores.filter(player=players[x]['player_id']) for x in range(len(players))]
+        selected_hole = Hole.objects.filter(id=hole)
             
         context = {
             'holiday':holiday_filter,
@@ -100,9 +121,10 @@ class EditScoresView(View):
             "players":players,
             "hole_numbers": hole_numbers,
             "player_scores":player_scores,
-            "hole":hole,
+            "hole":selected_hole,
         }
 
         return render(request,self.template_name,context)
+    
     
     
