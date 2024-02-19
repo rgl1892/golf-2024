@@ -17,7 +17,7 @@
 {% for round in rounds %}
     <ul class="list-group">
         
-    <a class="list-group-item list-group-item-action" href="{% url 'scores' tournament=tournament holiday=holiday.slug round=round.round_number %}">Round {{round.round_number}}<a>
+    <a class="list-group-item list-group-item-action" href="{% url 'scores' tournament=tournament holiday=holiday.slug selected_round=round.round_number %}">Round {{round.round_number}}<a>
 
 {% endfor %}
 </div></div>

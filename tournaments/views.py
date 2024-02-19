@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from .models import Tournament,Holiday,GolfRound,Score, Player,Hole,Handicap
+from .models import Tournament,Holiday,GolfRound,Score, Player,Hole,Handicap,Course
 from django.views.generic import View
 from django.http import HttpResponse
-import pandas as pd
+import math
 
 
 # Create your views here.
@@ -49,13 +49,26 @@ class RoundsView(View):
     
 class ScoresView(View):
     template_name = 'tournaments/scores.html'
+    stableford_lookup = {
+        '2':0,
+        '1':1,
+        '0':2,
+        '-1':3,
+        '-2':4,
+        '-3':5,
+        '-4':6,
+        '-5':7,
+        '-6':8,
+        '-7':9
+        }
+       
 
-    def get(self,request,tournament,holiday,round):
+    def get(self,request,tournament,holiday,selected_round):
         
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
         holiday_filter = Holiday.objects.filter(slug=holiday,tournament=selected_tournament).get()
-        round = GolfRound.objects.filter(round_number=round,holiday=holiday_filter).get()
-        scores = Score.objects.filter(golf_round=round)
+        selected_round = GolfRound.objects.filter(round_number=selected_round,holiday=holiday_filter).get()
+        scores = Score.objects.filter(golf_round=selected_round)
         players = scores.order_by('player__first_name').values('player_id').distinct()
         
         hole_numbers = [x for x in range(1,19)]
@@ -63,7 +76,7 @@ class ScoresView(View):
             
         context = {
             'holiday':holiday_filter,
-            'round':round,
+            'selected_round':selected_round,
             'tournament':tournament,
             'scores':scores,
             "players":players,
@@ -74,39 +87,71 @@ class ScoresView(View):
         
         return render(request,self.template_name,context)
     
-    def post(self,request,tournament,holiday,round):
+    def post(self,request,tournament,holiday,selected_round):
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
         holiday_filter = Holiday.objects.filter(slug=holiday,tournament=selected_tournament).get()
-        round = GolfRound.objects.filter(round_number=round,holiday=holiday_filter).get()
-        scores = Score.objects.filter(golf_round=round)
+        selected_round = GolfRound.objects.filter(round_number=selected_round,holiday=holiday_filter).get()
+        scores = Score.objects.filter(golf_round=selected_round)
         players = scores.order_by('player__first_name').values('player_id').distinct()
         hole_numbers = [x for x in range(1,19)]
         player_scores = [scores.filter(player=players[x]['player_id']) for x in range(len(players))]
+        course = Course.objects.filter(id=Hole.objects.filter(id=request.POST['hole']).values()[0]['course_id'])
+
+        # Get data on the course to calutale stableford points
+        slope_rating = course.values()[0]['slope_rating']
+        course_rating = course.values()[0]['course_rating']
+        hole_played = Hole.objects.filter(id=request.POST['hole']).values()[0]
+        print(hole_played)
+        handicaps = []
 
         for player in players:
             scores.filter(player=player['player_id'],hole=request.POST['hole']).update(strokes=request.POST[f'{player['player_id']}'])
+            handicap_index = Handicap.objects.filter(id=scores.filter(player=player['player_id'],
+                                                                      hole=request.POST['hole']).values('handicap_id')[0]['handicap_id']).values()[0]['handicap_index']
             
-        # test.update(strokes=7)
+            playing_handicap = round((slope_rating/113)*float(handicap_index)*0.95)
+            
+            take_off_score = math.floor(playing_handicap/18)
+            si_change = playing_handicap % 18
+            shots = scores.filter(player=player['player_id'],hole=request.POST['hole']).values('strokes')[0]['strokes']
+            stroke_index = hole_played['stroke_index']
+            par = hole_played['par']
+
+            if stroke_index <= si_change:
+                si_take_off = 1
+            else:
+                si_take_off = 0
+            final_shots = shots - take_off_score - si_take_off - par
+            try:
+                points = self.stableford_lookup[f'{final_shots}']
+            except:
+                points = 0
+
+            scores.filter(player=player['player_id'],hole=request.POST['hole']).update(stableford_score=points)
+            handicaps.append(playing_handicap)
+
+
         context = {
             'holiday':holiday_filter,
-            'round':round,
+            'selected_round':selected_round,
             'tournament':tournament,
             'scores':scores,
             "players":players,
             "hole_numbers": hole_numbers,
-            "player_scores":player_scores
+            "player_scores":player_scores,
+            'handicaps':handicaps
         }
         return render(request,self.template_name,context)
 
 class EditScoresView(View):
     template_name = 'tournaments/edit_scores.html'
 
-    def get(self,request,tournament,holiday,round,hole):
+    def get(self,request,tournament,holiday,selected_round,hole):
 
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
         holiday_filter = Holiday.objects.filter(slug=holiday,tournament=selected_tournament).get()
-        round = GolfRound.objects.filter(round_number=round,holiday=holiday_filter).get()
-        scores = Score.objects.filter(golf_round=round)
+        selected_round = GolfRound.objects.filter(round_number=selected_round,holiday=holiday_filter).get()
+        scores = Score.objects.filter(golf_round=selected_round)
         players = scores.order_by('player__first_name').values('player_id').distinct()
         
         hole_numbers = [x for x in range(1,19)]
@@ -115,7 +160,7 @@ class EditScoresView(View):
             
         context = {
             'holiday':holiday_filter,
-            'round':round,
+            'selected_round':selected_round,
             'tournament':tournament,
             'scores':scores,
             "players":players,

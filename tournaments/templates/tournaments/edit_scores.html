@@ -14,7 +14,7 @@
 </div></div>
 
 <div class="row">
-<form action="{% url 'scores' tournament=tournament holiday=holiday.slug round=round.round_number %}" method="post">
+<form action="{% url 'scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number %}" method="post">
     
     {% csrf_token %}
     <input type="text" value="{{hole.0.id}}" name="hole" hidden>

@@ -9,7 +9,7 @@
 {% for holiday in holidays %}
     
 <ul class="list-group">
-    <a class="list-group-item list-group-item-action" href="{% url 'rounds' tournament=tournament holiday=holiday.slug %}">{{holiday}}</a>
+    <a class="list-group-item list-group-item-action" href="{% url 'rounds' tournament=tournament holiday=holiday.slug %}">Holiday {{holiday.holiday_number}}</a>
 </ul>
 
 {% endfor %}
