@@ -105,7 +105,7 @@ class ScoresView(View):
         handicaps = []
 
         for player in players:
-            scores.filter(player=player['player_id'],hole=request.POST['hole']).update(strokes=request.POST[f'{player['player_id']}'])
+            scores.filter(player=player['player_id'],hole=request.POST['hole']).update(strokes=request.POST[f"{player['player_id']}"])
             handicap_index = Handicap.objects.filter(id=scores.filter(player=player['player_id'],
                                                                       hole=request.POST['hole']).values('handicap_id')[0]['handicap_id']).values()[0]['handicap_index']
             

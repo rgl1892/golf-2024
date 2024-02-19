@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'tournaments',
     'api',
     'rest_framework',
-    'compressor',
 ]
 
 MIDDLEWARE = [
