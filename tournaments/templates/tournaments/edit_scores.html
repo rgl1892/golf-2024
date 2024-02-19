@@ -1,5 +1,47 @@
 {% extends 'tournaments/base.html' %}
 
 {% block content %}
-<h1>Hi</h1>
+<h1>Hole {{hole}}</h1>
+
+
+
+<div class="row"><div class="col edit-score-details">
+    {% for score in player_scores.0 %}
+    {% if score.hole.hole_number == hole %}
+    {{score.hole.yards}} yards <br>Par {{score.hole.par}} <br>S.I. {{score.hole.stroke_index}}
+    {% endif %}
+    {% endfor %}   
+</div></div>
+
+<div class="row">
+<form action="{% url 'scores' tournament=tournament holiday=holiday.slug round=round.round_number %}" method="post">
+    
+    {% csrf_token %}
+    <input type="text" value="{{hole}}" name="hole" hidden>
+{% for player in player_scores %}
+    {% for score in player %}
+        {% if score.hole.hole_number == hole %}
+        
+        <div class="row">
+            <div class="col-1">
+            <div class="edit-score edit-score-name">{{score.player.first_name}}:</div>
+        </div>
+        <div class="col-1">
+            <div class="edit-score edit-score-value"><input 
+                class="edit-score-value" 
+                type="text" 
+                value={{score.strokes}} 
+                id="{{score.hole.hole_number}}"
+                name="{{score.player.id}}"></div>
+        </div>
+        </div>    
+            {% endif %}
+        
+    {% endfor %}
+{% endfor %}
+<div class="d-grid col-2">
+<button type="submit" class="btn btn-outline-warning">Submit</button>
+</div>
+</form>
+</div>
 {% endblock content %}

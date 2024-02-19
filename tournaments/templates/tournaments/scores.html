@@ -10,12 +10,12 @@
 <h3>Round {{player_scores.0.0.golf_round.round_number}}</h3>
 <h3>{{player_scores.0.0.hole.course}}</h3>
 
-<div class="table-responsive">
+<div class="table table-responsive-xxl">
 <table class = "table table-hover">
     <tr>
         <th scope="col" style="position: sticky;">Hole</th>
         {% for hole in player_scores.0 %}
-            <th scope="col">{{hole.hole.hole_number}}</th>
+            <th scope="col">{{hole.hole.hole_number}}<sub>{{hole.hole.yards}}</sub></th>
         {% endfor %}   
     </tr>
     <tr>
@@ -39,7 +39,7 @@
         
         {% for hole in hole_numbers %}
         <td>
-        <a class='btn' href={% url 'edit_scores' tournament=tournament holiday=holiday.slug round=round.round_number hole=hole %}>
+        <a class='btn' href={% url 'scores' tournament=tournament holiday=holiday.slug round=round.round_number hole=hole %}>
             Edit
         </a> 
         </td>

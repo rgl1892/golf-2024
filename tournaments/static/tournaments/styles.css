@@ -1,33 +1,31 @@
 :root{
---font_color:#F4D35E;
---background:#247116;
-
-
-/* --bs-body-font-family:'Ariel',sans-serif; */
-
-
-}
-
-td,th {
-    height: 20px;
-    width: 20px;
-    vertical-align: bottom;
-    text-align: center;
-    color: var(--font_color);
-  }
-h1,h2,h3 {
-  color: var(--font_color);
+  --bs-body-font-family: var(--bs-font-sans-serif);
+  --bs-body-font-size: 1rem;
+  --bs-body-font-weight: 400;
+  --bs-body-line-height: 1.5;
+  --bs-body-color: #F4D35E;
+  --bs-body-color-rgb: 33, 37, 41;
+  --bs-body-bg: #247116;
+  --bs-body-bg-rgb: 255, 255, 255;
+  --bs-emphasis-color:var(--bs-body-color);
+  /* --bs-emphasis-color-rgb:255,255,255; */
+  --bs-btn-bg:#F4D35E;
 }
 
 body {
-  background-color: var(--background);
   padding-top: 60px;
 }
 
-a {
-  color: var(--font_color);
+.edit-score {
+  font-size: x-large;
 }
-.navbar {
-  background-color: #19647E;
+.edit-score-value {
+  width: 50px;
 }
 
+.edit-score-details {
+  font-size: large;
+}
+.btn-outline-warning {
+  margin-top: 5px;
+}

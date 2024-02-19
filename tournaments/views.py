@@ -71,6 +71,12 @@ class ScoresView(View):
         }
 
         return render(request,self.template_name,context)
+    
+    def post(self,request,tournament,holiday,round):
+
+        print(request.POST)
+
+        return HttpResponse('HELLO')
 
 class EditScoresView(View):
     template_name = 'tournaments/edit_scores.html'
@@ -93,7 +99,10 @@ class EditScoresView(View):
             'scores':scores,
             "players":players,
             "hole_numbers": hole_numbers,
-            "player_scores":player_scores
+            "player_scores":player_scores,
+            "hole":hole,
         }
 
         return render(request,self.template_name,context)
+    
+    
