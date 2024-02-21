@@ -3,9 +3,11 @@
 {% block title %}{{player_scores.0.0.hole.course}}{% endblock %}
 {% block content %}
 
-
-
 <h1>Scores</h1>
+<div class="row">
+    <div class="col">
+
+
 <a class="navbar-brand" href="{% url 'tournament' tournament=tournament %}">
     <h2>{{player_scores.0.0.golf_round.holiday}}</h2>
 </a>
@@ -14,20 +16,36 @@
 </a>
 <h3>{{player_scores.0.0.hole.course}}</h3>
 
-<div class="row">
+    </div>
     <div class="col">
-
-        {% for person in handicaps %}
-        {{person.1}} : {{person.0}}
-        {% endfor %}
+        <div class="table table-responsive-xxl">
+            <table class="table table-hover">
+                <tr>
+                    <th></th>
+                    <th>Handicap</th>
+                    <th>Shots</th>
+                    <th>To Par</th>
+                    <th>Stableford</th>
+                </tr> 
+                {% for person in handicaps %}
+                <tr>
+                    <th>{{person.1}}</th>
+                    <td>{{person.0}}</td>
+                    <td>{{person.2}}</td>
+                    <td>{{person.3}}</td>
+                    <td>{{person.4}}</td>
+                </tr>
+                {% endfor %}   
+            </table>
+        </div>
     </div>
 </div>
 
-{% for player in player_scores %}
 
 
 
-{% endfor %}
+
+
 
 
 <div class="table table-responsive-xxl">
@@ -59,8 +77,7 @@
 
             {% for hole in player_scores.0 %}
             <td>
-                <a class='btn' href={% url 'edit_scores' tournament=tournament holiday=holiday.slug
-                    selected_round=selected_round.round_number hole=hole.hole.id %}>
+                <a class='btn' href={% url 'edit_scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number hole=hole.hole.id %}>
                     Edit
                 </a>
             </td>

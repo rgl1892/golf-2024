@@ -88,8 +88,12 @@ class ScoresView(View):
             player_name = Player.objects.filter(
                 id=player['player_id']).values('first_name')[0]['first_name']
 
-            handicaps.append([playing_handicap, player_name, sum(
-                [score.strokes for score in scores.filter(player=player['player_id'])])])
+            handicaps.append([playing_handicap, 
+                              player_name, 
+                              sum([score.strokes for score in scores.filter(player=player['player_id'])]),
+                              sum([score.strokes - score.hole.par  for score in scores.filter(player=player['player_id'])]),
+                              sum([score.stableford_score for score in scores.filter(player=player['player_id'])])
+                ])
 
         hole_numbers = [x for x in range(1, 19)]
         player_scores = [scores.filter(
@@ -161,7 +165,12 @@ class ScoresView(View):
             player_name = Player.objects.filter(
                 id=player['player_id']).values('first_name')[0]['first_name']
 
-            handicaps.append([playing_handicap, player_name])
+            handicaps.append([playing_handicap, 
+                              player_name, 
+                              sum([score.strokes for score in scores.filter(player=player['player_id'])]),
+                              sum([score.strokes - score.hole.par  for score in scores.filter(player=player['player_id'])]),
+                              sum([score.stableford_score for score in scores.filter(player=player['player_id'])])
+                ])
 
         context = {
             'holiday': holiday_filter,
