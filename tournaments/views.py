@@ -71,6 +71,21 @@ class ScoresView(View):
         scores = Score.objects.filter(golf_round=selected_round)
         players = scores.order_by('player__first_name').values('player_id').distinct()
         
+        
+
+        selected_course = Course.objects.filter(hole=scores.values()[0]['hole_id']).values()[0]
+        slope_rating = selected_course['slope_rating']
+        course_rating = selected_course['course_rating']
+        
+        handicaps = []
+        for player in players:
+            handicap_index = Handicap.objects.filter(id=scores.filter(player=player['player_id'],
+                                                                      hole=scores.values()[0]['hole_id']).values('handicap_id')[0]['handicap_id']).values()[0]['handicap_index']
+            playing_handicap = round((slope_rating/113)*float(handicap_index)*0.95)
+            player_name = Player.objects.filter(id=player['player_id']).values('first_name')[0]['first_name']
+
+            handicaps.append([playing_handicap,player_name])
+
         hole_numbers = [x for x in range(1,19)]
         player_scores = [scores.filter(player=players[x]['player_id']) for x in range(len(players))]
             
@@ -81,7 +96,8 @@ class ScoresView(View):
             'scores':scores,
             "players":players,
             "hole_numbers": hole_numbers,
-            "player_scores":player_scores
+            "player_scores":player_scores,
+            "handicaps":handicaps
         }
         
         
@@ -128,7 +144,9 @@ class ScoresView(View):
                 points = 0
 
             scores.filter(player=player['player_id'],hole=request.POST['hole']).update(stableford_score=points)
-            handicaps.append(playing_handicap)
+            player_name = Player.objects.filter(id=player['player_id']).values('first_name')[0]['first_name']
+
+            handicaps.append([playing_handicap,player_name])
 
 
         context = {

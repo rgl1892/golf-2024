@@ -3,7 +3,7 @@
 {% block title %}{{player_scores.0.0.hole.course}}{% endblock %}
 {% block content %}
     
-{{handi}}
+
     
 <h1>Scores</h1>
 <a class="navbar-brand" href="{% url 'tournament' tournament=tournament %}"><h2>{{player_scores.0.0.golf_round.holiday}}</h2></a>
@@ -12,7 +12,9 @@
 
 <div class="row"><div class="col">
 
-    
+    {% for person in handicaps %}
+    {{person.1}} : {{person.0}} | 
+    {% endfor %}
 </div></div>
 
 
@@ -32,7 +34,7 @@
     </tr>
     {% for player in player_scores %}
         <tr>
-            <th scope="row" style="position: sticky;">{{player.0.player.first_name}}<sub>{{player.0.handicap.handicap_index}}</sub></th>
+            <th scope="row" style="position: sticky;">{{player.0.player.first_name}}</th>
             {% for score in player %}
             <td>
                 {{score.strokes}}<sub>{{score.stableford_score}}</sub>
