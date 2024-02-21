@@ -6,12 +6,18 @@
 <div class="container">
     <div class="row">
         <div class="col col-md-3">
-{% for holiday in holidays %}
-    
-<ul class="list-group">
-    <a class="list-group-item list-group-item-action" href="{% url 'rounds' tournament=tournament holiday=holiday.slug %}">Holiday {{holiday.holiday_number}}</a>
-</ul>
+            <ul class="list-group">
+                {% for holiday in holidays %}
 
-{% endfor %}
-</div></div></div>
+
+                <a class="list-group-item list-group-item-action"
+                    href="{% url 'rounds' tournament=tournament holiday=holiday.slug %}">Holiday
+                    {{holiday.holiday_number}}</a>
+
+
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock content%}

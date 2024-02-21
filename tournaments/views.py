@@ -50,17 +50,17 @@ class RoundsView(View):
 class ScoresView(View):
     template_name = 'tournaments/scores.html'
     stableford_lookup = {
-        '2':0,
-        '1':1,
-        '0':2,
-        '-1':3,
-        '-2':4,
-        '-3':5,
-        '-4':6,
-        '-5':7,
-        '-6':8,
-        '-7':9
-        }
+                        '2':0,
+                        '1':1,
+                        '0':2,
+                        '-1':3,
+                        '-2':4,
+                        '-3':5,
+                        '-4':6,
+                        '-5':7,
+                        '-6':8,
+                        '-7':9
+                        }
        
 
     def get(self,request,tournament,holiday,selected_round):

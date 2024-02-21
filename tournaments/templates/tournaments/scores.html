@@ -2,37 +2,43 @@
 
 {% block title %}{{player_scores.0.0.hole.course}}{% endblock %}
 {% block content %}
-    
 
-    
+
+
 <h1>Scores</h1>
-<a class="navbar-brand" href="{% url 'tournament' tournament=tournament %}"><h2>{{player_scores.0.0.golf_round.holiday}}</h2></a>
-<a class="navbar-brand" href="{% url 'rounds' tournament=tournament holiday=holiday.slug %}"><h3>Round {{player_scores.0.0.golf_round.round_number}}</h3></a>
+<a class="navbar-brand" href="{% url 'tournament' tournament=tournament %}">
+    <h2>{{player_scores.0.0.golf_round.holiday}}</h2>
+</a>
+<a class="navbar-brand" href="{% url 'rounds' tournament=tournament holiday=holiday.slug %}">
+    <h3>Round {{player_scores.0.0.golf_round.round_number}}</h3>
+</a>
 <h3>{{player_scores.0.0.hole.course}}</h3>
 
-<div class="row"><div class="col">
+<div class="row">
+    <div class="col">
 
-    {% for person in handicaps %}
-    {{person.1}} : {{person.0}} | 
-    {% endfor %}
-</div></div>
+        {% for person in handicaps %}
+        {{person.1}} : {{person.0}} |
+        {% endfor %}
+    </div>
+</div>
 
 
 <div class="table table-responsive-xxl">
-<table class = "table table-hover">
-    <tr>
-        <th scope="col" style="position: sticky;">Hole</th>
-        {% for hole in player_scores.0 %}
+    <table class="table table-hover">
+        <tr>
+            <th scope="col" style="position: sticky;">Hole</th>
+            {% for hole in player_scores.0 %}
             <th scope="col">{{hole.hole.hole_number}}<sub>{{hole.hole.yards}}</sub></th>
-        {% endfor %}   
-    </tr>
-    <tr>
-        <th scope="col" style="position: sticky;">Par<sub>S.I.</sub></th>
-        {% for hole in player_scores.0 %}
+            {% endfor %}
+        </tr>
+        <tr>
+            <th scope="col" style="position: sticky;">Par<sub>S.I.</sub></th>
+            {% for hole in player_scores.0 %}
             <th scope="col">{{hole.hole.par}}<sub>{{hole.hole.stroke_index}}</sub></th>
-        {% endfor %}   
-    </tr>
-    {% for player in player_scores %}
+            {% endfor %}
+        </tr>
+        {% for player in player_scores %}
         <tr>
             <th scope="row" style="position: sticky;">{{player.0.player.first_name}}</th>
             {% for score in player %}
@@ -41,20 +47,21 @@
             </td>
             {% endfor %}
         </tr>
-    {% endfor %}
-    <tr>
-        <th></th>
-        
-        {% for hole in player_scores.0 %}
-        <td>
-        <a class='btn' href={% url 'edit_scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number hole=hole.hole.id %}>
-            Edit
-        </a> 
-        </td>
         {% endfor %}
-    
-    </tr>
-</table>
+        <tr>
+            <th></th>
+
+            {% for hole in player_scores.0 %}
+            <td>
+                <a class='btn' href={% url 'edit_scores' tournament=tournament holiday=holiday.slug
+                    selected_round=selected_round.round_number hole=hole.hole.id %}>
+                    Edit
+                </a>
+            </td>
+            {% endfor %}
+
+        </tr>
+    </table>
 </div>
 
 {% endblock content %}
