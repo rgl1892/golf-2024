@@ -44,8 +44,20 @@ class RoundsView(View):
             slug=holiday, tournament=selected_tournament)
         holiday_filter = selected_holiday.get()
         rounds = GolfRound.objects.filter(holiday=holiday_filter)
+        rounds_id = rounds.values('id')
+        
+        
+        for round_id in rounds_id:
+            scores = Score.objects.filter(golf_round=round_id['id'])
+            print(scores)
 
-        return render(request, self.template_name, {'holiday': holiday_filter, 'rounds': rounds, 'tournament': tournament})
+        
+        context = {
+            'holiday': holiday_filter,
+            'rounds': rounds,
+            'tournament': tournament}
+
+        return render(request, self.template_name, context)
 
 
 class ScoresView(View):
@@ -127,7 +139,7 @@ class ScoresView(View):
         course = Course.objects.filter(id=Hole.objects.filter(
             id=request.POST['hole']).values()[0]['course_id'])
 
-        # Get data on the course to calutale stableford points
+        # Get data on the course to calculate stableford points
         slope_rating = course.values()[0]['slope_rating']
         course_rating = course.values()[0]['course_rating']
         hole_played = Hole.objects.filter(id=request.POST['hole']).values()[0]
