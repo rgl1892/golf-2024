@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Tournament, Holiday, GolfRound, Score, Player, Hole, Handicap, Course
+from .models import Tournament, Holiday, GolfRound, Score, Player, Hole, Handicap, Course,Resort
 from django.views.generic import View
 from django.http import HttpResponse
 import math
@@ -45,17 +45,20 @@ class RoundsView(View):
         holiday_filter = selected_holiday.get()
         rounds = GolfRound.objects.filter(holiday=holiday_filter)
         rounds_id = rounds.values('id')
-        
+        resort = Resort.objects.filter(holiday=holiday_filter)
+        courses = Course.objects.filter(resort=resort.get())
+        print(courses)
         
         for round_id in rounds_id:
             scores = Score.objects.filter(golf_round=round_id['id'])
-            print(scores)
+            # print(scores)
 
         
         context = {
             'holiday': holiday_filter,
             'rounds': rounds,
-            'tournament': tournament}
+            'tournament': tournament,
+            'courses':courses}
 
         return render(request, self.template_name, context)
 
