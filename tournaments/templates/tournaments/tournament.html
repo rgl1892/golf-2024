@@ -1,23 +1,89 @@
-{% extends 'tournaments/base.html' %}
-{% block content %}
-
+{% extends 'tournaments/base.html' %} {% block content %}
 
 <h1>{{selected_tournament}}</h1>
 <div class="container">
-    <div class="row">
-        <div class="col col-md-3">
-            <ul class="list-group">
-                {% for holiday in holidays %}
+  <div class="row">
+    <div class="col col-md-3">
+      <ul class="list-group">
+        {% for holiday in holidays %}
 
+        <a
+          class="list-group-item list-group-item-action"
+          href="{% url 'rounds' tournament=tournament holiday=holiday.slug %}"
+          >Holiday {{holiday.holiday_number}}</a
+        >
 
-                <a class="list-group-item list-group-item-action"
-                    href="{% url 'rounds' tournament=tournament holiday=holiday.slug %}">Holiday
-                    {{holiday.holiday_number}}</a>
-
-
-                {% endfor %}
-            </ul>
-        </div>
+        {% endfor %}
+      </ul>
     </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <!--  Modal trigger button  -->
+      <button
+        type="button"
+        class="btn btn-warning btn-lg text-nowrap my-3"
+        data-bs-toggle="modal"
+        data-bs-target="#modalId"
+      >
+        New Holiday
+      </button>
+
+      <!-- Modal Body-->
+      <div
+        class="modal fade"
+        id="modalId"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="modalTitleId"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <form action="{% url 'tournament' tournament %}" method="post">
+            {% csrf_token %}
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId">New holiday</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container-fluid">
+                  <div class="mb-3">
+                    <select
+                      class="form-select form-select-lg"
+                      name="resort"
+                      id="select"
+                    >
+                      <option selected>Resort</option>
+                      {% for resort in resorts %}
+                      <option value="{{resort}}">
+                        {{resort.name}}
+                      </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock content%}
 </div>
-{% endblock content%}

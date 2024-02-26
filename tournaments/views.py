@@ -28,8 +28,32 @@ class TournamentView(View):
     def get(self, request, tournament):
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
         holidays = Holiday.objects.filter(tournament=selected_tournament)
+        resorts = Resort.objects.all()
 
-        return render(request, self.template_name, {'holidays': holidays, 'tournament': tournament, 'selected_tournament': selected_tournament})
+        context = {
+            'holidays': holidays,
+            'tournament': tournament,
+            'selected_tournament': selected_tournament,
+            'resorts':resorts}
+
+        return render(request, self.template_name, context)
+    
+    def post(self, request, tournament):
+        print(request.POST)
+        selected_tournament = Tournament.objects.filter(slug=tournament).get()
+        holidays = Holiday.objects.filter(tournament=selected_tournament)
+        holiday_number = holidays.order_by('holiday_number').values_list('holiday_number').last()[0] + 1
+        print(holiday_number)
+        # Holiday.objects.create()
+        resorts = Resort.objects.all()
+
+        context = {
+            'holidays': holidays,
+            'tournament': tournament,
+            'selected_tournament': selected_tournament,
+            'resorts':resorts}
+
+        return render(request, self.template_name, context)
 
 
 class RoundsView(View):
