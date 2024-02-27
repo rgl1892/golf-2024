@@ -29,6 +29,10 @@ class TournamentView(View):
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
         holidays = Holiday.objects.filter(tournament=selected_tournament)
         resorts = Resort.objects.all()
+        player_by_handicap = Handicap.objects.all().order_by('-holiday__holiday_number')
+        players = Handicap.objects.distinct()
+
+        print(players)
 
         context = {
             'holidays': holidays,
@@ -73,6 +77,7 @@ class RoundsView(View):
         courses = Course.objects.filter(resort=resort.get())
         players = Player.objects.all()
         
+
         for round_id in rounds_id:
             scores = Score.objects.filter(golf_round=round_id['id'])
             # print(scores)
