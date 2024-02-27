@@ -31,8 +31,17 @@
                 <div class="edit-score edit-score-name">{{score.player.first_name}}:</div>
             </div>
             <div class="col-1">
-                <div class="edit-score edit-score-value"><input class="edit-score-value" type="text"
-                        value={{score.strokes}} id="{{score.hole.hole_number}}" name="{{score.player.id}}"></div>
+                <div class="edit-score edit-score-value">
+                    <input class="edit-score-value" type="text"
+                        value=
+                        {% if score.strokes == None %}
+                        ""
+                        {% else %}
+                        {{score.strokes}} 
+                        {% endif %}
+                        {{score.strokes}} 
+                        id="{{score.hole.hole_number}}" name="{{score.player.id}}">
+                    </div>
             </div>
         </div>
         {% endif %}

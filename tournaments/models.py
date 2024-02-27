@@ -76,7 +76,7 @@ class Score(models.Model):
     hole = models.ForeignKey(Hole,on_delete=models.CASCADE)
     
     golf_round = models.ForeignKey(GolfRound,on_delete=models.CASCADE)
-    strokes = models.IntegerField()
+    strokes = models.IntegerField(blank=True,null=True)
     stableford_score = models.IntegerField(blank=True,null=True)
     sandy = models.BooleanField(default=False)
     handicap = models.ForeignKey(Handicap,on_delete=models.CASCADE,blank=True,null=True)

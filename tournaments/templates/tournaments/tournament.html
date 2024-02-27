@@ -8,10 +8,11 @@
         {% for holiday in holidays %}
 
         <a
-          class="list-group-item list-group-item-action"
+          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
           href="{% url 'rounds' tournament=tournament holiday=holiday.slug %}"
           >Holiday {{holiday.holiday_number}}</a
         >
+        
 
         {% endfor %}
       </ul>
@@ -61,7 +62,7 @@
                     >
                       <option selected>Resort</option>
                       {% for resort in resorts %}
-                      <option value="{{resort}}">
+                      <option value="{{resort.id}}">
                         {{resort.name}}
                       </option>
                       {% endfor %}
