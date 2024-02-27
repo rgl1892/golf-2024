@@ -1,14 +1,22 @@
 {% extends 'tournaments/base.html' %}
 {% block content %}
 
+{% load static %}
+<script src="{% static 'tournaments/js/d3.v7.js' %}" ></script>
+<script id="hello-data" type="application/json">{"lat": {{lat}},"long":{{long}}}</script>
+<script  type="module" src="{% static 'tournaments/js/weather.js' %}" defer data-username="37"></script>
+
 <div class="container">
     <div class="row">
-        <div class="col-5">
+        <div class="col-6">
             <h1>Rounds</h1>
             <h1>{{holiday}}</h1>
         </div>
-        <div class="col-6 position-relative" >
-                    
+        
+        <div class="col-6 d-flex flex-column align-items-end">
+            <h4>{{weather.0.current.temperature_2m}}<sup>o</sup>C</h4>
+            <h4>{{weather.1}}</h4>
+
         </div>
     </div>
 </div>

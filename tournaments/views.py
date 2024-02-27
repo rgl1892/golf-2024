@@ -3,9 +3,21 @@ from .models import Tournament, Holiday, GolfRound, Score, Player, Hole, Handica
 from django.views.generic import View
 from django.http import HttpResponse
 import math
+import requests
 
 
 # Create your views here.
+def getWeather(lat,long):
+    weather_codes = {'0':'Clear sky','1':'Mainly Clear ☀️','2':'Partly Cloudy','3':'Overcast','45':'Fog','48':'Depositing Rime Fog',
+                     '51':'Light Drizzle','53':'Moderate Drizzle','55':'Dense Drizzle','56':'Light Freezing Dizzle','57':'Dense Freezing Drizzle',
+                     '61':'Slight Rain','63':'Moderate Rain','65':'Heavy Rain','66':'Light Freezing Rain','67':'Heavy Freezing Rain',
+                     '71':'Slight Snowfall','73':'Moderate Snowfall','75':'Heavy Snowfall','77':'Snow Grains','80':'Slight Rain Showers',
+                     '81':'Moderate Rain Showers','82':'Violent Rain Showers','85':'Sight Snow Showers','95':'Slight Thunderstorms','96':'Moderate Thunderstorms',
+                     '99':'Thunderstorms with hail'}
+   
+    weather = requests.request("GET",f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={long}&current=temperature_2m,weather_code").json()
+    return [weather,weather_codes[f'{weather['current']['weather_code']}']]
+
 
 class Home(View):
 
@@ -16,7 +28,10 @@ class Home(View):
 
     def get(self, request):
         tournaments = Tournament.objects.all()
-        return render(request, self.template_name, {'tournaments': tournaments})
+        context = {
+            'tournaments': tournaments,
+            }
+        return render(request, self.template_name, context)
 
 
 class TournamentView(View):
@@ -73,6 +88,12 @@ class RoundsView(View):
         courses = Course.objects.filter(resort=resort.get())
         players = Player.objects.all()
         
+        resort = Resort.objects.filter(holiday=selected_holiday.get())
+
+        print(resort[0])
+        print(resort[0].latitude)
+        print(resort[0].longitude)
+
         for round_id in rounds_id:
             scores = Score.objects.filter(golf_round=round_id['id'])
             # print(scores)
@@ -83,7 +104,10 @@ class RoundsView(View):
             'rounds': rounds,
             'tournament': tournament,
             'courses':courses,
-            'players':players}
+            'players':players,
+            'lat':resort[0].latitude,
+            'long':resort[0].longitude,
+            'weather':getWeather(resort[0].latitude,resort[0].longitude)}
 
         return render(request, self.template_name, context)
 

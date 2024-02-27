@@ -21,6 +21,8 @@ class Player(models.Model):
 class Resort(models.Model):
     name = models.CharField(max_length=20)
     country = models.CharField(max_length=20)
+    latitude = models.DecimalField(decimal_places=6,max_digits=9)
+    longitude = models.DecimalField(decimal_places=6,max_digits=9)
 
     def __str__(self) -> str:
         return f"{self.name}"
