@@ -94,10 +94,6 @@ class RoundsView(View):
         
         resort = Resort.objects.filter(holiday=selected_holiday.get())
 
-        print(resort[0])
-        print(resort[0].latitude)
-        print(resort[0].longitude)
-
         for round_id in rounds_id:
             scores = Score.objects.filter(golf_round=round_id['id'])
             # print(scores)

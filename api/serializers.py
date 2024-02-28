@@ -15,5 +15,5 @@ class HoleSerializer(serializers.ModelSerializer):
 class ScoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Score
-        fields =['strokes','hole','player','sandy']
+        fields =['strokes','hole','player','sandy','stableford_score','golf_round']
         depth = 1
