@@ -45,15 +45,25 @@ class TournamentView(View):
         holidays = Holiday.objects.filter(tournament=selected_tournament)
         resorts = Resort.objects.all()
         player_by_handicap = Handicap.objects.all().order_by('-holiday__holiday_number')
-        players = Handicap.objects.distinct()
+        players = Player.objects.all()
 
-        print(players)
+        def catch(player):
+            try:
+                return Handicap.objects.filter(player=player).order_by('-holiday__holiday_number')[0].handicap_index
+            except:
+                return ""
+
+        player_list = [[player, catch(player)] for player in players]
+            
+        print(player_list)
+        
 
         context = {
             'holidays': holidays,
             'tournament': tournament,
             'selected_tournament': selected_tournament,
-            'resorts':resorts}
+            'resorts':resorts,
+            'players':player_list}
 
         return render(request, self.template_name, context)
     
@@ -62,7 +72,7 @@ class TournamentView(View):
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
         holidays = Holiday.objects.filter(tournament=selected_tournament)
         holiday_number = holidays.order_by('holiday_number').values_list('holiday_number').last()[0] + 1
-        print(holiday_number)
+        
         Holiday.objects.create(resort=Resort.objects.filter(id=request.POST['resort'])[0],tournament=selected_tournament,holiday_number=holiday_number,slug=f"{request.POST['resort']}-{holiday_number}")
         resorts = Resort.objects.all()
 

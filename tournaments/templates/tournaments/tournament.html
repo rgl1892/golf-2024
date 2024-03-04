@@ -57,7 +57,7 @@
                       name="resort"
                       id="select"
                     >
-                      <option selected>Resort</option>
+                      
                       {% for resort in resorts %}
                       <option value="{{resort.id}}">
                         {{resort.name}}
@@ -65,6 +65,17 @@
                       {% endfor %}
                     </select>
                   </div>
+                  {% for player in  players%}
+                  <div class="form-check">
+                    
+                    <input type="checkbox" class="form-check-input" id="player_name" value="{{player.0}}" name="selected">
+                    <label for="player_name" class="form-check-label">{{player.0}}</label>
+
+                    <input type="text" name="{{player.0}}_handi" value="{{player.1}}" id="">
+                    
+
+                  </div>
+                  {% endfor %}
                 </div>
               </div>
               <div class="modal-footer">
