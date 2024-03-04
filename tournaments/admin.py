@@ -9,7 +9,7 @@ class TournamentAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug":["name"]}
 
 class HolidayAdmin(admin.ModelAdmin):
-    list_display = ["resort","tournament","holiday_number"]
+    list_display = ["resort","tournament","holiday_number","id"]
     prepopulated_fields = {"slug":["resort","holiday_number"]}
     
     

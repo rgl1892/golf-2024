@@ -29,3 +29,7 @@ body {
 .btn-outline-warning {
   margin-top: 5px;
 }
+.input-group-text{
+  color: #247116;
+  width: 150px;
+}

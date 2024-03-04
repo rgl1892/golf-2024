@@ -7,10 +7,8 @@
       <ul class="list-group">
         {% for holiday in holidays %}
 
-        <a
-          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-          href="{% url 'rounds' tournament=tournament holiday=holiday.slug %}"
-          >Holiday {{holiday.holiday_number}}</a>
+        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+          href="{% url 'rounds' tournament=tournament holiday=holiday.slug %}">Holiday {{holiday.holiday_number}}</a>
         {% endfor %}
       </ul>
     </div>
@@ -18,46 +16,27 @@
   <div class="row">
     <div class="col">
       <!--  Modal trigger button  -->
-      <button
-        type="button"
-        class="btn btn-warning btn-lg text-nowrap my-3"
-        data-bs-toggle="modal"
-        data-bs-target="#modalId"
-      >
+      <button type="button" class="btn btn-warning btn-lg text-nowrap my-3" data-bs-toggle="modal"
+        data-bs-target="#modalId">
         New Holiday
       </button>
 
       <!-- Modal Body-->
-      <div
-        class="modal fade"
-        id="modalId"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="modalTitleId"
-        aria-hidden="true"
-      >
+      <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
           <form action="{% url 'tournament' tournament %}" method="post">
             {% csrf_token %}
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="modalTitleId">New holiday</h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
                 <div class="container-fluid">
                   <div class="mb-3">
-                    <select
-                      class="form-select form-select-lg"
-                      name="resort"
-                      id="select"
-                    >
-                      
+                    <select class="form-select form-select-lg" name="resort" id="select">
+
                       {% for resort in resorts %}
                       <option value="{{resort.id}}">
                         {{resort.name}}
@@ -65,25 +44,55 @@
                       {% endfor %}
                     </select>
                   </div>
-                  {% for player in  players%}
-                  <div class="form-check">
-                    
-                    <input type="checkbox" class="form-check-input" id="player_name" value="{{player.0}}" name="selected">
-                    <label for="player_name" class="form-check-label">{{player.0}}</label>
+                  {% for player in players%}
 
-                    <input type="text" name="{{player.0}}_handi" value="{{player.1}}" id="">
-                    
+                  <div class="input-group mb-3">
+                    <div class="input-group-text">
+                      <input type="checkbox" class="form-check-input m-2" id="{{player.0}}" value="{{player.0.id}}"
+                        name="selected_{{forloop.counter}}" onclick="ckChange(this)">
+                      <label for="{{player.0}}" class="form-check-label">{{player.0}}</label>
+                    </div>
+                    <input type="text" name="selected_{{forloop.counter}}" value="{{player.1}}"
+                      id="{{player.0}}_handicap" class="input-group-text">
+
 
                   </div>
                   {% endfor %}
+                  <script>
+                    var array_of_ticked = [];
+                    var out = "";
+                    function ckChange(ckType) {
+                      var boxes = document.getElementsByName(ckType.name);
+                      var checked = document.getElementById(ckType.id);
+                      var just_checkboxes = document.querySelectorAll('input[type=checkbox]');
+                      // checked.setAttribute("disabled","")
+                      if (!array_of_ticked.includes(checked)) {
+                        array_of_ticked.push(checked);
+                      }
+                      else {
+                        let index = array_of_ticked.indexOf(checked);
+                        array_of_ticked.splice(index, 1);
+                      }
+                      if (array_of_ticked.length == 4) {
+                        for (let i = 0; i <= just_checkboxes.length; i++) {
+                          if (!array_of_ticked.includes(just_checkboxes[i])) {
+                            out = just_checkboxes[i];
+                            document.getElementById(out.id).setAttribute("disabled", "");
+                            document.getElementById(`${out.id}_handicap`).setAttribute("disabled", "");
+                            return out;
+                          }
+                        }
+                      }
+                      if (array_of_ticked.length != 4 && out != "") {
+                        document.getElementById(out.id).removeAttribute("disabled", "");
+                        document.getElementById(`${out.id}_handicap`).removeAttribute("disabled", "");
+                      }
+                    }
+                  </script>
                 </div>
               </div>
               <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                   Close
                 </button>
                 <button type="submit" class="btn btn-primary">Save</button>

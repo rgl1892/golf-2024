@@ -39,23 +39,22 @@ class TournamentView(View):
     """Lists all the holidays within a tournament"""
 
     template_name = 'tournaments/tournament.html'
+    def catch(self,player):
+            try:
+                return Handicap.objects.filter(player=player).order_by('-holiday__holiday_number')[0].handicap_index
+            except:
+                return ""
+            
 
     def get(self, request, tournament):
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
         holidays = Holiday.objects.filter(tournament=selected_tournament)
         resorts = Resort.objects.all()
         player_by_handicap = Handicap.objects.all().order_by('-holiday__holiday_number')
+
         players = Player.objects.all()
-
-        def catch(player):
-            try:
-                return Handicap.objects.filter(player=player).order_by('-holiday__holiday_number')[0].handicap_index
-            except:
-                return ""
-
-        player_list = [[player, catch(player)] for player in players]
+        player_list = [[player, self.catch(player)] for player in players]
             
-        print(player_list)
         
 
         context = {
@@ -68,19 +67,28 @@ class TournamentView(View):
         return render(request, self.template_name, context)
     
     def post(self, request, tournament):
-        print(request.POST)
+        
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
         holidays = Holiday.objects.filter(tournament=selected_tournament)
         holiday_number = holidays.order_by('holiday_number').values_list('holiday_number').last()[0] + 1
-        
         Holiday.objects.create(resort=Resort.objects.filter(id=request.POST['resort'])[0],tournament=selected_tournament,holiday_number=holiday_number,slug=f"{request.POST['resort']}-{holiday_number}")
+        new_hol = holidays.order_by('holiday_number').last()
+
+        for element in request.POST:
+            if len(request.POST.getlist(element)) == 2:
+                player = Player.objects.filter(id=request.POST.getlist(element)[0]).get()
+                Handicap.objects.create(player=player,handicap_index=request.POST.getlist(element)[1],holiday=new_hol)
+        
         resorts = Resort.objects.all()
+        players = Player.objects.all()
+        player_list = [[player, self.catch(player)] for player in players]
 
         context = {
             'holidays': holidays,
             'tournament': tournament,
             'selected_tournament': selected_tournament,
-            'resorts':resorts}
+            'resorts':resorts,
+            'players':player_list}
 
         return render(request, self.template_name, context)
 
@@ -100,7 +108,7 @@ class RoundsView(View):
         rounds_id = rounds.values('id')
         resort = Resort.objects.filter(holiday=holiday_filter)
         courses = Course.objects.filter(resort=resort.get())
-        players = Player.objects.all()
+        players = Handicap.objects.filter(holiday=holiday_filter)
         
         resort = Resort.objects.filter(holiday=selected_holiday.get())
 
@@ -120,6 +128,38 @@ class RoundsView(View):
             'weather':getWeather(resort[0].latitude,resort[0].longitude)}
 
         return render(request, self.template_name, context)
+    
+    def post(self, request, tournament, holiday):
+
+        selected_tournament = Tournament.objects.filter(slug=tournament).get()
+        selected_holiday = Holiday.objects.filter(
+            slug=holiday, tournament=selected_tournament)
+        holiday_filter = selected_holiday.get()
+        rounds = GolfRound.objects.filter(holiday=holiday_filter)
+        rounds_id = rounds.values('id')
+        resort = Resort.objects.filter(holiday=holiday_filter)
+        courses = Course.objects.filter(resort=resort.get())
+        players = Handicap.objects.filter(holiday=holiday_filter)
+        
+        resort = Resort.objects.filter(holiday=selected_holiday.get())
+
+        for round_id in rounds_id:
+            scores = Score.objects.filter(golf_round=round_id['id'])
+            # print(scores)
+
+        
+        context = {
+            'holiday': holiday_filter,
+            'rounds': rounds,
+            'tournament': tournament,
+            'courses':courses,
+            'players':players,
+            'lat':resort[0].latitude,
+            'long':resort[0].longitude,
+            'weather':getWeather(resort[0].latitude,resort[0].longitude)}
+
+        return render(request, self.template_name, context)
+    
 
 
 class ScoresView(View):
