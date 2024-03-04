@@ -16,7 +16,7 @@ def getWeather(lat,long):
                      '99':'Thunderstorms with hail'}
    
     weather = requests.request("GET",f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={long}&current=temperature_2m,weather_code").json()
-    return [weather,weather_codes[f'{weather['current']['weather_code']}']]
+    return [weather,weather_codes[f"{weather['current']['weather_code']}"]]
 
 
 class Home(View):
