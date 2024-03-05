@@ -18,6 +18,13 @@ def getWeather(lat,long):
     weather = requests.request("GET",f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={long}&current=temperature_2m,weather_code").json()
     return [weather,weather_codes[f"{weather['current']['weather_code']}"]]
 
+test_player = Player.objects.filter(id=1).get()
+test_golf_round = GolfRound.objects.filter(id=1).get()
+def getPlayerScore(golf_round,player):
+    scores = Score.objects.filter(player=player,golf_round=golf_round)
+    stableford = sum([score.stableford_score for score in scores])
+    return stableford
+
 
 class Home(View):
 
@@ -44,7 +51,7 @@ class TournamentView(View):
                 return Handicap.objects.filter(player=player).order_by('-holiday__holiday_number')[0].handicap_index
             except:
                 return ""
-            
+    
 
     def get(self, request, tournament):
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
@@ -54,15 +61,28 @@ class TournamentView(View):
 
         players = Player.objects.all()
         player_list = [[player, self.catch(player)] for player in players]
-            
-        
 
+        scores = Score.objects.all()
+        rounds = GolfRound.objects.all()
+
+        holiday_set = []
+        for holiday in holidays:
+            data = []
+            for player in Handicap.objects.filter(holiday=holiday).order_by('player__first_name'):
+                top_scores = []
+                for golf_round in rounds.filter(holiday=holiday):
+                    top_scores.append(getPlayerScore(golf_round,player.player))
+                top_3 = sorted(top_scores)
+                data.append([player.player,top_scores,sum(top_3[-3:])])      
+            holiday_set.append([player.holiday,data])
+        
         context = {
             'holidays': holidays,
             'tournament': tournament,
             'selected_tournament': selected_tournament,
             'resorts':resorts,
-            'players':player_list}
+            'players':player_list,
+            'holiday_set':holiday_set}
 
         return render(request, self.template_name, context)
     

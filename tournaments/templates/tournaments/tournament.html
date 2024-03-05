@@ -3,12 +3,22 @@
 <h1>{{selected_tournament}}</h1>
 <div class="container">
   <div class="row">
-    <div class="col col-md-3">
+    <div class="col col-md-6">
       <ul class="list-group">
-        {% for holiday in holidays %}
+        {% for holiday in holiday_set %}
 
-        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-          href="{% url 'rounds' tournament=tournament holiday=holiday.slug %}">Holiday {{holiday.holiday_number}}</a>
+        <a class="list-group-item list-group-item-action "
+          href="{% url 'rounds' tournament=tournament holiday=holiday.0.slug %}">
+
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="d-flex align-items-center me-2">{{holiday.0.resort}}</h5>
+            {% for player in holiday.1 %}
+              <small class="b-1">{{player.0.first_name}} {{player.0.last_name|first}}<br>Best : {{player.2}}<br> {% for score in player.1 %}
+                {{score}}
+                {% endfor %} </small>
+            {% endfor %}
+          </div>
+        </a>
         {% endfor %}
       </ul>
     </div>
