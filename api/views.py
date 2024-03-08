@@ -27,7 +27,7 @@ class Scores(generics.ListAPIView):
     serializer_class = ScoreSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['strokes','hole','player','sandy','stableford_score','hole__course','golf_round__holiday','golf_round__round_number','player__id']
+    filterset_fields = ['strokes','hole','player','sandy','stableford_score','hole__course','golf_round__holiday','golf_round__round_number','player__id','golf_round__id']
 
     def get_queryset(self):
         user = self.request.user

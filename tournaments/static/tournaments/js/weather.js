@@ -2,7 +2,6 @@ const value = JSON.parse(document.getElementById('hello-data').textContent);
 
 const data = await d3.json(`https://api.open-meteo.com/v1/forecast?latitude=${value.lat}&longitude=${value.long}&hourly=temperature_2m&forecast_days=1`);
 const fixed = d3.transpose([data.hourly.time,data.hourly.temperature_2m]);
-console.log(fixed);
 
 function plot() {
     var margin = { top: 10, right: 30, bottom: 20, left: 0 },

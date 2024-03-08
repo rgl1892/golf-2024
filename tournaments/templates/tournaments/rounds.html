@@ -18,7 +18,7 @@
             <h4>{{weather.0.current.temperature_2m}}<sup>o</sup>C</h4>
             <h4>{{weather.1}}</h4>
             <plot>
-            <script  type="module" src="{% static 'tournaments/js/weather.js' %}" defer data-username="37"></script>
+            <script  type="module" src="{% static 'tournaments/js/weather.js' %}"></script>
             </plot>
         </div>
     </div>
@@ -99,6 +99,7 @@
                             <h5 class="modal-title" id="modalTitleId">
                                 New round for {{holiday}}
                             </h5>
+                            
                             <button
                                 type="button"
                                 class="btn-close"
@@ -106,17 +107,19 @@
                                 aria-label="Close"
                             ></button>
                         </div>
+                        <form action="{% url 'rounds' tournament=tournament holiday=holiday.slug %}" method="post">
+                            {% csrf_token %}
                         <div class="modal-body">
                             <div class="container-fluid">
                             <div class="mb-3">
                                 <select
                                     class="form-select form-select-lg"
-                                    name=""
-                                    id=""
+                                    name="course"
+                                    
                                 >
-                                    <option selected>Course</option>
+                                    
                                     {% for course in courses %}
-                                    <option value="{{course}}" name="course">{{course.course_name}} {{course.tee}}</option>
+                                    <option value="{{course.id}}" name="course">{{course.course_name}} {{course.tee}}</option>
                                     {% endfor %}
                                 </select>
                                 
@@ -125,6 +128,7 @@
                             
                             </div>
                         </div>
+                    
                         <div class="modal-footer">
                             <button
                                 type="button"
@@ -133,8 +137,9 @@
                             >
                                 Close
                             </button>
-                            <button type="button" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
                         </div>
+                    </form>
                     </div>
                 </div>
             </div>

@@ -2,6 +2,10 @@
 
 {% block title %}{{player_scores.0.0.hole.course}}{% endblock %}
 {% block content %}
+{% load static %}
+{{player_scores.0.0.golf_round.holiday.id}}
+<script src="{% static 'tournaments/js/d3.v7.js' %}" ></script>
+<script id="hello-data" type="application/json">{"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
 
 <h1>Scores</h1>
 <div class="row">
@@ -92,5 +96,9 @@
         </tr>
     </table>
 </div>
-
+<div class="row">
+    <div class="col">
+        <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
+    </div>
+</div>
 {% endblock content %}
