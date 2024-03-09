@@ -30,7 +30,18 @@
             <div class="col-6 col-lg-1">
                 <div class="edit-score edit-score-name">{{score.player.first_name}}:</div>
             </div>
-            <div class="col-1">
+            <div class="col">
+                <div class="input-group mb-3">
+                    <div class="input-group-text">
+                      <input type="checkbox" class="form-check-input m-2" id="{{player.0}}" value="{{player.0.id}}"
+                        name="selected_{{forloop.counter}}" onclick="ckChange(this)">
+                      <label for="{{player.0}}" class="form-check-label">{{player.0}}</label>
+                    </div>
+                    <input type="text" name="selected_{{forloop.counter}}" value="{{player.1}}"
+                      id="{{player.0}}_handicap" class="input-group-text">
+
+
+                  </div>
                 <div class="edit-score edit-score-value">
                     <input class="edit-score-value" type="text"
                         value=
@@ -41,6 +52,12 @@
                         {% endif %}
                         {{score.strokes}} 
                         id="{{score.hole.hole_number}}" name="{{score.player.id}}">
+                        
+                            <input class="form-check-input" type="checkbox" value="" id="" />
+                            <label class="form-check-label" for=""> Default checkbox </label>
+                        
+                        
+                        
                     </div>
             </div>
         </div>
