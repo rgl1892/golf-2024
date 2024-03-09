@@ -33,3 +33,10 @@ body {
   color: #247116;
   width: 150px;
 }
+.input-group-text-check{
+  width: fit-content ;
+}
+.sandy {
+  background-color: red !important;
+  
+}

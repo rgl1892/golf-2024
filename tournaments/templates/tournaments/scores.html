@@ -69,12 +69,13 @@
         <tr>
             <th scope="row" style="position: sticky;">{{player.0.player.first_name}}</th>
             {% for score in player %}
+            
             {% if score.strokes == None %}
             <td>
                 
             </td>
             {% else %}
-            <td>
+            <td class={% if score.sandy %}"sandy"{% endif %}>
                 {{score.strokes}}<sub>{{score.stableford_score}}</sub>
             </td>
             {% endif %}
