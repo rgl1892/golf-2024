@@ -66,7 +66,7 @@
             {% endfor %}
         </tr>
         {% for player in player_scores %}
-        <tr>
+        <tr class="table align-middle">
             <th scope="row" style="position: sticky;">{{player.0.player.first_name}}</th>
             {% for score in player %}
             
@@ -75,8 +75,8 @@
                 
             </td>
             {% else %}
-            <td class={% if score.sandy %}"sandy"{% endif %}>
-                {{score.strokes}}<sub>{{score.stableford_score}}</sub>
+            <td>
+                {{score.strokes}}<sub>{{score.stableford_score}}</sub><span class="sandy" {% if score.sandy %} {% else %} hidden {% endif %}></span>
             </td>
             {% endif %}
             {% endfor %}

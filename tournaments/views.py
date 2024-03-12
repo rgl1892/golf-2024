@@ -305,8 +305,19 @@ class ScoresView(View):
             except:
                 points = 0
 
-            scores.filter(player=player['player_id'], hole=request.POST['hole']).update(
-                stableford_score=points)
+            print(request.POST)
+            try:
+                if int(request.POST['sandy']) == int(player['player_id']):
+                    scores.filter(player=player['player_id'], hole=request.POST['hole']).update(
+                stableford_score=points,sandy=1)
+                else:
+                    scores.filter(player=player['player_id'], hole=request.POST['hole']).update(
+                stableford_score=points,sandy=0)
+                
+            except:
+                scores.filter(player=player['player_id'], hole=request.POST['hole']).update(
+                stableford_score=points,sandy=0)
+            
             player_name = Player.objects.filter(
                 id=player['player_id']).values('first_name')[0]['first_name']
 
