@@ -222,6 +222,7 @@ class ScoresView(View):
             hole=scores.values()[0]['hole_id']).values()[0]
         slope_rating = selected_course['slope_rating']
         course_rating = selected_course['course_rating']
+        rounds = GolfRound.objects.filter(holiday=holiday_filter)
 
         handicaps = []
         for player in players:
@@ -253,7 +254,8 @@ class ScoresView(View):
             "players": players,
             "hole_numbers": hole_numbers,
             "player_scores": player_scores,
-            "handicaps": handicaps
+            "handicaps": handicaps,
+            "rounds":rounds
         }
 
         return render(request, self.template_name, context)
