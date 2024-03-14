@@ -13,7 +13,8 @@
           <div class="d-flex w-100 justify-content-between">
             <h5 class="d-flex align-items-center me-2">{{holiday.0.resort}}</h5>
             {% for player in holiday.1 %}
-              <small class="b-1">{{player.0.first_name}} {{player.0.last_name|first}}<br>Best : {{player.2}}<br> {% for score in player.1 %}
+              <small class="b-1">{{player.0.first_name}} {{player.0.last_name|first}}<br>Best : {{player.2}}</small>
+                <small class="b-1 d-none d-xl-block">{% for score in player.1 %}
                 {{score}}
                 {% endfor %} </small>
             {% endfor %}

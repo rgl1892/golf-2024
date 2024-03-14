@@ -141,9 +141,20 @@ class RoundsView(View):
         resort = Resort.objects.filter(holiday=holiday_filter)
         courses = Course.objects.filter(resort=resort.get())
         players = Handicap.objects.filter(holiday=holiday_filter)
+        scores = [[player,Score.objects.filter(handicap=player)] for player in players]
         
         resort = Resort.objects.filter(holiday=selected_holiday.get())
-
+        holidays = Holiday.objects.filter(tournament=selected_tournament)
+        holiday_set = []
+        
+        data = []
+        for player in Handicap.objects.filter(holiday=selected_holiday.get()).order_by('player__first_name'):
+            top_scores = []
+            for golf_round in rounds.filter(holiday=selected_holiday.get()):
+                top_scores.append(getPlayerScore(golf_round,player.player))
+            top_3 = sorted(top_scores)
+            data.append([player,top_scores,sum(top_3[-3:])])      
+            
 
         
         context = {
@@ -154,7 +165,8 @@ class RoundsView(View):
             'players':players,
             'lat':resort[0].latitude,
             'long':resort[0].longitude,
-            'weather':getWeather(resort[0].latitude,resort[0].longitude)}
+            'weather':getWeather(resort[0].latitude,resort[0].longitude),
+            'scores':data}
 
         return render(request, self.template_name, context)
     
@@ -373,4 +385,14 @@ class EditScoresView(View):
             "hole": selected_hole,
         }
 
+        return render(request, self.template_name, context)
+
+class StatsView(View):
+
+    template_name ='tournaments/stats.html'
+    def get(self,request):
+        stats = [2]
+        context = {
+            'stats':stats
+        }
         return render(request, self.template_name, context)
