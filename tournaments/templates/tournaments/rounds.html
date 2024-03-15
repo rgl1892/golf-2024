@@ -41,7 +41,6 @@
             </ul>
         </div>
     </div>
-    {{scores.0}}
     <div class="row">
         <div class="col col-md-6">
             <div class="accordion" id="accordionFlushExample">
@@ -67,7 +66,10 @@
                         data-bs-parent="#accordionFlushExample"
                     >
                         <div class="accordion-body">
-                            Index : {{score.0.handicap_index}} <br>Ocks : {{score.0.player.championships}} <br>{{score.1}}
+                            Index : {{score.0.handicap_index}} <br>Ocks : {{score.0.player.championships}} <br>
+                            {% for row in score.1 %}
+                            {{row}}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>

@@ -1,23 +1,24 @@
 var course = '';
-const data = await d3.json(`/api/scores?golf_round__holiday=${course}`);
+var player = '';
+const data = await d3.json(`/api/scores?golf_round__holiday=${course}&player=${player}`);
 
 const page_width = document.getElementById("charts").offsetWidth;
-const graph_width = page_width < 700 ? page_width : page_width*0.49;
+const graph_width = page_width < 700 ? page_width : page_width*0.7;
 
 const max_shots =  d3.max(data, d => d.strokes),
         max_stableford = d3.max(data, d => d.stableford_score),
         strokes_taken = d3.group(data, (d) => d.strokes),
-        furthest_under_par = d3.min(data,function(d){return d.strokes - d.hole.par});
+        furthest_under_par = d3.min(d3.filter(data,(d) => d.strokes > 0 ),function(d){return d.strokes - d.hole.par });
 
 console.log(furthest_under_par);
 
-function plot(dataset,x_domain,modifier) {
+function plot(dataset,x_domain,modifier,id) {
     var margin = { top: 50, right: 50, bottom: 100, left: 50 },
         width = graph_width - margin.left - margin.right ,
-        height = graph_width - margin.top - margin.bottom,
+        height = graph_width/2 - margin.top - margin.bottom,
         bar_width = width/(x_domain[1]-x_domain[0]+2);
     
-    var svg = d3.select('div.chart-1').append('svg')
+    var svg = d3.select(`div.chart-${id}`).append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
       .append('g')
@@ -54,8 +55,7 @@ function plot(dataset,x_domain,modifier) {
                     .text((d,i) => `${d.length}`);
 }
 // plot(d3.bin().value((d) => d.strokes)(data));
-plot(d3.bin().thresholds(max_stableford).value((d) => d.stableford_score)(data),[-1,max_stableford+1],0);
-plot(d3.bin().thresholds(max_shots).value((d) => d.strokes)(data),[0,max_shots+1],2);
-plot(d3.bin().thresholds(8).value((d) => d.strokes-d.hole.par)(data),[-3,6],furthest_under_par);
+plot(d3.bin().thresholds(max_stableford).value((d) => d.stableford_score)(data),[-1,max_stableford+1],0,1);
+plot(d3.bin().thresholds(6).value((d) => d.strokes)(data),[0,max_shots+1],2,2);
+plot(d3.bin().thresholds(4).value((d) => d.strokes-d.hole.par)(d3.filter(data,(d) => d.strokes > 0 )),[-3,7],furthest_under_par,3);
 
-console.log(d3.bin().thresholds(max_shots).value((d) => d.strokes-d.hole.par)(data));
