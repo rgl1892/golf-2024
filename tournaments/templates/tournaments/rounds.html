@@ -67,9 +67,29 @@
                     >
                         <div class="accordion-body">
                             Index : {{score.0.handicap_index}} <br>Ocks : {{score.0.player.championships}} <br>
-                            {% for row in score.1 %}
-                            {{row}}
-                            {% endfor %}
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Round</th>
+                                            <th scope="col">Shots</th>
+                                            <th scope="col">Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for row in score.1 %}
+                                        <tr class="">
+                                            <td scope="row">{{row.0}}</td>
+                                            <td scope="row">{{row.2}}</td>
+                                            <td scope="row">{{row.1}}</td>
+                                            
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            
                         </div>
                     </div>
                 </div>

@@ -50,7 +50,7 @@ function plot(dataset,name) {
                 .attr("width", bar_width)
                 .attr("height", d => y(0)- y(d.strokes-d.hole.par))
 
-                .attr("fill", "#69b3a2CC")
+                .attr("fill", "var(--bs-body-color)")
                 .attr('stroke','grey')
                 .append("svg:title")
                     .text(d => `${d.strokes} shots`);
@@ -65,7 +65,7 @@ function plot(dataset,name) {
                     .attr('y', d => y(0) )
                     .attr("width", bar_width)
                     .attr("height", d => y(0)- y(-d.strokes+d.hole.par))
-                    .attr("fill", "#69b3a2CC")
+                    .attr("fill", "var(--bs-body-color)")
                     .attr('stroke','grey')
                     .append("svg:title")
                         .text(d => `${d.strokes} shots`);

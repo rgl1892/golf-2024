@@ -25,6 +25,11 @@ def getPlayerScore(golf_round,player):
     stableford = sum([score.stableford_score if score.stableford_score != None else 0 for score in scores])
     return stableford
 
+def getPlayerStrokes(golf_round,player):
+    scores = Score.objects.filter(player=player,golf_round=golf_round)
+    strokes = sum([score.strokes if score.strokes != None else 0 for score in scores])
+    return strokes
+
 
 class Home(View):
 
@@ -151,9 +156,9 @@ class RoundsView(View):
         for player in Handicap.objects.filter(holiday=selected_holiday.get()).order_by('player__first_name'):
             top_scores = []
             for golf_round in rounds.filter(holiday=selected_holiday.get()):
-                top_scores.append(getPlayerScore(golf_round,player.player))
-            top_3 = sorted(top_scores)
-            data.append([player,top_scores,sum(top_3[-3:])])      
+                top_scores.append([golf_round.round_number,getPlayerScore(golf_round,player.player),getPlayerStrokes(golf_round,player.player)])
+   
+            data.append([player,top_scores])      
             
 
         
