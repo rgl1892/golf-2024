@@ -18,7 +18,7 @@ function plot() {
                 .domain([0,23])
                 .range([0,width]);
     var y = d3.scaleLinear()
-                .domain([5,25])
+                .domain([5,35])
                 .range([height,0]);
     
     svg.append('g')

@@ -1,27 +1,72 @@
 {% extends 'tournaments/base.html' %}
 {% block content %}
+
+    
+
 {% load static %}
 <script src="{% static 'tournaments/js/d3.v7.js' %}" ></script>
 {% comment %} <script id="hello-data" type="application/json">{"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script> {% endcomment %}
 
 <script type="module" src="{% static 'tournaments/js/stats.js' %}"></script>
 
+
 <div class="row">
-    <div class="col" id="charts">
-        <div class="chart d-flex align-items-center">
-            <h3 class="d-flex align-items-ceter">Stableford</h3>
-            <div class="chart-1 d-flex"></div>
+    <div class="col mb-3">
+        <label for="" class="form-label">Player</label>
+        <select
+            class="form-select form-select-lg"
+            id="player_choice"
+        >
+            <option value="" selected>All</option>
+            {% for player in players %}
+            <option value="{{player.id}}">{{player}}</option>
+            {% endfor %}
+            
+        </select>
+    </div>
+    <div class="col mb-3">
+        <label for="" class="form-label">Player</label>
+        <select
+            class="form-select form-select-lg"
+            id="player_choice"
+        >
+            <option value="" selected>All</option>
+            {% for player in players %}
+            <option value="{{player.id}}">{{player}}</option>
+            {% endfor %}
+            
+        </select>
+    </div>
+    <div class="col mb-3">
+        <label for="" class="form-label">Holiday</label>
+        <select
+            class="form-select form-select-lg"
+            id="player_choice"
+        >
+            <option value="" selected>All</option>
+            {% for player in players %}
+            <option value="{{player.id}}">{{player}}</option>
+            {% endfor %}
+            
+        </select>
+    </div>
+</div>
+<div class="row" id="charts">
+
+        <div class="col-lg-4 col">
+            <p class="">Stableford</p>
+            <div class="chart-1"></div>
         </div>
-        <div class="chart d-flex align-items-center">
-            <h3 class="d-flex align-items-ceter">Shots</h3>
-            <div class="chart-2 d-flex"></div>
+        <div class="col-lg-4">
+            <p class="">Shots</p>
+            <div class="chart-2"></div>
         </div>
-        <div class="chart d-flex align-items-center">
-            <h3 class="d-flex align-items-ceter">To Par</h3>
-            <div class="chart-3 d-flex"></div>
+        <div class="col-lg-4">
+            <p class="">To Par</p>
+            <div class="chart-3"></div>
         </div>
         
-    </div>
+    
 </div>
 
 

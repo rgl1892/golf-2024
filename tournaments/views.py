@@ -397,7 +397,9 @@ class StatsView(View):
     template_name ='tournaments/stats.html'
     def get(self,request):
         stats = [2]
+        players = Player.objects.all()
         context = {
-            'stats':stats
+            'stats':stats,
+            'players':players
         }
         return render(request, self.template_name, context)

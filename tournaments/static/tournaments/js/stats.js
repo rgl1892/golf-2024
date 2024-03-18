@@ -1,21 +1,40 @@
-var course = '2';
+var course = '';
 var player = '';
-const data = await d3.json(`/api/scores?golf_round__holiday=${course}&player=${player}`);
+var data = await d3.json(`/api/scores?golf_round__holiday=${course}&player=${player}`);
+
+
+var val = document.getElementById('player_choice').addEventListener('change',re_plot);
+
+async function getData(){
+    var player = document.getElementById('player_choice').value;
+    var data = await d3.json(`/api/scores?golf_round__holiday=${course}&player=${player}`)
+    return data
+}
+
+function re_plot(){
+    d3.selectAll("svg").remove();
+    var data = getData();
+    data.then((data) => plot_to_par(d3.bin().value((d) => d.strokes - d.hole.par)(d3.filter(data, (d) => d.strokes > 0)), [-3, 5]))
+    data.then((data) => plot(d3.bin().thresholds(max_stableford).value((d) => d.stableford_score)(data),[-1,max_stableford+1],0,1))
+    data.then((data) => plot(d3.bin().thresholds(6).value((d) => d.strokes)(data),[0,max_shots+1],2,2))
+}
+
 
 const page_width = document.getElementById("charts").offsetWidth;
-const graph_width = page_width < 700 ? page_width : page_width*0.7;
+console.log(page_width);
+const graph_width = page_width < 1024 ? page_width : page_width*0.37;
 
 const max_shots =  d3.max(data, d => d.strokes),
         max_stableford = d3.max(data, d => d.stableford_score),
         strokes_taken = d3.group(data, (d) => d.strokes),
         furthest_under_par = d3.min(d3.filter(data,(d) => d.strokes > 0 ),function(d){return d.strokes - d.hole.par });
 
-console.log(furthest_under_par);
 
 function plot(dataset,x_domain,modifier,id) {
+
     var margin = { top: 50, right: 50, bottom: 100, left: 50 },
         width = graph_width - margin.left - margin.right ,
-        height = graph_width/2 - margin.top - margin.bottom,
+        height = graph_width*0.7 - margin.top - margin.bottom,
         bar_width = width/(x_domain[1]-x_domain[0]+2);
     
     var svg = d3.select(`div.chart-${id}`).append('svg')
@@ -55,10 +74,11 @@ function plot(dataset,x_domain,modifier,id) {
                     .text((d,i) => `${d.length}`);
 }
 function plot_to_par(dataset, x_domain) {
-    var margin = { top: 50, right: 50, bottom: 100, left: 50 },
-        width = graph_width - margin.left - margin.right,
-        height = graph_width / 2 - margin.top - margin.bottom,
-        bar_width = width / (x_domain[1] - x_domain[0] + 2);
+
+   var margin = { top: 50, right: 50, bottom: 100, left: 50 },
+        width = graph_width - margin.left - margin.right ,
+        height = graph_width*0.7 - margin.top - margin.bottom,
+        bar_width = width/(x_domain[1]-x_domain[0]+2);
 
     var svg = d3.select(`div.chart-3`).append('svg')
         .attr('width', width + margin.left + margin.right)
@@ -101,9 +121,6 @@ function plot_to_par(dataset, x_domain) {
         .text((d, i) => `${d.length}`);
 }
 
-plot_to_par(d3.bin().value((d) => d.strokes - d.hole.par)(d3.filter(data, (d) => d.strokes > 0)), [-3, 5]);
-// plot(d3.bin().value((d) => d.strokes)(data));
 plot(d3.bin().thresholds(max_stableford).value((d) => d.stableford_score)(data),[-1,max_stableford+1],0,1);
+plot_to_par(d3.bin().value((d) => d.strokes - d.hole.par)(d3.filter(data, (d) => d.strokes > 0)), [-3, 5]);
 plot(d3.bin().thresholds(6).value((d) => d.strokes)(data),[0,max_shots+1],2,2);
-
-
