@@ -7,7 +7,7 @@
 <script src="{% static 'tournaments/js/d3.v7.js' %}" ></script>
 {% comment %} <script id="hello-data" type="application/json">{"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script> {% endcomment %}
 
-<script type="module" src="{% static 'tournaments/js/stats.js' %}"></script>
+<script type="module" src="{% static 'tournaments/js/stats2.js' %}"></script>
 
 
 <div class="row">
@@ -51,9 +51,9 @@
         </select>
     </div>
 </div>
-<div class="row" id="charts">
+<div class="row">
 
-        <div class="col-lg-4 col">
+        <div class="col-lg-4 col" id="charts">
             <p class="">Stableford</p>
             <div class="chart-1"></div>
         </div>
