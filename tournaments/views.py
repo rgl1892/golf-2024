@@ -398,8 +398,10 @@ class StatsView(View):
     def get(self,request):
         stats = [2]
         players = Player.objects.all()
+        holidays = Holiday.objects.all()
         context = {
             'stats':stats,
-            'players':players
+            'players':players,
+            'holidays':holidays
         }
         return render(request, self.template_name, context)

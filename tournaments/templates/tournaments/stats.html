@@ -25,31 +25,19 @@
         </select>
     </div>
     <div class="col mb-3">
-        <label for="" class="form-label">Player</label>
-        <select
-            class="form-select form-select-lg"
-            id="player_choice"
-        >
-            <option value="" selected>All</option>
-            {% for player in players %}
-            <option value="{{player.id}}">{{player}}</option>
-            {% endfor %}
-            
-        </select>
-    </div>
-    <div class="col mb-3">
         <label for="" class="form-label">Holiday</label>
         <select
             class="form-select form-select-lg"
-            id="player_choice"
+            id="holiday_choice"
         >
             <option value="" selected>All</option>
-            {% for player in players %}
-            <option value="{{player.id}}">{{player}}</option>
+            {% for holiday in holidays %}
+            <option value="{{holiday.id}}">{{holiday}}</option>
             {% endfor %}
             
         </select>
     </div>
+    
 </div>
 <div class="row">
 
