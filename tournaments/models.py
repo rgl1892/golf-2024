@@ -85,6 +85,17 @@ class Score(models.Model):
     
 
     def __str__(self):
-        return f"{self.player} {self.hole} Score"
+        return f"{self.player} {self.hole} Score {self.golf_round}"
+
+class Video(models.Model):
+    file = models.FileField(upload_to='')
+    title = models.CharField(max_length=100)
+
+    def __str__(self) -> str:
+            return self.title
+    
+class Highlight(models.Model):
+    video = models.ForeignKey(Video,on_delete=models.CASCADE)
+    hole = models.ForeignKey(Score,on_delete=models.CASCADE,blank=True, null=True)
 
     
