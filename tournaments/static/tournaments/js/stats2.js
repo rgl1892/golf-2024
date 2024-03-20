@@ -5,7 +5,7 @@ var duration = 700;
 var val = document.getElementById('player_choice').addEventListener('change', re_plot);
 var val = document.getElementById('holiday_choice').addEventListener('change', re_plot);
 const page_width = document.getElementById("charts").offsetWidth;
-const graph_width = page_width - 10;
+const graph_width = page_width - 30;
 const thresholds = [-4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 const max_shots = d3.max(data, d => d.strokes),
@@ -16,7 +16,7 @@ const max_shots = d3.max(data, d => d.strokes),
 var margin = { top: 50, right: 50, bottom: 100, left: 50 },
     width = graph_width - margin.left - margin.right,
     height = graph_width * 0.7 - margin.top - margin.bottom,
-    bar_width = 20;
+    bar_width = 40;
 
 
 function plot(dataset,type, id) {
@@ -210,7 +210,7 @@ function change_data(dataset, id, type) {
         .attr('stroke', 'black')
         .attr('transform', `translate(${margin.left},${margin.top})`);
 
-        svg.selectAll('title').remove();
+    svg.selectAll('title').remove();
         
     svg.selectAll('rect').data(dataset).append("svg:title")
         .text((d, i) => `${d.length}`);
@@ -247,9 +247,9 @@ function add_to_par_data(dataset, id) {
         .attr("x", (d, i) =>  x(d[0]['strokes']-d[0]['hole']['par']) - 20 / 2)
         .attr('y', d => y(d.length))
         .attr("width", 20)
-        .attr("height", function (d){d
-            try{d[0]['strokes']>0? y(0) - y(d.length):0}
-            catch{d['strokes']>0? y(0) - y(d.length):0}}) // add try catch for any bins with just one element 
+        .attr("height", function (d){
+            try{ return d[0]['strokes']>0? y(0) - y(d.length):0;}
+            catch{return d['strokes']>0? y(0) - y(d.length):0}}) 
         .attr("fill", "var(--bs-body-color)")
         .attr('stroke', 'black')
         .attr('transform', `translate(${margin.left},${margin.top})`)
