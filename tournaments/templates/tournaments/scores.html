@@ -95,6 +95,7 @@
             {% else %}
             
                 <td>{{score.strokes}}<sub>{{score.stableford_score}}</sub><span class="sandy" title="Sandy"{% if score.sandy %} {% else %} hidden {% endif %}></span>
+                    {% if score.highlight_link.all.0 == None %} {% else %} <a class="navbar-brand" href="{% url 'highlight_view' highlight=score.highlight_link.all.0.id %}">Highlight</a> {% endif %}
                 
             </td>
             {% endif %}
