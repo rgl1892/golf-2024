@@ -93,8 +93,9 @@
                 
             </td>
             {% else %}
-            <td>
-                {{score.strokes}}<sub>{{score.stableford_score}}</sub><span class="sandy" title="Sandy"{% if score.sandy %} {% else %} hidden {% endif %}></span>
+            
+                <td>{{score.strokes}}<sub>{{score.stableford_score}}</sub><span class="sandy" title="Sandy"{% if score.sandy %} {% else %} hidden {% endif %}></span>
+                
             </td>
             {% endif %}
             {% endfor %}

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Tournament, Holiday, GolfRound, Score, Player, Hole, Handicap, Course,Resort
+from .models import Tournament, Holiday, GolfRound, Score, Player, Hole, Handicap, Course,Resort,Video
 from django.views.generic import View
 from django.http import HttpResponse
 import math
@@ -403,5 +403,33 @@ class StatsView(View):
             'stats':stats,
             'players':players,
             'holidays':holidays
+        }
+        return render(request, self.template_name, context)
+    
+class HighlightsHome(View):
+    template_name = 'tournaments/highlights_home.html'
+
+    def get(self,request):
+
+        scores = Score.objects.exclude(highlight_link__isnull=True)
+        videos = Video.objects.all()
+        vid_list = [vid.get().id for vid in [score.highlight_link.all() for score in scores]]       
+        unholed_vids = [vid for vid in videos if vid.id not in vid_list]
+        context = {
+            'scores':scores,
+            'other_vids':unholed_vids
+        }
+        return render(request, self.template_name, context)
+    
+class HighlightView(View):
+    template_name = 'tournaments/highlight.html'
+
+    def get(self,request,highlight):
+        
+        selected_highlight = Video.objects.filter(id=highlight)
+        
+        context = {
+            'highlights':selected_highlight
+            
         }
         return render(request, self.template_name, context)

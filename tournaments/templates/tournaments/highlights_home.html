@@ -1,0 +1,15 @@
+{% extends 'tournaments/base.html' %}
+{% block content %}
+<h2>Highlights for holes</h2>
+{% for score in scores %}
+
+{% for highlight in score.highlight_link.all %}
+<a class="navbar-brand" href="{% url 'highlight_view' highlight=highlight.id %}">{{highlight}} - {{score.player}} on {{score.hole}}. {{score.hole.course.resort.country}}
+</a><br>
+{% endfor %}
+{% endfor %}
+<h2>Other Highlights</h2>
+{% for vid in other_vids%}
+<a class="navbar-brand" href="{% url 'highlight_view' highlight=vid.id %}">{{vid}}</a><br>
+{% endfor %}
+{% endblock content%}

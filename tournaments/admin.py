@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Player, Holiday, Course, Resort,Score,Hole,Handicap,Tournament,GolfRound,Video,Highlight
+from .models import Player, Holiday, Course, Resort,Score,Hole,Handicap,Tournament,GolfRound,Video
 
 # Register your models here.
 
@@ -23,4 +23,3 @@ admin.site.register(Hole)
 admin.site.register(Handicap)
 admin.site.register(Tournament,TournamentAdmin)
 admin.site.register(Video)
-admin.site.register(Highlight)

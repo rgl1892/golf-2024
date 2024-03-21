@@ -1,0 +1,15 @@
+{% extends 'tournaments/base.html'%}
+{% block content %}
+
+
+
+{% for highlight in highlights %}
+
+{{highlight}}
+
+<video preload controls class="player">
+    <source src="{{highlight.file.url}}" type="video/mp4" />
+  </video>
+
+  {% endfor %}
+{% endblock content%}
