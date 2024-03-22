@@ -1,15 +1,31 @@
 {% extends 'tournaments/base.html'%}
+{% block title %}Highlight{% endblock %}
 {% block content %}
 
+{% if assigned %}
+
+{% for row in highlights %}
 
 
-{% for highlight in highlights %}
+{% for highlight in row.highlight_link.all %}
 
-{{highlight}}
 
+<h4>{{row.player}} - {{row.hole.course.course_name}} - Round {{row.golf_round.round_number}} - Ock {{row.golf_round.holiday.holiday_number}}</h4>
 <video preload controls class="player">
     <source src="{{highlight.file.url}}" type="video/mp4" />
   </video>
 
   {% endfor %}
+  {% endfor %}
+
+  {% else %}
+  
+  {% for highlight in video %}
+  <h4>{{highlight.title}}</h4>
+  <video preload controls class="player">
+    <source src="{{highlight.file.url}}" type="video/mp4" />
+  </video>
+  {% endfor %}
+
+  {% endif %}
 {% endblock content%}

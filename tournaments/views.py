@@ -426,10 +426,17 @@ class HighlightView(View):
 
     def get(self,request,highlight):
         
-        selected_highlight = Video.objects.filter(id=highlight)
-        
+        selected_highlight = Score.objects.filter(highlight_link__id=highlight)
+        assigned = True
+        video = 0
+        if len(selected_highlight) == 0:
+            video = Video.objects.filter(id=highlight)
+            assigned = False
         context = {
-            'highlights':selected_highlight
+            'highlights':selected_highlight,
+            'assigned':assigned,
+            'video':video
+
             
         }
         return render(request, self.template_name, context)

@@ -29,7 +29,7 @@ function plot(dataset,type, id) {
         }
     }
     var y_domain = [0, y_max + y_max * 0.05]
-
+    bar_width = width/(2*dataset.length );
     var svg = d3.select(`div.chart-${id}`).append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
@@ -112,6 +112,7 @@ function add_data(dataset, id, type) {
         }
     }
     var y_domain = [0, y_max + y_max * 0.05]
+    bar_width = width/(2*dataset.length);
     var x = d3.scaleLinear()
         .domain(x_domain)
         .range([0, width]);
@@ -134,7 +135,7 @@ function add_data(dataset, id, type) {
         .append('rect')
         .attr("x", (d, i) => x(d[0][`${type}`]) - 20 / 2)
         .attr('y', d => y(d.length))
-        .attr("width", 20)
+        .attr("width", bar_width)
         .attr("height", d => y(0) - y(d.length))
         .attr("fill", "var(--bs-body-color)")
         .attr('stroke', 'black')
@@ -223,6 +224,8 @@ function add_to_par_data(dataset, id) {
             y_max = dataset[i].length
         }
     }
+    bar_width = width/(2*dataset.length);
+    console.log(dataset.length,bar_width);
     var y_domain = [0, y_max + y_max * 0.05]
     var x = d3.scaleLinear()
         .domain(x_domain)
@@ -246,7 +249,7 @@ function add_to_par_data(dataset, id) {
         .append('rect')
         .attr("x", (d, i) =>  x(d[0]['strokes']-d[0]['hole']['par']) - 20 / 2)
         .attr('y', d => y(d.length))
-        .attr("width", 20)
+        .attr("width", bar_width)
         .attr("height", function (d){
             try{ return d[0]['strokes']>0? y(0) - y(d.length):0;}
             catch{return d['strokes']>0? y(0) - y(d.length):0}}) 
@@ -265,6 +268,8 @@ function change_to_par_data(dataset, id) {
             y_max = dataset[i].length
         }
     }
+    bar_width = width/(2*dataset.length);
+    console.log(dataset.length,bar_width);
     var y_domain = [0, y_max + y_max * 0.05]
     var x = d3.scaleLinear()
         .domain(x_domain)

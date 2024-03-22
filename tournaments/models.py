@@ -88,7 +88,7 @@ class Score(models.Model):
     stableford_score = models.IntegerField(blank=True,null=True)
     sandy = models.BooleanField(default=False)
     handicap = models.ForeignKey(Handicap,on_delete=models.CASCADE,blank=True,null=True)
-    highlight_link = models.ManyToManyField(Video,blank=True,null=True)
+    highlight_link = models.ManyToManyField(Video,blank=True)
     
 
     def __str__(self):
