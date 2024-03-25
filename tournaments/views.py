@@ -7,6 +7,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import permission_required
+from .forms import UploadFileForm
+from django.conf import settings
 import math
 import requests
 import cv2
@@ -505,3 +507,32 @@ def logInUser(request):
         else:
             login(request, user)
             return redirect('homepage')
+
+def handle_uploaded_file(f):
+    with open(f"media/{f}", "wb+") as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+def uploadHighlight(request):
+
+    if request.method == 'GET':
+        return render(request,'tournaments/new_highlight.html',{'form':UploadFileForm()})
+    
+    elif request.method == 'POST':
+        form = UploadFileForm(request.POST,request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'])
+            vidcap = cv2.VideoCapture(fr'{settings.MEDIA_ROOT}\{request.FILES['file']}')
+            success,image = vidcap.read()
+            cv2.imwrite(fr'{settings.MEDIA_ROOT}\{str(request.FILES['file'])[:-4]}.jpg',image)
+            Video.objects.create(title=request.POST['title'],file=request.FILES['file'],thumbnail=fr'{settings.MEDIA_ROOT}\{str(request.FILES['file'])[:-4]}.jpg')
+            if request.POST['hole'] != 0:
+                rounds = GolfRound.objects.filter(holiday=request.POST['holiday'])
+                selected_round = rounds[int(request.POST['round_number'])-1]
+                event = Score.objects.filter(player__id=request.POST['player'],golf_round=selected_round,hole__hole_number=request.POST['hole'])
+                vid_event = Video.objects.last()
+                # print(vid_event)
+                event.get().highlight_link.add(vid_event)
+            return redirect('highlights')
+        else:
+            return redirect('new_highlight')
