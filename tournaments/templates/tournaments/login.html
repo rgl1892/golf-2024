@@ -1,0 +1,13 @@
+{% extends 'tournaments/base.html' %}
+{% block content%}
+<div class="container"></div>
+{{error}}
+<form method="POST" class="login">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="Log In">
+</form>
+</div>
+
+
+{% endblock %}

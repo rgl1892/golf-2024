@@ -75,6 +75,7 @@ class Hole(models.Model):
 class Video(models.Model):
     file = models.FileField(upload_to='')
     title = models.CharField(max_length=100)
+    thumbnail = models.ImageField(blank=True)
 
     def __str__(self) -> str:
             return self.title   

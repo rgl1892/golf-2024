@@ -102,9 +102,10 @@
             {% endfor %}
         </tr>
         {% endfor %}
+        {% if user.is_superuser %}
         <tr>
             <th></th>
-
+            
             {% for hole in player_scores.0 %}
             <td>
                 <a class='btn' href={% url 'edit_scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number hole=hole.hole.id %}>
@@ -112,8 +113,9 @@
                 </a>
             </td>
             {% endfor %}
-
+            
         </tr>
+        {% endif %}
     </table>
 
 <div class="row">

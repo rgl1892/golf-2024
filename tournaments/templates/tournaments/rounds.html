@@ -98,6 +98,7 @@
             
         </div>
     </div>
+    {% if user.is_superuser %}
     <div class="row">
         <div class="col">
             <!--  Modal trigger button  -->
@@ -173,4 +174,5 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% endblock content%}

@@ -1,10 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Tournament, Holiday, GolfRound, Score, Player, Hole, Handicap, Course,Resort,Video
 from django.views.generic import View
 from django.http import HttpResponse
+from django.db import IntegrityError
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.models import User
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import permission_required
 import math
 import requests
-
+import cv2
 
 # Create your views here.
 def getWeather(lat,long):
@@ -40,6 +45,19 @@ class Home(View):
 
     def get(self, request):
         tournaments = Tournament.objects.all()
+        vids = Video.objects.all()
+
+        # for index,vid in enumerate(vids):
+        #     vidcap = cv2.VideoCapture(fr'C:\Users\User\Documents\golf\golf-2024\{vid.file.url}')
+        #     success,image = vidcap.read()
+        #     cv2.imwrite(fr'C:\Users\User\Documents\golf\golf-2024\media\{index}.jpg',image)
+        #     Video.objects.filter(id=vid.id).update(thumbnail=fr'C:\Users\User\Documents\golf\golf-2024\media\{index}.jpg')
+        # vids = Video.objects.filter(id=1).get()
+        # vidcap = cv2.VideoCapture(fr'C:\Users\User\Documents\golf\golf-2024\{vids.file.url}')
+        # success,image = vidcap.read()
+        # cv2.imwrite(fr'C:\Users\User\Documents\golf\golf-2024\1.jpg',image)
+        # Video.objects.filter(id=1).update(thumbnail=fr'C:\Users\User\Documents\golf\golf-2024\1.jpg')
+
         context = {
             'tournaments': tournaments,
             }
@@ -413,8 +431,16 @@ class HighlightsHome(View):
 
         scores = Score.objects.exclude(highlight_link__isnull=True)
         videos = Video.objects.all()
-        vid_list = [vid.get().id for vid in [score.highlight_link.all() for score in scores]]       
+        vids =  [vid for vid in [score.highlight_link.all() for score in scores]] 
+        vid_list = []
+        for x in vids:
+            for y in x:
+                vid_list.append(y.id)
+        # vid_list = [vid.get().id for vid in [score.highlight_link.all() for score in scores]]    
+
+        
         unholed_vids = [vid for vid in videos if vid.id not in vid_list]
+
         context = {
             'scores':scores,
             'other_vids':unholed_vids
@@ -440,3 +466,42 @@ class HighlightView(View):
             
         }
         return render(request, self.template_name, context)
+    
+def signUpUser(request):
+    if request.method == 'GET':
+
+        return render(request, 'tournaments/signUpUser.html', {'form': UserCreationForm()})
+
+    else:
+        if request.POST['password1'] == request.POST['password2']:
+            try:
+                user = User.objects.create_user(
+                    request.POST['username'], password=request.POST['password1'])
+                user.save()
+                login(request, user)
+                return redirect('homepage')
+            except IntegrityError:
+                return render(request, 'tournaments/signUpUser.html', {'form': UserCreationForm(), 'error': 'Username Already Taken'})
+
+        else:
+
+            return render(request, 'tournaments/signUpUser.html', {'form': UserCreationForm(), 'error': 'Passwords did not match'})
+
+
+def logOutUser(request):
+    logout(request)
+    return redirect('homepage')
+
+
+def logInUser(request):
+    if request.method == 'GET':
+        return render(request, 'tournaments/login.html', {'form': AuthenticationForm()})
+
+    else:
+        user = authenticate(
+            request, username=request.POST['username'], password=request.POST['password'])
+        if user == None:
+            return render(request, 'tournaments/login.html', {'form': AuthenticationForm(), 'error': 'Unknown User / Incorrect Password'})
+        else:
+            login(request, user)
+            return redirect('homepage')

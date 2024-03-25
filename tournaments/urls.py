@@ -7,6 +7,9 @@ from django.conf import settings
 urlpatterns = [
     path('',views.Home.as_view(),name='homepage' ),
     path('stats',views.StatsView.as_view(),name='stats'),
+    path('login',views.logInUser,name='login'),
+    path('logout',views.logOutUser,name='logout'),
+    path('sign_up_user/', views.signUpUser,name='sign_up_user'),
     path('highlights',views.HighlightsHome.as_view(),name='highlights'),
     path('highlights/<int:highlight>',views.HighlightView.as_view(),name='highlight_view'),
     path('<slug:tournament>/',views.TournamentView.as_view(),name='tournament'),
