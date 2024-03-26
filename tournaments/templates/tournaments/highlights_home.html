@@ -15,7 +15,7 @@
 
         {% for highlight in score.highlight_link.all %}
 
-        <a href="{% url 'highlight_view' highlight=highlight.id %}">
+        <a class="d-flex flex-column justify-content-center " href="{% url 'highlight_view' highlight=highlight.id %}">
             <h4 class="mt-4 image-link">{{highlight}}</h4>
             <h6 class="image-link">{{score.player}} on {{score.hole}}</h6>
             <h6 class="image-link">{{score.hole.course.resort.country}}</h6>
@@ -31,8 +31,9 @@
         {% for vid in other_vids%}
         <a href="{% url 'highlight_view' highlight=vid.id %}">
             <h4 class="mt-4 image-link">{{vid}}</h4>
-        </a><br>
+        
         <img class="thumbnail" src="{{vid.thumbnail.url}}" alt="">
+    </a><br>
         {% endfor %}
     </div>
 </div>

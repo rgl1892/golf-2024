@@ -7,6 +7,7 @@ from django.conf import settings
 urlpatterns = [
     path('',views.Home.as_view(),name='homepage' ),
     path('stats',views.StatsView.as_view(),name='stats'),
+    path('player_stats',views.PlayerStats.as_view(),name='player_stats'),
     path('login',views.logInUser,name='login'),
     path('logout',views.logOutUser,name='logout'),
     path('sign_up_user', views.signUpUser,name='sign_up_user'),

@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 # Create your models here.
 
@@ -39,6 +40,7 @@ class Holiday(models.Model):
 class GolfRound(models.Model):
     round_number = models.IntegerField()
     holiday = models.ForeignKey(Holiday,on_delete=models.CASCADE)
+    date_time = models.DateTimeField(default=datetime(2018,11,5))
 
     def __str__(self):
         return f"{self.holiday} {self.round_number}"

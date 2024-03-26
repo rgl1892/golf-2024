@@ -1,0 +1,20 @@
+{% extends "tournaments/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<script src="{% static 'tournaments/js/d3.v7.js' %}" ></script>
+<script type="module" src="{% static 'tournaments/js/player_stats.js' %}"></script>
+
+<div class="row">
+    <div class="col-6">
+        <div class="chart-1" id="chart-1"></div>
+    </div>
+    <div class="col-6">
+        <div class="chart-2" id="chart-2"></div>
+    </div>
+    <div class="col-6">
+        <div class="chart-3" id="chart-3"></div>
+    </div>
+</div>
+{% endblock content %}

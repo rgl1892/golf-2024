@@ -7,7 +7,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import permission_required
-from .forms import UploadFileForm
+from .forms import UploadFileForm,EditAuthForm,EditUserForm
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files import File as DjangoFile
@@ -29,8 +29,6 @@ def getWeather(lat,long):
     weather = requests.request("GET",f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={long}&current=temperature_2m,weather_code").json()
     return [weather,weather_codes[f"{weather['current']['weather_code']}"]]
 
-test_player = Player.objects.filter(id=1).get()
-test_golf_round = GolfRound.objects.filter(id=1).get()
 def getPlayerScore(golf_round,player):
     scores = Score.objects.filter(player=player,golf_round=golf_round)
     stableford = sum([score.stableford_score if score.stableford_score != None else 0 for score in scores])
@@ -474,7 +472,7 @@ class HighlightView(View):
 def signUpUser(request):
     if request.method == 'GET':
 
-        return render(request, 'tournaments/signUpUser.html', {'form': UserCreationForm()})
+        return render(request, 'tournaments/signUpUser.html', {'form': EditUserForm()})
 
     else:
         if request.POST['password1'] == request.POST['password2']:
@@ -485,11 +483,11 @@ def signUpUser(request):
                 login(request, user)
                 return redirect('homepage')
             except IntegrityError:
-                return render(request, 'tournaments/signUpUser.html', {'form': UserCreationForm(), 'error': 'Username Already Taken'})
+                return render(request, 'tournaments/signUpUser.html', {'form': EditUserForm(), 'error': 'Username Already Taken'})
 
         else:
 
-            return render(request, 'tournaments/signUpUser.html', {'form': UserCreationForm(), 'error': 'Passwords did not match'})
+            return render(request, 'tournaments/signUpUser.html', {'form': EditUserForm(), 'error': 'Passwords did not match'})
 
 
 def logOutUser(request):
@@ -499,13 +497,13 @@ def logOutUser(request):
 
 def logInUser(request):
     if request.method == 'GET':
-        return render(request, 'tournaments/login.html', {'form': AuthenticationForm()})
+        return render(request, 'tournaments/login.html', {'form': EditAuthForm()})
 
     else:
         user = authenticate(
             request, username=request.POST['username'], password=request.POST['password'])
         if user == None:
-            return render(request, 'tournaments/login.html', {'form': AuthenticationForm(), 'error': 'Unknown User / Incorrect Password'})
+            return render(request, 'tournaments/login.html', {'form': EditAuthForm(), 'error': 'Unknown User / Incorrect Password'})
         else:
             login(request, user)
             return redirect('homepage')
@@ -530,7 +528,7 @@ def uploadHighlight(request):
 
             f = DjangoFile(open(fr'{settings.MEDIA_ROOT}\{str(request.FILES["file"])[:-4]}.jpg','rb'))
             
-            Video.objects.create(title=request.POST['title'],file=request.FILES['file'],thumbnail=f)
+            Video.objects.create(title=request.POST['title'],file=request.FILES['file'],thumbnail=f'{str(request.FILES["file"])[:-4]}.jpg')
             if request.POST['hole'] != 0:
                 rounds = GolfRound.objects.filter(holiday=request.POST['holiday'])
                 selected_round = rounds[int(request.POST['round_number'])-1]
@@ -541,3 +539,11 @@ def uploadHighlight(request):
             return redirect('highlights')
         else:
             return redirect('new_highlight')
+class PlayerStats(View):
+    template_name = 'tournaments/player_stats.html'
+
+    def get(self,request):
+
+        context = {'test':'result'}
+
+        return render(request,self.template_name,context)

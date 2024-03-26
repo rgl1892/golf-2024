@@ -1,5 +1,7 @@
 from django import forms
 from .models import Tournament, Holiday, GolfRound, Score, Player, Hole, Handicap, Course,Resort,Video
+from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
+from django.contrib.auth import password_validation
 
 
 list_of_players = [(player.id,player) for player in Player.objects.all()]
@@ -14,3 +16,12 @@ class UploadFileForm(forms.Form):
     holiday = forms.ChoiceField(choices=holidays,required=False,widget=forms.Select(attrs={'class': 'form-select'}))
     round_number = forms.ChoiceField(choices=round_choices,widget=forms.Select(attrs={'class': 'form-select'}))
     hole = forms.ChoiceField(choices=holes,required=False,widget=forms.Select(attrs={'class': 'form-select'}))
+
+class EditAuthForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+class EditUserForm(UserCreationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password1 = forms.CharField(help_text=password_validation.password_validators_help_text_html(),label=("Password"),widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Password'}))
+    password2 = forms.CharField(label=("Re-enter Password"),widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Password'}))
