@@ -57,12 +57,9 @@ class Home(View):
         #     vidcap = cv2.VideoCapture(fr'C:\Users\User\Documents\golf\golf-2024\{vid.file.url}')
         #     success,image = vidcap.read()
         #     cv2.imwrite(fr'C:\Users\User\Documents\golf\golf-2024\media\{index}.jpg',image)
-        #     Video.objects.filter(id=vid.id).update(thumbnail=fr'C:\Users\User\Documents\golf\golf-2024\media\{index}.jpg')
-        # vids = Video.objects.filter(id=1).get()
-        # vidcap = cv2.VideoCapture(fr'C:\Users\User\Documents\golf\golf-2024\{vids.file.url}')
-        # success,image = vidcap.read()
-        # cv2.imwrite(fr'C:\Users\User\Documents\golf\golf-2024\1.jpg',image)
-        # Video.objects.filter(id=1).update(thumbnail=fr'C:\Users\User\Documents\golf\golf-2024\1.jpg')
+        #     f = DjangoFile(open(fr'C:\Users\User\Documents\golf\golf-2024\media\{index}.jpg','rb'))
+        #     Video.objects.filter(id=vid.id).update(thumbnail=f)
+        
 
         context = {
             'tournaments': tournaments,
@@ -529,7 +526,7 @@ def uploadHighlight(request):
             vidcap = cv2.VideoCapture(fr'{settings.MEDIA_ROOT}\{request.FILES["file"]}')
             success,image = vidcap.read()
             cv2.imwrite(fr'{settings.MEDIA_ROOT}\{str(request.FILES["file"])[:-4]}.jpg',image)
-            # f = ContentFile(open(fr'{settings.MEDIA_ROOT}\{str(request.FILES["file"])[:-4]}.jpg','rb').read())
+
             f = DjangoFile(open(fr'{settings.MEDIA_ROOT}\{str(request.FILES["file"])[:-4]}.jpg','rb'))
             Video.objects.create(title=request.POST['title'],file=request.FILES['file'],thumbnail=f)
             if request.POST['hole'] != 0:
