@@ -522,10 +522,10 @@ def uploadHighlight(request):
         form = UploadFileForm(request.POST,request.FILES)
         if form.is_valid():
             handle_uploaded_file(request.FILES['file'])
-            vidcap = cv2.VideoCapture(fr'{settings.MEDIA_ROOT}\{request.FILES['file']}')
+            vidcap = cv2.VideoCapture(fr'{settings.MEDIA_ROOT}\{request.FILES["file"]}')
             success,image = vidcap.read()
-            cv2.imwrite(fr'{settings.MEDIA_ROOT}\{str(request.FILES['file'])[:-4]}.jpg',image)
-            Video.objects.create(title=request.POST['title'],file=request.FILES['file'],thumbnail=fr'{settings.MEDIA_ROOT}\{str(request.FILES['file'])[:-4]}.jpg')
+            cv2.imwrite(fr'{settings.MEDIA_ROOT}\{str(request.FILES["file"])[:-4]}.jpg',image)
+            Video.objects.create(title=request.POST['title'],file=request.FILES['file'],thumbnail=fr'{settings.MEDIA_ROOT}\{str(request.FILES["file"])[:-4]}.jpg')
             if request.POST['hole'] != 0:
                 rounds = GolfRound.objects.filter(holiday=request.POST['holiday'])
                 selected_round = rounds[int(request.POST['round_number'])-1]
