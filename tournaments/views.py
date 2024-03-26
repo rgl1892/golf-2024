@@ -56,9 +56,10 @@ class Home(View):
         # for index,vid in enumerate(vids):
         #     vidcap = cv2.VideoCapture(fr'C:\Users\User\Documents\golf\golf-2024\{vid.file.url}')
         #     success,image = vidcap.read()
-        #     cv2.imwrite(fr'C:\Users\User\Documents\golf\golf-2024\media\{index}.jpg',image)
-        #     f = DjangoFile(open(fr'C:\Users\User\Documents\golf\golf-2024\media\{index}.jpg','rb'))
-        #     Video.objects.filter(id=vid.id).update(thumbnail=f)
+        #     cv2.imwrite(fr'{settings.MEDIA_ROOT}\{vid.file}.jpg',image)
+        #     f = DjangoFile(open(fr'media\{vid.file}.jpg','rb'))
+        #     print(f.name[6:])
+        #     Video.objects.filter(id=vid.id).update(thumbnail=f.name[6:])
         
 
         context = {
@@ -528,6 +529,7 @@ def uploadHighlight(request):
             cv2.imwrite(fr'{settings.MEDIA_ROOT}\{str(request.FILES["file"])[:-4]}.jpg',image)
 
             f = DjangoFile(open(fr'{settings.MEDIA_ROOT}\{str(request.FILES["file"])[:-4]}.jpg','rb'))
+            
             Video.objects.create(title=request.POST['title'],file=request.FILES['file'],thumbnail=f)
             if request.POST['hole'] != 0:
                 rounds = GolfRound.objects.filter(holiday=request.POST['holiday'])
