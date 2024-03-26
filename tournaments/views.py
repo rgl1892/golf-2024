@@ -9,6 +9,10 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import permission_required
 from .forms import UploadFileForm
 from django.conf import settings
+from django.core.files.base import ContentFile
+from django.core.files import File as DjangoFile
+
+from PIL import Image
 import math
 import requests
 import cv2
@@ -525,7 +529,9 @@ def uploadHighlight(request):
             vidcap = cv2.VideoCapture(fr'{settings.MEDIA_ROOT}\{request.FILES["file"]}')
             success,image = vidcap.read()
             cv2.imwrite(fr'{settings.MEDIA_ROOT}\{str(request.FILES["file"])[:-4]}.jpg',image)
-            Video.objects.create(title=request.POST['title'],file=request.FILES['file'],thumbnail=fr'{settings.MEDIA_ROOT}\{str(request.FILES["file"])[:-4]}.jpg')
+            # f = ContentFile(open(fr'{settings.MEDIA_ROOT}\{str(request.FILES["file"])[:-4]}.jpg','rb').read())
+            f = DjangoFile(open(fr'{settings.MEDIA_ROOT}\{str(request.FILES["file"])[:-4]}.jpg','rb'))
+            Video.objects.create(title=request.POST['title'],file=request.FILES['file'],thumbnail=f)
             if request.POST['hole'] != 0:
                 rounds = GolfRound.objects.filter(holiday=request.POST['holiday'])
                 selected_round = rounds[int(request.POST['round_number'])-1]
