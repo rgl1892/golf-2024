@@ -2,12 +2,20 @@
 {% block content %}
 
 <h1>Home</h1>
+<div class="row">
+<div class="col-lg-6 ">
 
-{% for tournament in tournaments %}
-<ul class="list-group">
-  <a class="list-group-item list-group-item-action" href="{% url 'tournament' tournament.slug %}">{{tournament}}</a>
-</ul>
-{% endfor %}
+  {% for tournament in tournaments %}
+  
+  <ul class="list-group">
+    <a class="list-group-item list-group-item-action" href="{% url 'tournament' tournament.slug %}">{{tournament}}</a>
+  </ul>
+  {% endfor %}
+</div>
+<div class="col-lg-6 ">
+  Info on stuff
+</div>
+</div>
 
 
 {% endblock content%}

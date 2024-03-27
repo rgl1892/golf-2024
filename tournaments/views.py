@@ -547,3 +547,27 @@ class PlayerStats(View):
         context = {'test':'result'}
 
         return render(request,self.template_name,context)
+    
+class CoursesOverview(View):
+    template_name = 'tournaments/courses_overview.html'
+
+    def get(self,request):
+        
+        courses = Course.objects.all().order_by('resort__name')
+        course_names = list(dict.fromkeys([course.course_name for course in courses]))
+        courses_now = [Course.objects.filter(course_name=course_name) for course_name in course_names]
+        yards = [[sum([hole.yards for hole in y.hole_set.all()]) for y in x] for x in courses_now]
+        par = [[sum([hole.par for hole in y.hole_set.all()]) for y in x] for x in courses_now]
+            
+                
+        
+        
+        context = {
+            'courses':courses,
+            'course_names':course_names,
+            'courses_now':courses_now,
+            'yards':yards,
+            'par':par
+        }
+
+        return render(request,self.template_name,context)

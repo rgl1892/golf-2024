@@ -1,0 +1,71 @@
+{% extends "tournaments/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6">
+
+        <div class="accordion" id="accordionExample">
+            {% for course_set in courses_now %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading{{course_set.0.id}}">
+                    <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapse_{{course_set.0.id}}"
+                    aria-expanded="true"
+                aria-controls="collapse_{{course_set.0.id}}"
+                >
+                {{course_set.0.course_name}} - {{course_set.0.resort}}
+            </button>
+        </h2>
+        <div
+        id="collapse_{{course_set.0.id}}"
+        class="accordion-collapse collapse"
+        aria-labelledby="heading{{course_set.0.id}}"
+        data-bs-parent="#accordionExample"
+        >
+        <div class="accordion-body">
+            <div
+            class="table-responsive"
+            >
+            <table
+            class="table"
+                    >
+                    <thead>
+                        <tr>
+                            <th scope="col">Tees</th>
+                            <th scope="col">Yards</th>
+                            <th scope="col">Slope Rating</th>
+                            <th scope="col">Stroke Rating</th>
+                            <th scope="col">Par</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in course_set %}
+                                <tr class="">
+                                    <td>{{course.tee}}</td>
+                                    <td>{{yards|slice:forloop.parentloop.counter|last|slice:forloop.counter|last}}</td>
+                                    <td>{{course.slope_rating}}</td>
+                                    <td>{{course.course_rating}}</td>
+                                    <td>{{par|slice:forloop.parentloop.counter|last|slice:forloop.counter|last}}</td>
+                                    
+                                </tr>
+                            
+                        {% endfor %}
+                        
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+
+
+</div>
+</div>
+
+{% endblock content %}
