@@ -3,9 +3,11 @@
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
   --bs-body-line-height: 1.5;
-  --bs-body-color: #F4D35E;
+  /* --bs-body-color: #F4D35E; */
+  --bs-body-color: #403f3b;
   --bs-body-color-rgb: 33, 37, 41;
-  --bs-body-bg: #247116;
+  /* --bs-body-bg: #247116; */
+  --bs-body-bg: #cfcfcf;
   --bs-body-bg-rgb: 255, 255, 255;
   --bs-emphasis-color:var(--bs-body-color);
   /* --bs-emphasis-color-rgb:255,255,255; */

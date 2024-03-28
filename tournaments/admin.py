@@ -11,11 +11,14 @@ class TournamentAdmin(admin.ModelAdmin):
 class HolidayAdmin(admin.ModelAdmin):
     list_display = ["resort","tournament","holiday_number","id"]
     prepopulated_fields = {"slug":["resort","holiday_number"]}
+
+class CourseAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug":['course_name',"tee"]}
     
     
 admin.site.register(Player)
 admin.site.register(Holiday,HolidayAdmin)
-admin.site.register(Course)
+admin.site.register(Course,CourseAdmin)
 admin.site.register(GolfRound)
 admin.site.register(Resort)
 admin.site.register(Score)

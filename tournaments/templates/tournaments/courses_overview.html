@@ -43,13 +43,13 @@
                     </thead>
                     <tbody>
                         {% for course in course_set %}
-                                <tr class="">
+                                <tr class="position-relative ">
                                     <td>{{course.tee}}</td>
                                     <td>{{yards|slice:forloop.parentloop.counter|last|slice:forloop.counter|last}}</td>
                                     <td>{{course.slope_rating}}</td>
                                     <td>{{course.course_rating}}</td>
                                     <td>{{par|slice:forloop.parentloop.counter|last|slice:forloop.counter|last}}</td>
-                                    <a href="#" class="stretched-link " ></a>
+                                    <td><a href="{% url 'course_view' course_name=course.slug %}" class="stretched-link " ></a></td>
                                     
                                 </tr>
                             

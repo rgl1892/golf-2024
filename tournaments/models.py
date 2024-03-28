@@ -59,6 +59,7 @@ class Course(models.Model):
     tee = models.CharField(max_length=20)
     slope_rating = models.IntegerField()
     course_rating = models.DecimalField(decimal_places=1,max_digits=3)
+    slug = models.SlugField(default="", null=False)
 
     def __str__(self) -> str:
         return f"{self.course_name} {self.tee} Tees"

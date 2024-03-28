@@ -1,0 +1,47 @@
+{% extends "tournaments/base.html" %}
+
+{% block content %}
+{% for object in course %}
+<h1>{{object.course_name}} {{object.tee}} Tees</h1>
+{% endfor %}
+    <div class="row">
+        <div class="col-lg-6">
+
+            {% for object in course %}
+            
+            
+            <div
+                class="table-responsive"
+                >
+            <table
+            class="table table-hover"
+            >
+            <thead>
+                <tr>
+                    <th scope="col">Hole</th>
+                    <th scope="col">Yards</th>
+                    <th scope="col">Par</th>
+                    <th scope="col">S.I.</th>                            
+                </tr>
+            </thead>
+            <tbody>
+                {% for hole in object.hole_set.all %}
+                <tr class="">
+                    <td scope="row">{{hole.hole_number}}</td>
+                    <td scope="row">{{hole.yards}}</td>
+                    <td scope="row">{{hole.par}}</td>
+                    <td scope="row">{{hole.stroke_index}}</td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    
+    
+            {% endfor %}
+            
+        </div>
+        </div>
+        {% endblock content %}

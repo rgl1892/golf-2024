@@ -1,6 +1,6 @@
 var holiday = '1';
-var player = '';
-var round_number = '4';
+var player = '1';
+var round_number = '';
 var data = await d3.json(`/api/scores?golf_round__holiday=${holiday}&player=${player}&golf_round__round_number=${round_number}`);
 
 function line_plot(data,id) {

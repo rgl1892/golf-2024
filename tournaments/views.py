@@ -556,9 +556,9 @@ class CoursesOverview(View):
         courses = Course.objects.all().order_by('resort__name')
         course_names = list(dict.fromkeys([course.course_name for course in courses]))
         courses_now = [Course.objects.filter(course_name=course_name) for course_name in course_names]
-        yards = [[sum([hole.yards for hole in y.hole_set.all()]) for y in x] for x in courses_now]
-        par = [[sum([hole.par for hole in y.hole_set.all()]) for y in x] for x in courses_now]
-            
+        yards = [[sum([hole.yards for hole in tee_set.hole_set.all()]) for tee_set in resort] for resort in courses_now]
+        par = [[sum([hole.par for hole in tee_set.hole_set.all()]) for tee_set in resort] for resort in courses_now]
+
                 
         
         
@@ -568,6 +568,17 @@ class CoursesOverview(View):
             'courses_now':courses_now,
             'yards':yards,
             'par':par
+        }
+
+        return render(request,self.template_name,context)
+    
+class CourseView(View):
+    template_name = 'tournaments/course_view.html'
+
+    def get(self,request,course_name):
+        course = Course.objects.filter(slug=course_name)
+        context = {
+            'course':course
         }
 
         return render(request,self.template_name,context)
