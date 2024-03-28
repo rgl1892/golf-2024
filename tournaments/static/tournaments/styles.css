@@ -10,6 +10,8 @@
   --bs-body-bg: #cfcfcf;
   --bs-body-bg-rgb: 255, 255, 255;
   --bs-emphasis-color:var(--bs-body-color);
+  
+  --bs-primary-bg-subtle:white;
   /* --bs-emphasis-color-rgb:255,255,255; */
   --bs-btn-bg:#F4D35E;
 }

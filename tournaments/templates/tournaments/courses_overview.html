@@ -39,6 +39,8 @@
                             <th scope="col">Slope Rating</th>
                             <th scope="col">Stroke Rating</th>
                             <th scope="col">Par</th>
+                            <th scope="col">Avg Strokes</th>
+                            <th scope="col">Avg Stbfrd</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,6 +51,21 @@
                                     <td>{{course.slope_rating}}</td>
                                     <td>{{course.course_rating}}</td>
                                     <td>{{par|slice:forloop.parentloop.counter|last|slice:forloop.counter|last}}</td>
+                                    <td>
+                                        {% if strokes|slice:forloop.parentloop.counter|last|slice:forloop.counter|last == None %}
+                                        -
+                                        {% else %}
+                                        {{strokes|slice:forloop.parentloop.counter|last|slice:forloop.counter|last}}</td>
+                                        {% endif %}
+
+                                    <td>
+                                        {% if points|slice:forloop.parentloop.counter|last|slice:forloop.counter|last == None %}
+                                        -
+                                        {% else %}
+                                        {{points|slice:forloop.parentloop.counter|last|slice:forloop.counter|last}}
+                                        {% endif %}
+                                        
+                                    </td>
                                     <td><a href="{% url 'course_view' course_name=course.slug %}" class="stretched-link " ></a></td>
                                     
                                 </tr>
