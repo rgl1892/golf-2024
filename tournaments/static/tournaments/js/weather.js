@@ -37,7 +37,7 @@ function plot() {
 
     var temp = svg.append('path')
                         .attr('fill','none')
-                        .attr('stroke','yellow')
+                        .attr('stroke','var(--bs-body-color)')
                         .attr("stroke-width", 1)
                         .attr("d",temp_line(fixed));
    
