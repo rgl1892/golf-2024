@@ -13,6 +13,7 @@ urlpatterns = [
     path('sign_up_user', views.signUpUser,name='sign_up_user'),
     path('courses', views.CoursesOverview.as_view(),name='courses'),
     path('courses/<course_name>', views.CourseView.as_view(),name='course_view'),
+    path('courses/<course_name>/<int:hole>', views.HoleView.as_view(),name='hole_view'),
     path('highlights',views.HighlightsHome.as_view(),name='highlights'),
     path('highlights/new',views.uploadHighlight,name='new_highlight'),
     path('highlights/<int:highlight>',views.HighlightView.as_view(),name='highlight_view'),

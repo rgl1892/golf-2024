@@ -1,0 +1,12 @@
+{% extends "tournaments/base.html" %}
+
+{% block content %}
+
+{% for object in hole %}
+
+    {{object.par}}
+    {{object.pro_tip}}
+
+{% endfor %}
+
+{% endblock content %}

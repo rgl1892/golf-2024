@@ -71,6 +71,7 @@ class Hole(models.Model):
     par = models.IntegerField(choices=[(3,3),(4,4),(5,5)])
     stroke_index = models.IntegerField(choices=[(x+1,x+1) for x in range(18)])
     hole_number = models.IntegerField(choices=[(x+1,x+1) for x in range(18)])
+    pro_tip = models.TextField()
 
     def __str__(self) -> str:
         return f"{self.course} Hole {self.hole_number}"
