@@ -1,14 +1,17 @@
-id,course_name,tee,slope_rating,course_rating,resort_id
-1,Faldo,White,122,72,1
-2,Faldo,Yellow,132,70.6,1
-3,"O'Connor Junior",White,132,72.8,1
-4,"O'Connor Junior",Yellow,128,71.1,1
-5,Bramley,White,122,69.3,3
-6,Bramley,Yellow,118,67.6,3
-7,Assoufid,Black,133,72,2
-8,Assoufid,White,131,72,2
-9,Assoufid,Yellow,129,72,2
-10,Assoufid,Blue,127,72,2
-11,"Al Maaden",Black,138,74.3,2
-12,"Al Maaden",White,135,72.9,2
-13,"Al Maaden",Yellow,130,70.8,2
+id,course_name,tee,slope_rating,course_rating,resort_id,slug
+1,Faldo,White,122,72,1,faldo-white
+2,Faldo,Yellow,132,70.6,1,faldo-yellow
+3,"O'Connor Junior",White,132,72.8,1,oconnor-junior-white
+4,"O'Connor Junior",Yellow,128,71.1,1,oconnor-junior-yellow
+5,Bramley,White,122,69.3,3,bramley-white
+6,Bramley,Yellow,118,67.6,3,bramley-yellow
+7,Assoufid,Black,133,72,2,assoufid-black
+8,Assoufid,White,131,72,2,assoufid-white
+9,Assoufid,Yellow,129,72,2,assoufid-yellow
+10,Assoufid,Blue,127,72,2,assoufid-blue
+11,"Al Maaden",Black,138,74.3,2,al-maaden-black
+12,"Al Maaden",White,135,72.9,2,al-maaden-white
+13,"Al Maaden",Yellow,130,70.8,2,al-maaden-yellow
+14,Samanah,Black,149,76,2,samanah-black
+15,Samanah,White,143,73,2,samanah-white
+16,Samanah,Yellow,141,72,2,samanah-yellow

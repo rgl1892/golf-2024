@@ -1,6 +1,10 @@
 {% extends "tournaments/base.html" %}
 
 {% block content %}
+{% load static %}
+<script id="hello-data" type="application/json">{"course_id":{{course_id}}}</script>
+{{course_id}}
+<script src="{% static 'tournaments/js/d3.v7.js' %}" ></script>
 {% for object in course %}
 <h1>{{object.course_name}} {{object.tee}} Tees</h1>
 {% endfor %}

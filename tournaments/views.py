@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Tournament, Holiday, GolfRound, Score, Player, Hole, Handicap, Course,Resort,Video
+from .models import Tournament, Holiday, GolfRound, Score, Player, Hole, Handicap, Course,Resort,Video,ProTip
 from django.views.generic import View
 from django.http import HttpResponse
 from django.db import IntegrityError
@@ -51,6 +51,16 @@ def getPlayerStrokes(golf_round,player):
     strokes = sum([score.strokes if score.strokes != None else 0 for score in scores])
     return strokes
 
+def addProTips(tips,chosen_course):
+    
+    courses = Course.objects.filter(course_name=chosen_course)
+    for index,tip in enumerate(tips):
+        ProTip.objects.create(pro_tip=tip)
+        chosen = ProTip.objects.last()
+        for course in courses:
+            hole = Hole.objects.filter(course=course,hole_number=(index+1)).get()
+            chosen.hole.add(hole)
+
 
 class Home(View):
 
@@ -70,32 +80,6 @@ class Home(View):
         #     f = DjangoFile(open(fr'media\{vid.file}.jpg','rb'))
         #     print(f.name[6:])
         #     Video.objects.filter(id=vid.id).update(thumbnail=f.name[6:])
-
-
-        tips = ["Placement from the tee shot and then an accurate second shot required as missing the green either side can result in a dropped shot.",
- "A demanding tee shot which requires accuracy. Once on the fairway you are likely to be hitting from a sloping lie up onto a two tiered green.",
- "A very demanding tee shot required with a carry of 200 yards to land the ball on the green. A four is an acceptable score on this hole.",
- "A well guarded par 3 with three possible tee positions. A favourite nearest the pin hole for societies and competitions - particularly if playing off the elevated white and red tees.",
- "A very accurate tee shot is required though the trees and then the second shot is played from a sloping lie to a blind green",
- "A slight draw is required from the tee shot to enable an approach shot to a well protected green.<",
- "A good tee shot required to be able to carry the cross bunker with your 2nd shot. Don't go long or you bring the water into play.",
- "A well placed tee shot offers the chance of a short second shot into a well protected green.",
- "An accurate tee shot required, preferably with a slight left to right shape. The green is protected by bunkers on both sides with the green sloping to the left.",
- "Avoid the bunker on the left from the tee. The second shot requires accuracy to a well guarded green with both bunkers and water!",
- "Keep the tee shot down the left side of the fairway to enable a view and good angle into the green.",
- "This hole favours a little right to left shape to avoid the bunkers on the left.",
- "It's two big hits to get up, especially having to carry the two bunkers just short of the green. Lay up for two shots and play an accurate wedge in.",
- "With bunkers both left and right of the green you need to be accurate.Don't go right as this will lead to an almost certain bogey.",
- "Keep the tee shot up the left and onto the flat area of the fairway. The second shot is all about placement to allow your approach into a green sloping from left to right.",
- "A tough par 4 with a right to left sloping fairway. Keep the second shot down the right as the ball will feed in from that side.",
- "With a pond on the left and out of bounds on the right this will test your nerves.",
- "A demanding final hole. Slightly uphill and it plays all 448 yards."]
-        # course = Course.objects.filter(course_name="Bramley",tee='White').get()
-        # print(course)
-        # for index,tip in enumerate(tips):
-        #     hole = Hole.objects.filter(course=course,hole_number=index+1)
-        #     hole.update(pro_tip=tip)
-
 
         context = {
             'tournaments': tournaments,
@@ -634,6 +618,7 @@ class CourseView(View):
             'minimum_shots':minimum_shots,
             'maximum_shots':maximum_shots,
             'avg_shots':avg_shots,
+            'course_id':course.get().id,
         }
 
         return render(request,self.template_name,context)
@@ -647,6 +632,7 @@ class HoleView(View):
         hole = Hole.objects.filter(course=course).filter(hole_number=hole)
 
         context = {
-            'hole':hole
+            'hole':hole,
+            'course':course.id
         }
         return render(request,self.template_name,context)
