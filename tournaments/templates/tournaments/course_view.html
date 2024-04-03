@@ -3,14 +3,14 @@
 {% block content %}
 {% load static %}
 <script id="hello-data" type="application/json">{"course_id":{{course_id}}}</script>
-{{course_id}}
+
 <script src="{% static 'tournaments/js/d3.v7.js' %}" ></script>
+<script type="module" src="{% static 'tournaments/js/course_stats.js' %}"></script>
 {% for object in course %}
 <h1>{{object.course_name}} {{object.tee}} Tees</h1>
 {% endfor %}
     <div class="row">
         <div class="col-lg-6">
-
             {% for object in course %}
             
             
@@ -31,9 +31,9 @@
                     <th scope="col">Avg +/- Par</th>                            
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="chart-table">
                 {% for hole in object.hole_set.all %}
-                <tr class="position-relative ">
+                <tr class="position-relative " id = "chart-{{forloop.counter}}">
                     <td scope="row">{{hole.hole_number}}</td>
                     <td scope="row">{{hole.yards}}</td>
                     <td scope="row">{{hole.par}}</td>
@@ -53,6 +53,11 @@
     
             {% endfor %}
             
+        </div>
+        <div class="col-lg-6">
+            <div class="chart" id="chart">
+
+            </div>
         </div>
         </div>
         {% endblock content %}

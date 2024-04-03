@@ -225,7 +225,6 @@ function add_to_par_data(dataset, id) {
         }
     }
     bar_width = width/(2*dataset.length);
-    console.log(dataset.length,bar_width);
     var y_domain = [0, y_max + y_max * 0.05]
     var x = d3.scaleLinear()
         .domain(x_domain)
