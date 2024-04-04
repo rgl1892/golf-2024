@@ -582,8 +582,11 @@ class CoursesOverview(View):
         
         strokes = [[round(sum([np.average([0 if score.strokes == None else score.strokes for score in hole.score_set.all()]) for hole in tee_set.hole_set.all()]),2) for tee_set in resort] for resort in courses_now]
         strokes = [np.where(np.isnan(x),None,x) for x in strokes] 
+        strokes = [np.where(x == 0,None,x) for x in strokes] 
         points = [[round(sum([ np.average([0 if score.stableford_score == None else score.stableford_score for score in hole.score_set.all()]) for hole in tee_set.hole_set.all()]),2) for tee_set in resort] for resort in courses_now]
+        
         points = [np.where(np.isnan(x),None,x) for x in points] 
+        points = [np.where(x == 0,None,x) for x in points] 
         
         
         context = {
