@@ -1,11 +1,11 @@
 {% extends "tournaments/base.html" %}
 
 {% block content %}
-{% load static %}
+<!-- {% load static %}
 <script id="hello-data" type="application/json">{"course_id":{{course_id}}}</script>
 
 <script src="{% static 'tournaments/js/d3.v7.js' %}" ></script>
-<script type="module" src="{% static 'tournaments/js/course_stats.js' %}"></script>
+<script type="module" src="{% static 'tournaments/js/course_stats.js' %}"></script> -->
 {% for object in course %}
 <h1>{{object.course_name}} {{object.tee}} Tees</h1>
 {% endfor %}
@@ -25,10 +25,14 @@
                     <th scope="col">Hole</th>
                     <th scope="col">Yards</th>
                     <th scope="col">Par</th>
-                    <th scope="col">S.I.</th>                            
+                    <th scope="col">S.I.</th>
+                    <th scope="col">Our Index</th>                             
                     <th scope="col">Lowest</th>                            
                     <th scope="col">Highest</th>                            
-                    <th scope="col">Avg +/- Par</th>                            
+                    <th scope="col">Avg +/- Par</th>          
+                    <th scope="col">Avg Points</th>          
+                    <th scope="col">Points Index</th>          
+
                 </tr>
             </thead>
             <tbody id="chart-table">
@@ -38,9 +42,13 @@
                     <td scope="row">{{hole.yards}}</td>
                     <td scope="row">{{hole.par}}</td>
                     <td scope="row">{{hole.stroke_index}}</td>
+                    <td scope="row">{{our_index|slice:forloop.counter|last}}</td>
                     <td scope="row">{{minimum_shots|slice:forloop.counter|last}}</td>
                     <td scope="row">{{maximum_shots|slice:forloop.counter|last}}</td>
                     <td scope="row">{{avg_shots|slice:forloop.counter|last}}</td>
+                    <td scope="row">{{avg_points|slice:forloop.counter|last}}</td>
+                    <td scope="row">{{points_index|slice:forloop.counter|last}}</td>
+                    
                     <td scope="row"><a class="stretched-link" href="{% url 'hole_view' course_name=object.slug hole=forloop.counter%}"></a></td>
                     
                 </tr>

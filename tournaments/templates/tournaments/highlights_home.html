@@ -2,8 +2,9 @@
 {% block content %}
 
 <div class="row">
+    {% if user.is_superuser %}
     <a href="{% url 'new_highlight' %}">New highlight</a>
-    
+    {% endif %}
 </div>
 <div class="row">
 

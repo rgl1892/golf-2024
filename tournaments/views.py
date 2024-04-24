@@ -611,11 +611,19 @@ class CourseView(View):
             try:
                 minimum_shots = [min([score.strokes for score in hole.score_set.all()]) for hole in row.hole_set.all()]
                 maximum_shots = [max([score.strokes for score in hole.score_set.all()]) for hole in row.hole_set.all()]
-                avg_shots = [round(np.average([score.strokes - score.hole.par for score in hole.score_set.all()]),2) for hole in row.hole_set.all()]
+                avg_shots = [round(np.average([score.strokes - score.hole.par for score in hole.score_set.all()]),3) for hole in row.hole_set.all()]
+                avg_points = [round(np.average([score.stableford_score for score in hole.score_set.all()]),3) for hole in row.hole_set.all()]
+                our_index = [sorted(avg_shots,reverse=True).index(x) +1 for x in avg_shots]
+                points_index = [sorted(avg_points).index(x) +1 for x in avg_points]
+
+
             except:
                 minimum_shots = ['-' for x in range(17)]
                 maximum_shots = ['-' for x in range(17)]
                 avg_shots = ['-' for x in range(17)]
+                our_index = ['-' for x in range(17)]
+                points_index = ['-' for x in range(17)]
+                avg_points = ['-' for x in range(17)]
 
         context = {
             'course':course,
@@ -623,6 +631,9 @@ class CourseView(View):
             'maximum_shots':maximum_shots,
             'avg_shots':avg_shots,
             'course_id':course.get().id,
+            'our_index':our_index,
+            'points_index':points_index,
+            'avg_points':avg_points
         }
 
         return render(request,self.template_name,context)
