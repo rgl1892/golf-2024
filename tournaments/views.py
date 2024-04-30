@@ -78,7 +78,6 @@ class Home(View):
         #     success,image = vidcap.read()
         #     cv2.imwrite(fr'{settings.MEDIA_ROOT}\{vid.file}.jpg',image)
         #     f = DjangoFile(open(fr'media\{vid.file}.jpg','rb'))
-        #     print(f.name[6:])
         #     Video.objects.filter(id=vid.id).update(thumbnail=f.name[6:])
 
         context = {
@@ -365,7 +364,6 @@ class ScoresView(View):
             except:
                 points = 0
 
-            print(request.POST)
             try:
                 if int(request.POST['sandy']) == int(player['player_id']):
                     scores.filter(player=player['player_id'], hole=request.POST['hole']).update(
@@ -555,7 +553,6 @@ def uploadHighlight(request):
                 selected_round = rounds[int(request.POST['round_number'])-1]
                 event = Score.objects.filter(player__id=request.POST['player'],golf_round=selected_round,hole__hole_number=request.POST['hole'])
                 vid_event = Video.objects.last()
-                # print(vid_event)
                 event.get().highlight_link.add(vid_event)
             return redirect('highlights')
         else:
