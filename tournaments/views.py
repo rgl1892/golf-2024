@@ -135,7 +135,10 @@ class TournamentView(View):
         
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
         holidays = Holiday.objects.filter(tournament=selected_tournament)
-        holiday_number = holidays.order_by('holiday_number').values_list('holiday_number').last()[0] + 1
+        try:
+            holiday_number = holidays.order_by('holiday_number').values_list('holiday_number').last()[0] + 1
+        except:
+            holiday_number = 1
         Holiday.objects.create(resort=Resort.objects.filter(id=request.POST['resort'])[0],tournament=selected_tournament,holiday_number=holiday_number,slug=f"{request.POST['resort']}-{holiday_number}")
         new_hol = holidays.order_by('holiday_number').last()
 
