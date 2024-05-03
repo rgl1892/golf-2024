@@ -545,12 +545,12 @@ def uploadHighlight(request):
         if form.is_valid():
             print("VALID FORM")
             handle_uploaded_file(request.FILES['file'])
-            vidcap = cv2.VideoCapture(fr'{settings.MEDIA_ROOT}\{request.FILES["file"]}')
-            print(fr'{settings.MEDIA_ROOT}\{request.FILES["file"]}')
+            vidcap = cv2.VideoCapture(fr'{settings.MEDIA_ROOT}/{request.FILES["file"]}')
+            print(fr'{settings.MEDIA_ROOT}/{request.FILES["file"]}')
             
             success,image = vidcap.read()
-            cv2.imwrite(fr'{settings.MEDIA_ROOT}\{str(request.FILES["file"])[:-4]}.jpg',image)
-            f = DjangoFile(open(fr'{settings.MEDIA_ROOT}\{str(request.FILES["file"])[:-4]}.jpg','rb'))
+            cv2.imwrite(fr'{settings.MEDIA_ROOT}/{str(request.FILES["file"])[:-4]}.jpg',image)
+            f = DjangoFile(open(fr'{settings.MEDIA_ROOT}/{str(request.FILES["file"])[:-4]}.jpg','rb'))
             Video.objects.create(title=request.POST['title'],file=request.FILES['file'],thumbnail=f'{str(request.FILES["file"])[:-4]}.jpg')
                        
             
