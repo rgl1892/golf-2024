@@ -552,7 +552,7 @@ def uploadHighlight(request):
                 f = DjangoFile(open(fr'{settings.MEDIA_ROOT}\{str(request.FILES["file"])[:-4]}.jpg','rb'))
                 Video.objects.create(title=request.POST['title'],file=request.FILES['file'],thumbnail=f'{str(request.FILES["file"])[:-4]}.jpg')
             else:
-                return redirect('home')
+                return redirect('homepage')
             
             
             Video.objects.create(title=request.POST['title'],file=request.FILES['file'],thumbnail=f'{str(request.FILES["file"])[:-4]}.jpg')
