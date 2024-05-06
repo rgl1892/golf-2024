@@ -34,6 +34,7 @@
                     >
                     <thead>
                         <tr>
+                            <th scope="col"></th>
                             <th scope="col">Tees</th>
                             <th scope="col">Yards</th>
                             <th scope="col">Slope Rating</th>
@@ -44,8 +45,18 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% load static %}
                         {% for course in course_set %}
+                    
                                 <tr class="position-relative ">
+                                    <td><a href="{% url 'course_view' course_name=course.slug %}" >
+                                    <img
+                                        src="{% static 'tournaments/pictures/Link.PNG' %}"
+                                        class="rounded-top"
+                                        alt=""
+                                        height="30px"
+                                    />
+                                    </a></td> 
                                     <td>{{course.tee}}</td>
                                     <td>{{yards|slice:forloop.parentloop.counter|last|slice:forloop.counter|last}}</td>
                                     <td>{{course.slope_rating}}</td>
@@ -66,7 +77,7 @@
                                         {% endif %}
                                         
                                     </td>
-                                    <td><a href="{% url 'course_view' course_name=course.slug %}" class="stretched-link " ></a></td>
+                                    
                                     
                                 </tr>
                             

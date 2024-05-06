@@ -22,6 +22,7 @@
             >
             <thead>
                 <tr>
+                    <th scope="col"></th>
                     <th scope="col">Hole</th>
                     <th scope="col">Yards</th>
                     <th scope="col">Par</th>
@@ -36,8 +37,16 @@
                 </tr>
             </thead>
             <tbody id="chart-table">
+                {% load static %}
                 {% for hole in object.hole_set.all %}
                 <tr class="position-relative " id = "chart-{{forloop.counter}}">
+                    <td scope="row"><a href="{% url 'hole_view' course_name=object.slug hole=forloop.counter%}"> <img
+                        src="{% static 'tournaments/pictures/Link.PNG' %}"
+                        class="ounded-top"
+                        alt=""
+                        height="30px"
+                    />
+                     </a></td>
                     <td scope="row">{{hole.hole_number}}</td>
                     <td scope="row">{{hole.yards}}</td>
                     <td scope="row">{{hole.par}}</td>
@@ -49,7 +58,6 @@
                     <td scope="row">{{avg_points|slice:forloop.counter|last}}</td>
                     <td scope="row">{{points_index|slice:forloop.counter|last}}</td>
                     
-                    <td scope="row"><a class="stretched-link" href="{% url 'hole_view' course_name=object.slug hole=forloop.counter%}"></a></td>
                     
                 </tr>
                 {% endfor %}
