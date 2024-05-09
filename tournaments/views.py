@@ -72,6 +72,9 @@ class Home(View):
     def get(self, request):
         tournaments = Tournament.objects.all()
         vids = Video.objects.all()
+        latest_round = GolfRound.objects.last()
+        latest_scores = Score.objects.filter(golf_round=latest_round)
+        # for x in latest_scores
 
         # for index,vid in enumerate(vids):
         #     vidcap = cv2.VideoCapture(fr'C:\Users\User\Documents\golf\golf-2024\{vid.file.url}')
@@ -82,6 +85,8 @@ class Home(View):
 
         context = {
             'tournaments': tournaments,
+            'latest_round':latest_round,
+            'latest_scores':latest_scores,
             }
         return render(request, self.template_name, context)
 
@@ -282,14 +287,18 @@ class ScoresView(View):
             hole=scores.values()[0]['hole_id']).values()[0]
         slope_rating = selected_course['slope_rating']
         course_rating = selected_course['course_rating']
+    
         rounds = GolfRound.objects.filter(holiday=holiday_filter)
+
+        holes = Hole.objects.filter(course=Course.objects.filter(hole=scores.values()[0]['hole_id']).last())
+        total_par = sum([hole.par for hole in holes])
 
         handicaps = []
         for player in players:
             handicap_index = Handicap.objects.filter(id=scores.filter(player=player['player_id'],
                                                                       hole=scores.values()[0]['hole_id']).values('handicap_id')[0]['handicap_id']).values()[0]['handicap_index']
             playing_handicap = round(
-                (slope_rating/113)*float(handicap_index)*0.95)
+                ((slope_rating/113)*float(handicap_index) + float(course_rating) - total_par)*0.95)
             player_name = Player.objects.filter(
                 id=player['player_id']).values('first_name')[0]['first_name']
 
@@ -299,7 +308,8 @@ class ScoresView(View):
                               player_name, 
                               sum([score.strokes if score.strokes != None else 0 for score in scores.filter(player=player['player_id'])]),
                               sum([score.strokes - score.hole.par if score.strokes != None else 0 for score in scores.filter(player=player['player_id'])]),
-                              sum([score.stableford_score if score.stableford_score != None else 0 for score in scores.filter(player=player['player_id'])])
+                              sum([score.stableford_score if score.stableford_score != None else 0 for score in scores.filter(player=player['player_id'])]),
+                                float(handicap_index)
                 ])
 
         hole_numbers = [x for x in range(1, 19)]
@@ -315,7 +325,8 @@ class ScoresView(View):
             "hole_numbers": hole_numbers,
             "player_scores": player_scores,
             "handicaps": handicaps,
-            "rounds":rounds
+            "rounds":rounds,
+            "total_par":total_par,
         }
 
         return render(request, self.template_name, context)
@@ -339,6 +350,8 @@ class ScoresView(View):
         slope_rating = course.values()[0]['slope_rating']
         course_rating = course.values()[0]['course_rating']
         hole_played = Hole.objects.filter(id=request.POST['hole']).values()[0]
+        holes = Hole.objects.filter(course=Course.objects.filter(hole=scores.values()[0]['hole_id']).last())
+        total_par = sum([hole.par for hole in holes])
         handicaps = []
 
         for player in players:
@@ -348,7 +361,7 @@ class ScoresView(View):
                                                                       hole=request.POST['hole']).values('handicap_id')[0]['handicap_id']).values()[0]['handicap_index']
 
             playing_handicap = round(
-                (slope_rating/113)*float(handicap_index)*0.95)
+                ((slope_rating/113)*float(handicap_index) + float(course_rating) - total_par)*0.95)
 
             take_off_score = math.floor(playing_handicap/18)
             si_change = playing_handicap % 18
@@ -386,7 +399,8 @@ class ScoresView(View):
                               player_name, 
                               sum([score.strokes if score.strokes != None else 0 for score in scores.filter(player=player['player_id'])]),
                               sum([score.strokes - score.hole.par if score.strokes != None else 0 for score in scores.filter(player=player['player_id'])]),
-                              sum([score.stableford_score if score.stableford_score != None else 0 for score in scores.filter(player=player['player_id'])])
+                              sum([score.stableford_score if score.stableford_score != None else 0 for score in scores.filter(player=player['player_id'])]),
+                                float(handicap_index)
                 ])
 
         context = {
@@ -397,7 +411,8 @@ class ScoresView(View):
             "players": players,
             "hole_numbers": hole_numbers,
             "player_scores": player_scores,
-            'handicaps': handicaps
+            'handicaps': handicaps,
+            "total_par":total_par,
         }
         return render(request, self.template_name, context)
 

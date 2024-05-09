@@ -12,8 +12,18 @@
   </ul>
   {% endfor %}
 </div>
+<div class="col-lg-6 "></div>
 <div class="col-lg-6 ">
-  Info on stuff
+  
+  <a class="navbar-brand" href="{% url 'scores' tournament=latest_round.holiday.tournament.slug holiday=latest_round.holiday.slug selected_round=latest_round.round_number %}">
+    <h2>Latest Round</h2>
+    {{latest_round.score_set.all.0.hole.course}}
+    <br>
+    Through xx
+
+    {{latest_scores}}
+  </a>
+  
 </div>
 </div>
 

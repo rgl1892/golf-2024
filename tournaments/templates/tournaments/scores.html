@@ -20,6 +20,9 @@
     <h3>Round {{player_scores.0.0.golf_round.round_number}}</h3>
 </a>
 <h3>{{player_scores.0.0.hole.course}}</h3>
+<h5>Slope : {{player_scores.0.0.hole.course.slope_rating}}</h3>
+    <h5>Course : {{player_scores.0.0.hole.course.course_rating}}</h3>
+        <h5>Par : {{total_par}}</h3>
 
     </div>
     <div class="col">
@@ -31,6 +34,7 @@
                     <th>Shots</th>
                     <th>To Par</th>
                     <th>Stableford</th>
+                    <th>Index</th>
                 </tr> 
                 {% for person in handicaps %}
                 <tr>
@@ -39,6 +43,7 @@
                     <td>{{person.2}}</td>
                     <td>{{person.3}}</td>
                     <td>{{person.4}}</td>
+                    <td>{{person.5}}</td>
                 </tr>
                 {% endfor %}   
             </table>
