@@ -74,7 +74,13 @@ class Home(View):
         vids = Video.objects.all()
         latest_round = GolfRound.objects.last()
         latest_scores = Score.objects.filter(golf_round=latest_round)
-        # for x in latest_scores
+        scores =   [score.strokes for score in latest_scores]
+        scores_2 = [0.25 if x != None else 0 for x in scores] 
+        through = round(sum(scores_2))
+        
+        
+
+
 
         # for index,vid in enumerate(vids):
         #     vidcap = cv2.VideoCapture(fr'C:\Users\User\Documents\golf\golf-2024\{vid.file.url}')
@@ -87,6 +93,7 @@ class Home(View):
             'tournaments': tournaments,
             'latest_round':latest_round,
             'latest_scores':latest_scores,
+            'through':through,
             }
         return render(request, self.template_name, context)
 
