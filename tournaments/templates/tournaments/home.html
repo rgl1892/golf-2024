@@ -1,14 +1,14 @@
 {% extends 'tournaments/base.html' %}
 {% block content %}
 
-<h1 class=" m-3">Home</h1>
+<h1 class="m-3">Home</h1>
 <div class="row">
 
-<div class="col-lg-6 m-3 ">
+<div class="col-lg-6">
 
   
   
-  <ul class="list-group">
+  <ul class="list-group m-3">
     {% for tournament in tournaments %}
     <a class="list-group-item list-group-item-action" href="{% url 'tournament' tournament.slug %}">{{tournament}}</a>
     {% endfor %}
@@ -16,17 +16,18 @@
   
 </div>
 
-<div class="col-lg-6  m-3">
-  
-  <a class="navbar-brand" href="{% url 'scores' tournament=latest_round.holiday.tournament.slug holiday=latest_round.holiday.slug selected_round=latest_round.round_number %}">
-    <h2>Latest Round</h2>
-    {{latest_round.score_set.all.0.hole.course}}
-    <br>
-    Through {{through}}
-
-    <!-- {{latest_scores}} -->
-  </a>
-  
+<div class="col-lg-6 ">
+  <div class="m-3">
+    <a class="navbar-brand" href="{% url 'scores' tournament=latest_round.holiday.tournament.slug holiday=latest_round.holiday.slug selected_round=latest_round.round_number %}">
+      <h2>Latest Round</h2>
+      {{latest_round.score_set.all.0.hole.course}}
+      <br>
+      Through {{through}}
+      
+      <!-- {{latest_scores}} -->
+    </a>
+    
+  </div>
 </div>
 </div>
 
