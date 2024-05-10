@@ -1,5 +1,5 @@
-var holiday = '';
-var player = '';
+var holiday = '1';
+var player = '1';
 var data = await d3.json(`/api/scores?golf_round__holiday=${holiday}&player=${player}`);
 var duration = 700;
 var val = document.getElementById('player_choice').addEventListener('change', re_plot);
@@ -133,7 +133,15 @@ function add_data(dataset, id, type) {
         .data(dataset)
         .enter()
         .append('rect')
-        .attr("x", (d, i) => x(d[0][`${type}`]) - 20 / 2)
+        .attr("x", function (d, i) { 
+            try {
+                var stuff = x(d[0][`${type}`]) - 20 / 2
+            }
+            catch {
+                var stuff = x(d[`${type}`]) - 20 / 2
+            }
+            return stuff }
+            )
         .attr('y', d => y(d.length))
         .attr("width", bar_width)
         .attr("height", d => y(0) - y(d.length))
@@ -146,7 +154,13 @@ function add_data(dataset, id, type) {
 
 function change_data(dataset, id, type) {
 
-    var x_domain = [dataset.slice(0)[0][0][`${type}`] - 1, dataset.slice(-1)[0][0][`${type}`] + 1];
+    try {
+        var x_domain = [dataset.slice(0)[0][0][`${type}`] - 1, dataset.slice(-1)[0][0][`${type}`] + 1];
+    }
+    catch {
+        var x_domain = [dataset.slice(0)[0][`${type}`] - 1, dataset.slice(-1)[0][`${type}`] + 1];
+    }
+    
     var y_max = 0
     for (let i = 0; i < dataset.length; i++) {
         if (y_max < dataset[i].length) {

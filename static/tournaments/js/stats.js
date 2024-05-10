@@ -1,5 +1,5 @@
-var course = '';
-var player = '';
+var course = '1';
+var player = '1';
 var data = await d3.json(`/api/scores?golf_round__holiday=${course}&player=${player}`);
 
 
