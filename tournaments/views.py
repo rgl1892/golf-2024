@@ -78,6 +78,9 @@ class Home(View):
         scores_2 = [0.25 if x != None else 0 for x in scores] 
         through = round(sum(scores_2))
         
+        for x in range(len(latest_scores)):
+            print(latest_scores[x].strokes)
+        
         
 
 
