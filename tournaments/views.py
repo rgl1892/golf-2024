@@ -75,11 +75,12 @@ class Home(View):
         latest_round = GolfRound.objects.last()
         latest_scores = Score.objects.filter(golf_round=latest_round)
         scores =   [score.strokes for score in latest_scores]
-        scores_2 = [0.25 if x != None else 0 for x in scores] 
-        through = round(sum(scores_2))
+        scores_2 = [1 if x != None else 0 for x in scores] 
+        through = round(sum(scores_2)/(len(scores_2)/18))
         
-        for x in range(len(latest_scores)):
-            print(latest_scores[x].strokes)
+        
+        # for x in range(len(latest_scores)):
+        #     print(latest_scores[x].strokes)
         
         
 
