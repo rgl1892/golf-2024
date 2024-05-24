@@ -36,7 +36,7 @@
             <div class="col">
                 <div class="input-group mb-3">
 
-                    <input type="text" name="{{score.player.id}}" value={% if score.strokes == None %} "" {% else %}
+                    <input type="number" pattern="[0-9]*" inputmode="numeric" name="{{score.player.id}}" value={% if score.strokes == None %} "" {% else %}
                         {{score.strokes}} {% endif %} {{score.strokes}} id="{{player.0}}_handicap"
                         class="input-group-text">
                     <div class="input-group-text input-group-text-check">
