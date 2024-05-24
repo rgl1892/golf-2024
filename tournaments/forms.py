@@ -5,6 +5,7 @@ from django.contrib.auth import password_validation
 
 
 list_of_players = [(player.id,player) for player in Player.objects.all()]
+# list_of_players = []
 holes = [(x,x) for x in range(19)]
 holidays = [(holiday.id,holiday) for holiday in Holiday.objects.all()]
 round_choices = [(x+1,x+1) for x in range(5)]

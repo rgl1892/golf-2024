@@ -51,6 +51,11 @@ def getPlayerStrokes(golf_round,player):
     strokes = sum([score.strokes if score.strokes != None else 0 for score in scores])
     return strokes
 
+def getPlayerToPar(golf_round,player):
+    scores = Score.objects.filter(player=player,golf_round=golf_round)
+    strokes = sum([score.strokes - score.hole.par if score.strokes != None else 0 for score in scores])
+    return strokes
+
 def addProTips(tips,chosen_course):
     
     courses = Course.objects.filter(course_name=chosen_course)
@@ -587,11 +592,24 @@ def uploadHighlight(request):
         else:
             return redirect('new_highlight')
 class PlayerStats(View):
-    template_name = 'tournaments/player_stats.html'
+    template_name = 'tournaments/player_stats/player_stats.html'
 
     def get(self,request):
 
-        context = {'test':'result'}
+        players = Player.objects.all()
+        player_scores=[]
+        for player in players:
+            rounds = GolfRound.objects.all()
+            try:
+                max_score = max([getPlayerScore(player=player,golf_round=golf_round) for golf_round in rounds if getPlayerScore(player=player,golf_round=golf_round) > 0])
+                min_score = min([getPlayerStrokes(player=player,golf_round=golf_round) for golf_round in rounds if getPlayerStrokes(player=player,golf_round=golf_round) >0])
+                min_to_par = min([getPlayerToPar(player=player,golf_round=golf_round) for golf_round in rounds if getPlayerStrokes(player=player,golf_round=golf_round) >0])
+            except:
+                max_score = ''
+                min_score = ''
+                min_to_par = ''
+            player_scores.append([player,max_score,min_score,min_to_par])
+        context = {'players':player_scores}
 
         return render(request,self.template_name,context)
     
