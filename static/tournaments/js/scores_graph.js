@@ -1,18 +1,23 @@
-const value = JSON.parse(document.getElementById('hello-data').textContent);
+// const value = JSON.parse(document.getElementById('player-1').textContent) |
+//  JSON.parse(document.getElementById('player-2').textContent)|
+//  JSON.parse(document.getElementById('player-3').textContent)|
+//  JSON.parse(document.getElementById('player-4').textContent);
+
+const value = JSON.parse(document.getElementById('player').textContent)
+const start = 0;
+const end = 18;
 
 
 const data = await d3.json(`/api/scores?golf_round__holiday=${value.holiday_id}&golf_round__id=${value.round_id}`);
-console.log(data);
 
-const player_1 = data.slice(0,18);
+function plot(dataset,name,div_id) {
 
-function plot(dataset,name) {
     var margin = { top: 50, right: 50, bottom: 100, left: 50 },
-        width = window.innerWidth*(1-5/7) - margin.left - margin.right ,
+        width = document.getElementById(`${div_id}`).offsetWidth - margin.left - margin.right ,
         height = 300 - margin.top - margin.bottom,
         bar_width = width/25;
     
-    var svg = d3.select('div.chart').append('svg')
+    var svg = d3.select(`div.${div_id}`).append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
       .append('g')
@@ -71,7 +76,7 @@ function plot(dataset,name) {
                         .text(d => `${d.strokes} shots`);
 
 }
-plot(data.slice(0,18),data.slice(0,18)[0]['player']['first_name']);
-plot(data.slice(18,36),data.slice(18,36)[0]['player']['first_name']);
-plot(data.slice(36,54),data.slice(36,54)[0]['player']['first_name']);
-plot(data.slice(54,72),data.slice(54,72)[0]['player']['first_name']);
+plot(data.slice(start,end),data.slice(start,end)[0]['player']['first_name'],'player-1');
+plot(data.slice(start+(18*1),end+(18*1)),data.slice(start+(18*1),end+(18*1))[0]['player']['first_name'],'player-2');
+plot(data.slice(start+(18*2),end+(18*2)),data.slice(start+(18*2),end+(18*2))[0]['player']['first_name'],'player-3');
+plot(data.slice(start+(18*3),end+(18*3)),data.slice(start+(18*3),end+(18*3))[0]['player']['first_name'],'player-4');
