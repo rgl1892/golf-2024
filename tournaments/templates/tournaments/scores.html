@@ -124,27 +124,21 @@
     </table>
     
 <div class="row">
-    <div class="col">
-        <div class="chart">
-        <script id="player-1" type="application/json">{"start": 0,"end":18,"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
+    <div class="col-sm-12 col-lg-6 player-1" id="player-1">
+        <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
         <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
     </div>
-    <div class="col">
-        <div class="chart">
-        <script id="player-2" type="application/json">{"start": 18,"end":36,"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
+    <div class="col-sm-12 col-lg-6 player-2" id="player-2">
+        <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
         <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
     </div>
-    <div class="col">
-        <div class="chart">
-        <script id="player-3" type="application/json">{"start": 36,"end":54,"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
+    <div class="col-sm-12 col-lg-6 player-3" id="player-3">
+        <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
         <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
     </div>
-    <div class="col">
-        <div class="chart">
-        <script id="player-4" type="application/json">{"start": 54,"end":72,"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
+    <div class="col-sm-12 col-lg-6 player-4" id="player-4">
+        <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
         <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
     </div>
-    </div>
-</div>
 </div>
 {% endblock content %}
