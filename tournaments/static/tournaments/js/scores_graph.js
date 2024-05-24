@@ -1,12 +1,21 @@
-const value = JSON.parse(document.getElementById('hello-data').textContent);
+// const value = JSON.parse(document.getElementById('player-1').textContent) |
+//  JSON.parse(document.getElementById('player-2').textContent)|
+//  JSON.parse(document.getElementById('player-3').textContent)|
+//  JSON.parse(document.getElementById('player-4').textContent);
+
+try {const value = JSON.parse(document.getElementById('player-1').textContent)}
+catch { const value =0}
 
 
 const data = await d3.json(`/api/scores?golf_round__holiday=${value.holiday_id}&golf_round__id=${value.round_id}`);
-console.log(data);
 
-const player_1 = data.slice(0,18);
+console.log(value);
+
+const player_1 = data.slice(value['start'],value['end']);
+
 
 function plot(dataset,name) {
+
     var margin = { top: 50, right: 50, bottom: 100, left: 50 },
         width = window.innerWidth*(1-5/7) - margin.left - margin.right ,
         height = 300 - margin.top - margin.bottom,
@@ -71,7 +80,4 @@ function plot(dataset,name) {
                         .text(d => `${d.strokes} shots`);
 
 }
-plot(data.slice(0,18),data.slice(0,18)[0]['player']['first_name']);
-plot(data.slice(18,36),data.slice(18,36)[0]['player']['first_name']);
-plot(data.slice(36,54),data.slice(36,54)[0]['player']['first_name']);
-plot(data.slice(54,72),data.slice(54,72)[0]['player']['first_name']);
+plot(data.slice(value['start'],value['end']),data.slice(value['start'],value['end'])[0]['player']['first_name']);

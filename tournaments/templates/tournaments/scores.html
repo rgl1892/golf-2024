@@ -122,10 +122,26 @@
         </tr>
         {% endif %}
     </table>
-
+    
 <div class="row">
     <div class="col">
         <div class="chart">
+        <script id="player-1" type="application/json">{"start": 0,"end":18,"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
+        <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
+    </div>
+    <div class="col">
+        <div class="chart">
+        <script id="player-2" type="application/json">{"start": 18,"end":36,"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
+        <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
+    </div>
+    <div class="col">
+        <div class="chart">
+        <script id="player-3" type="application/json">{"start": 36,"end":54,"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
+        <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
+    </div>
+    <div class="col">
+        <div class="chart">
+        <script id="player-4" type="application/json">{"start": 54,"end":72,"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
         <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
     </div>
     </div>
