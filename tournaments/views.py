@@ -635,8 +635,7 @@ class StatsPage(View):
         stable = [0,1,2,3,4,5,6]
         stable_scores = [len([score.stableford_score for score in scores if score.stableford_score == stable_points]) for stable_points in stable]
         stable_per_round = list(map(lambda x :round(x/rounds,2),stable_scores))
-
-
+        avg_score = [stable_per_round[x]*x for x in range(len(stable))]
         holidays = Holiday.objects.all()
         context = {
             'player':player,
@@ -645,7 +644,8 @@ class StatsPage(View):
             'pars_birdies':pars_birdies,
             'per_round':per_round,
             'stable_scores':stable_scores,
-            'stable_per_round':stable_per_round
+            'stable_per_round':stable_per_round,
+            'avg_score':avg_score
         }
         return render(request, self.template_name, context)
     

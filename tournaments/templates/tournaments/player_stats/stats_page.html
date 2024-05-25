@@ -9,11 +9,11 @@
 </div>
 <div class="row justify-content-center" >
 
-    <div class="col-10 col-lg-4 p-2 d-flex" >
+    <div class="col-10 col-lg-4 p-2 d-flex" style="height:400px; width:400px;overflow:hidden;" >
     {% if player.picture %}
-        <img src="{{player.picture.url}}" class="img-fluid mx-auto " alt="...">
+        <img src="{{player.picture.url}}" class="mx-auto " alt="...">
     {% else %}
-        <img src="{% static 'tournaments/pictures/superbock.png' %}" class="img-fluid mx-auto" alt="...">  
+        <img src="{% static 'tournaments/pictures/superbock.png' %}" class="mx-auto h-100 " alt="...">  
     {% endif %}
     </div>
     
@@ -74,17 +74,17 @@
             </div>
             <div class="col-8 col-lg-6">
                 <p>
-                    Blobs per round: {{stable_per_round.0}}
+                    Blobs per round: {{stable_per_round.0}}<br>-> {{avg_score.0}} points
                     <br>
-                    1's per round: {{stable_per_round.1}}
+                    1's per round: {{stable_per_round.1}}<br>-> {{avg_score.1}} points
                     <br>
-                    2's per round: {{stable_per_round.2}}
+                    2's per round: {{stable_per_round.2}}<br>-> {{avg_score.2}} points
                     <br>
-                    3's per round: {{stable_per_round.3}}
+                    3's per round: {{stable_per_round.3}}<br>-> {{avg_score.3}} points
                     <br>
-                    4's per round: {{stable_per_round.4}}
+                    4's per round: {{stable_per_round.4}}<br>-> {{avg_score.4}} points
                     <br>
-                    5's per round: {{stable_per_round.5}}
+                    5's per round: {{stable_per_round.5}}<br>-> {{avg_score.5}} points
                 </p>
             </div>
         </div>
