@@ -4,7 +4,7 @@
 {% load static %}
 <div class="row">
     <dov class="col">
-        <a class="navbar-brand " href="{% url 'player_stats' %}">Player Stats</a>
+        <a class="navbar-brand " href="{% url 'player_stats' %}">Back to Player Stats</a>
     </dov>
 </div>
 <div class="row justify-content-center" >
@@ -89,7 +89,68 @@
             </div>
         </div>
     </div>
+</div>
     
+<div class="row">
+    <div class="accordion" id="accordionExample">
+        {% for round in player_rounds %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{forloop.counter}}">
+                <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapse{{forloop.counter}}"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
+                >
+                    {{round.holiday.tournament}}
+                    <br>
+                    Holiday {{round.holiday.holiday_number}} Round {{round.round_number}} {{round.score_set.all.0.hole.course}}
+                </button>
+            </h2>
+            <div
+                id="collapse{{forloop.counter}}"
+                class="accordion-collapse collapse"
+                aria-labelledby="heading{{forloop.counter}}"
+                data-bs-parent="#accordionExample"
+            >
+                <div class="accordion-body">
+                    <div
+                        class="table-responsive"
+                    >
+                        <table
+                            class="table"
+                        >
+                            <thead>
+                                <tr>
+                                    <th scope="col">Hole</th>
+                                    <th scope="col">Par</th>
+                                    <th scope="col">Shots</th>
+                                    <th scope="col">Points</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for score in round.score_set.all %}
+                                {% if score.player == player %}
+                                <tr class="">
+                                    <td scope="row">{{score.hole.hole_number}}</td>
+                                    <td scope="row">{{score.hole.par}}</td>
+                                    <td scope="row">{{score.strokes}}</td>
+                                    <td scope="row">{{score.stableford_score}}</td>
+                                    
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    {% endfor %}  
+    </div>
     
-<div>
+</div>
 {% endblock content %}

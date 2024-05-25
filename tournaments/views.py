@@ -630,13 +630,22 @@ class StatsPage(View):
                         len([score.strokes for score in scores if score.strokes - score.hole.par == 2]),
                         len([score.strokes for score in scores if score.strokes - score.hole.par > 2])
                         ]
-        per_round = list(map(lambda x :round(x/rounds,2),pars_birdies))
-        
+        try:
+            per_round = list(map(lambda x :round(x/rounds,2),pars_birdies))
+        except:
+            per_round = [pars_birdies]
         stable = [0,1,2,3,4,5,6]
         stable_scores = [len([score.stableford_score for score in scores if score.stableford_score == stable_points]) for stable_points in stable]
-        stable_per_round = list(map(lambda x :round(x/rounds,2),stable_scores))
+        try:
+            stable_per_round = list(map(lambda x :round(x/rounds,2),stable_scores))
+        except:
+            stable_per_round = stable_scores
         avg_score = [stable_per_round[x]*x for x in range(len(stable))]
         holidays = Holiday.objects.all()
+        golf_rounds = scores.values_list('golf_round').distinct()
+        player_rounds = [GolfRound.objects.filter(id=choice[0]).get() for choice in golf_rounds]
+
+
         context = {
             'player':player,
             'holidays':holidays,
@@ -645,7 +654,8 @@ class StatsPage(View):
             'per_round':per_round,
             'stable_scores':stable_scores,
             'stable_per_round':stable_per_round,
-            'avg_score':avg_score
+            'avg_score':avg_score,
+            'player_rounds':player_rounds
         }
         return render(request, self.template_name, context)
     
