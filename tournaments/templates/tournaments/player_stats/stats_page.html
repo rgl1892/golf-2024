@@ -2,13 +2,18 @@
 
 {% block content %}
 {% load static %}
+<div class="row">
+    <dov class="col">
+        <a class="navbar-brand " href="{% url 'player_stats' %}">Player Stats</a>
+    </dov>
+</div>
 <div class="row justify-content-center" >
 
-    <div class="col-10 col-lg-4 p-2" >
+    <div class="col-10 col-lg-4 p-2 d-flex" >
     {% if player.picture %}
-        <img src="{{player.picture.url}}" class="img-fluid" alt="...">
+        <img src="{{player.picture.url}}" class="img-fluid mx-auto " alt="...">
     {% else %}
-        <img src="{% static 'tournaments/pictures/superbock.png' %}" class="img-fluid" alt="...">  
+        <img src="{% static 'tournaments/pictures/superbock.png' %}" class="img-fluid mx-auto" alt="...">  
     {% endif %}
     </div>
     
@@ -16,34 +21,71 @@
     <div class="col-5 col-lg-4 p-2  ">
         <h1>{{player.first_name}} {{player.last_name}}</h1>
         <div class="row">
-            <div class="col-12 col-lg-3">
-        <p>Rounds played: {{rounds}}
-            <br>
-            Eagles: {{eagles}}
-            <br>
-            Birdies: {{birdies}}
-            <br>
-            Pars: {{pars}}
-            <br>
-            Bogeys: {{bogeys}}
-            <br>
-            Worse: {{worse}}
-        </p>
-    </div>
-    <div class="col-12 col-lg-3">
-        <p>
-            <br>
-            Eagles per round:
-            <br>
-            Birdies per round:
-            <br>
-            Pars per round:
-            <br>
-            Bogeys per round:
+            <div class="col-12 col-lg-6">
+                <p>Rounds played: {{rounds}}
+                    <br>
+                    Eagles: {{pars_birdies.0}}
+                    <br>
+                    Birdies: {{pars_birdies.1}}
+                    <br>
+                    Pars: {{pars_birdies.2}}
+                    <br>
+                    Bogeys: {{pars_birdies.3}}
+                    <br>
+                    Doubles: {{pars_birdies.4}}
+                    <br>
+                    Worse: {{pars_birdies.5}}
+                </p>
+            </div>
+            <div class="col-12 col-lg-6">
+                <p>
+                    <br>
+                    Eagles per round: {{per_round.0}}
+                    <br>
+                    Birdies per round: {{per_round.1}}
+                    <br>
+                    Pars per round: {{per_round.2}}
+                    <br>
+                    Bogeys per round: {{per_round.3}}
+                    <br>
+                    Doubles per round: {{per_round.4}}
+                    <br>
+                    Worse per round: {{per_round.5}}
 
-        </p>
-    </div>
-    </div>
+                </p>
+            </div>
+            <hr class="border border-warning border-2 opacity-100">
+            <div class="col-12 col-lg-6">
+                <p>
+                    Blobs: {{stable_scores.0}}
+                    <br>
+                    1's: {{stable_scores.1}}
+                    <br>
+                    2's: {{stable_scores.2}}
+                    <br>
+                    3's: {{stable_scores.3}}
+                    <br>
+                    4's: {{stable_scores.4}}
+                    <br>
+                    5's: {{stable_scores.5}}
+                </p>
+            </div>
+            <div class="col-12 col-lg-6">
+                <p>
+                    Blobs: {{stable_per_round.0}}
+                    <br>
+                    1's: {{stable_per_round.1}}
+                    <br>
+                    2's: {{stable_per_round.2}}
+                    <br>
+                    3's: {{stable_per_round.3}}
+                    <br>
+                    4's: {{stable_per_round.4}}
+                    <br>
+                    5's: {{stable_per_round.5}}
+                </p>
+            </div>
+        </div>
     </div>
     
     

@@ -622,21 +622,30 @@ class StatsPage(View):
         player = Player.objects.filter(slug=player).get()
         scores = Score.objects.filter(player=player)
         rounds = round(len(scores)/18)
-        eagles = len([score.strokes for score in scores if score.strokes - score.hole.par == -2])
-        birdies = len([score.strokes for score in scores if score.strokes - score.hole.par == -1])
-        pars = len([score.strokes for score in scores if score.strokes - score.hole.par == 0])
-        bogeys = len([score.strokes for score in scores if score.strokes - score.hole.par == 1])
-        worse = len([score.strokes for score in scores if score.strokes - score.hole.par > 1])
+
+        pars_birdies = [len([score.strokes for score in scores if score.strokes - score.hole.par == -2]),
+                        len([score.strokes for score in scores if score.strokes - score.hole.par == -1]),
+                        len([score.strokes for score in scores if score.strokes - score.hole.par == 0]),
+                        len([score.strokes for score in scores if score.strokes - score.hole.par == 1]),
+                        len([score.strokes for score in scores if score.strokes - score.hole.par == 2]),
+                        len([score.strokes for score in scores if score.strokes - score.hole.par > 2])
+                        ]
+        per_round = list(map(lambda x :round(x/rounds,2),pars_birdies))
+        
+        stable = [0,1,2,3,4,5,6]
+        stable_scores = [len([score.stableford_score for score in scores if score.stableford_score == stable_points]) for stable_points in stable]
+        stable_per_round = list(map(lambda x :round(x/rounds,2),stable_scores))
+
+
         holidays = Holiday.objects.all()
         context = {
             'player':player,
             'holidays':holidays,
             'rounds':rounds,
-            'eagles':eagles,
-            'birdies':birdies,
-            'pars':pars,
-            'bogeys':bogeys,
-            'worse':worse
+            'pars_birdies':pars_birdies,
+            'per_round':per_round,
+            'stable_scores':stable_scores,
+            'stable_per_round':stable_per_round
         }
         return render(request, self.template_name, context)
     
