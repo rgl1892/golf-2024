@@ -644,6 +644,10 @@ class StatsPage(View):
         holidays = Holiday.objects.all()
         golf_rounds = scores.values_list('golf_round').distinct()
         player_rounds = [GolfRound.objects.filter(id=choice[0]).get() for choice in golf_rounds]
+        player_totals = [sum([score.strokes for score in choice.score_set.filter(player=player)]) for choice in player_rounds]
+        player_stab_totals = [sum([score.stableford_score for score in choice.score_set.filter(player=player)]) for choice in player_rounds]
+
+
 
 
         context = {
@@ -655,7 +659,9 @@ class StatsPage(View):
             'stable_scores':stable_scores,
             'stable_per_round':stable_per_round,
             'avg_score':avg_score,
-            'player_rounds':player_rounds
+            'player_rounds':player_rounds,
+            'player_totals':player_totals,
+            'player_stab_totals':player_stab_totals
         }
         return render(request, self.template_name, context)
     

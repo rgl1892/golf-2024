@@ -3,13 +3,13 @@
 {% block content %}
 {% load static %}
 <div class="row">
-    <dov class="col">
+    <div class="col">
         <a class="navbar-brand " href="{% url 'player_stats' %}">Back to Player Stats</a>
-    </dov>
+    </div>
 </div>
 <div class="row justify-content-center" >
 
-    <div class="col-10 col-lg-4 p-2 d-flex" style="height:350px; width:350px;overflow:hidden;" >
+    <div class="col-10 col-lg-6 p-2 m-2 d-flex" style="height:350px; width:350px;overflow:hidden;" >
     {% if player.picture %}
         <img src="{{player.picture.url}}" class="mx-auto " alt="...">
     {% else %}
@@ -56,7 +56,11 @@
 
                 </p>
             </div>
+
+
+    
             <hr class="border border-warning border-2 opacity-100">
+            <div class="row justify-content-center">
             <div class="col-8 col-lg-6">
                 <p>
                     Blobs: {{stable_scores.0}}
@@ -90,8 +94,9 @@
         </div>
     </div>
 </div>
-    
-<div class="row">
+<hr class="border border-warning border-2 opacity-100">
+<div class="row my-4">
+    <h2>Rounds</h2>
     <div class="accordion" id="accordionExample">
         {% for round in player_rounds %}
         <div class="accordion-item">
@@ -104,7 +109,7 @@
                     aria-expanded="true"
                     aria-controls="collapseOne"
                 >
-                    {{round.holiday.tournament}}
+                    {{round.holiday.tournament}} ---- {{player_stab_totals|slice:forloop.counter|last}} Points
                     <br>
                     Holiday {{round.holiday.holiday_number}} Round {{round.round_number}} {{round.score_set.all.0.hole.course}}
                 </button>
@@ -116,6 +121,7 @@
                 data-bs-parent="#accordionExample"
             >
                 <div class="accordion-body">
+                    <h5>Strokes : {{player_totals|slice:forloop.counter|last}}</h5>
                     <div
                         class="table-responsive"
                     >
