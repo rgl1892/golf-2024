@@ -478,6 +478,7 @@ class StatsView(View):
             'holidays':holidays
         }
         return render(request, self.template_name, context)
+
     
 class HighlightsHome(View):
     template_name = 'tournaments/highlights_home.html'
@@ -612,6 +613,32 @@ class PlayerStats(View):
         context = {'players':player_scores}
 
         return render(request,self.template_name,context)
+    
+class StatsPage(View):
+
+    template_name ='tournaments/player_stats/stats_page.html'
+    def get(self,request,player):
+        
+        player = Player.objects.filter(slug=player).get()
+        scores = Score.objects.filter(player=player)
+        rounds = round(len(scores)/18)
+        eagles = len([score.strokes for score in scores if score.strokes - score.hole.par == -2])
+        birdies = len([score.strokes for score in scores if score.strokes - score.hole.par == -1])
+        pars = len([score.strokes for score in scores if score.strokes - score.hole.par == 0])
+        bogeys = len([score.strokes for score in scores if score.strokes - score.hole.par == 1])
+        worse = len([score.strokes for score in scores if score.strokes - score.hole.par > 1])
+        holidays = Holiday.objects.all()
+        context = {
+            'player':player,
+            'holidays':holidays,
+            'rounds':rounds,
+            'eagles':eagles,
+            'birdies':birdies,
+            'pars':pars,
+            'bogeys':bogeys,
+            'worse':worse
+        }
+        return render(request, self.template_name, context)
     
 class CoursesOverview(View):
     template_name = 'tournaments/courses_overview.html'

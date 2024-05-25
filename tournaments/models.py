@@ -17,6 +17,7 @@ class Player(models.Model):
     championships = models.IntegerField()
     picture = models.ImageField(blank=True,null=True)
     info = models.TextField(blank=True,null=True)
+    slug = models.SlugField(default="", null=False)
 
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"

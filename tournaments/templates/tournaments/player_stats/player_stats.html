@@ -10,8 +10,11 @@
       <div class="col-md-4">
         {% if player.0.picture %}
         <img src="{{player.0.picture.url}}" class="card-img-top" alt="...">
+        {% else %}
+        <img src="{% static 'tournaments/pictures/superbock.png' %}" class="card-img-top" alt="...">
         {% endif %}
       </div>
+      
       <div class="col-md-8">
         <div class="card-body">
           <h5 class="card-title">{{player.0}}</h5>
@@ -19,8 +22,11 @@
           <p class="card-text">Highest Score: {{player.1}}</p>
           <p class="card-text">Lowest Strokes: {{player.2}} To Par: {{player.3}}</p>
           <p class="card-text"><small class="text-body-secondary">{{player.0.info}}</small></p>
+          <a href="{% url 'stats_page' player=player.0.slug %}" class="btn btn-warning">More</a>
+
         </div>
       </div>
+    
     </div>
   </div>
 {% endfor %}

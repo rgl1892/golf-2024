@@ -1,0 +1,51 @@
+{% extends "tournaments/base.html" %}
+
+{% block content %}
+{% load static %}
+<div class="row justify-content-center" >
+
+    <div class="col-10 col-lg-4 p-2" >
+    {% if player.picture %}
+        <img src="{{player.picture.url}}" class="img-fluid" alt="...">
+    {% else %}
+        <img src="{% static 'tournaments/pictures/superbock.png' %}" class="img-fluid" alt="...">  
+    {% endif %}
+    </div>
+    
+    
+    <div class="col-5 col-lg-4 p-2  ">
+        <h1>{{player.first_name}} {{player.last_name}}</h1>
+        <div class="row">
+            <div class="col">
+        <p>Rounds played: {{rounds}}
+            <br>
+            Eagles: {{eagles}}
+            <br>
+            Birdies: {{birdies}}
+            <br>
+            Pars: {{pars}}
+            <br>
+            Bogeys: {{bogeys}}
+            <br>
+            Worse: {{worse}}
+        </p>
+    </div>
+    <div class="col">
+        <p>
+            <br>
+            Eagles per round:
+            <br>
+            Birdies per round:
+            <br>
+            Pars per round:
+            <br>
+            Bogeys per round:
+
+        </p>
+    </div>
+    </div>
+    </div>
+    
+    
+<div>
+{% endblock content %}

@@ -14,9 +14,12 @@ class HolidayAdmin(admin.ModelAdmin):
 
 class CourseAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug":['course_name',"tee"]}
+
+class PlayerAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug":['first_name',"last_name"]}
     
     
-admin.site.register(Player)
+admin.site.register(Player,PlayerAdmin)
 admin.site.register(Holiday,HolidayAdmin)
 admin.site.register(Course,CourseAdmin)
 admin.site.register(GolfRound)
