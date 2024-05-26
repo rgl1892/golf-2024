@@ -46,6 +46,16 @@ def getPlayerScore(golf_round,player):
     stableford = sum([score.stableford_score if score.stableford_score != None else 0 for score in scores])
     return stableford
 
+def getPlayerStrokesFull(golf_round,player):
+    scores = Score.objects.filter(player=player,golf_round=golf_round)
+    strokes = [score.strokes if score.strokes != None else None for score in scores]
+    clean_strokes = [item for item in strokes if item != None]
+    if len(clean_strokes) == 18:
+        final = sum(clean_strokes)
+    else:
+        final = None
+    return final
+
 def getPlayerStrokes(golf_round,player):
     scores = Score.objects.filter(player=player,golf_round=golf_round)
     strokes = sum([score.strokes if score.strokes != None else 0 for score in scores])
@@ -55,6 +65,16 @@ def getPlayerToPar(golf_round,player):
     scores = Score.objects.filter(player=player,golf_round=golf_round)
     strokes = sum([score.strokes - score.hole.par if score.strokes != None else 0 for score in scores])
     return strokes
+
+def getPlayerToParFull(golf_round,player):
+    scores = Score.objects.filter(player=player,golf_round=golf_round)
+    strokes = [score.strokes - score.hole.par if score.strokes != None else None for score in scores]
+    clean_strokes = [item for item in strokes if item != None]
+    if len(clean_strokes) == 18:
+        final = sum(clean_strokes)
+    else:
+        final = None
+    return final
 
 def addProTips(tips,chosen_course):
     
@@ -603,13 +623,16 @@ class PlayerStats(View):
             rounds = GolfRound.objects.all()
             try:
                 max_score = max([getPlayerScore(player=player,golf_round=golf_round) for golf_round in rounds if getPlayerScore(player=player,golf_round=golf_round) > 0])
-                min_score = min([getPlayerStrokes(player=player,golf_round=golf_round) for golf_round in rounds if getPlayerStrokes(player=player,golf_round=golf_round) >0])
-                min_to_par = min([getPlayerToPar(player=player,golf_round=golf_round) for golf_round in rounds if getPlayerStrokes(player=player,golf_round=golf_round) >0])
+                min_score_set_up = [getPlayerStrokesFull(player=player,golf_round=golf_round) for golf_round in rounds if getPlayerStrokes(player=player,golf_round=golf_round) >0]
+                min_score = min([item for item in min_score_set_up if item != None])
+                min_set_up = [getPlayerToParFull(player=player,golf_round=golf_round) for golf_round in rounds if getPlayerStrokes(player=player,golf_round=golf_round) >0]
+                min_to_par = min([item for item in min_set_up if item != None])
             except:
                 max_score = ''
                 min_score = ''
                 min_to_par = ''
             player_scores.append([player,max_score,min_score,min_to_par])
+            
         context = {'players':player_scores}
 
         return render(request,self.template_name,context)
