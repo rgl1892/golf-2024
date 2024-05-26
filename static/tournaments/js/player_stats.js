@@ -1,7 +1,9 @@
-var holiday = '1';
+var holiday = '60';
 var player = '1';
-var round_number = '';
+var round_number = '1';
 var data = await d3.json(`/api/scores?golf_round__holiday=${holiday}&player=${player}&golf_round__round_number=${round_number}`);
+
+var font_size = 1;
 
 function line_plot(data,id) {
     const div_width = document.getElementById(`chart-${id}`).offsetWidth;
@@ -14,7 +16,9 @@ function line_plot(data,id) {
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
     .append('g')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+        .attr('transform', `translate(${margin.left}, ${margin.top})`)
+        .attr('stroke-width',"2px")
+        ;
 
     console.log(data.length,)
     
@@ -27,12 +31,14 @@ function line_plot(data,id) {
     svg.append('g')
         .attr('class', 'axis')
         .attr('transform', `translate(${0},${height})`)
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x))
+        .attr('font-size',`${font_size}em`);
         
     svg.append('g')
         .attr('class', 'axis')
         .attr('transform', `translate(${0},${0})`)
-        .call(d3.axisLeft(y));
+        .call(d3.axisLeft(y))
+        .attr('font-size',`${font_size}em`);
     
     var line = d3.line()
                 .x((d,i) => x(i))
@@ -42,6 +48,7 @@ function line_plot(data,id) {
         .attr('d',line(data))
         .attr('fill','none')
         .attr('stroke',"var(--bs-body-color)")
+        .attr('stroke-width',"2px")
 
 }
 
