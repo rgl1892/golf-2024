@@ -2,27 +2,20 @@
 {% block content %}
 {% load static %}
 </div>
-{% comment %} <img
-  src="{% static 'tournaments\pictures\IMG_8993.jpg' %}"
-  class="picture"
-  alt=""
-/> {% endcomment %}
-<div id="carouselExampleAutoplaying" class="carousel slide picture" data-bs-ride="carousel">
+<div id="carouselExampleAutoplaying" class="carousel slide pic-holder" data-bs-ride="carousel">
   <div class="carousel-indicators">
     <button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
     <button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="2" aria-label="Slide 3"></button>
+
   </div>
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img src="{% static 'tournaments\pictures\IMG_8993.jpg' %}" class="d-block w-100" alt="...">
+      <img src="{% static 'tournaments\pictures\IMG_8993.jpg' %}" class="d-block w-100 min-vh-100 picture" alt="..." style="object-position: 50% 70%;">
     </div>
     <div class="carousel-item">
-      <img src="{% static 'tournaments\pictures\IMG_3254.JPG' %}" class="d-block w-100" alt="...">
+      <img src="{% static 'tournaments\pictures\IMG_3254.JPG' %}" class="d-block w-100 min-vh-100 picture" alt="...">
     </div>
-    <div class="carousel-item">
-      <img src="..." class="d-block w-100" alt="...">
-    </div>
+
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>

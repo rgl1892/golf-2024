@@ -88,14 +88,28 @@ a:active {
   text-decoration: none; 
 }
 
-.picture{
-  /* left: 50%; */
-  /* margin-left: -200px; */
+.pic-holder{
   position: absolute;
   top: 0;
   height: 100%;
   overflow: hidden;
-  width:100%;
+
   object-fit: cover;
-  object-position: 50% 70%;
+  /* object-position: 50% 70%; */
+}
+.picture{
+  overflow: hidden;
+  object-position: 50% 50%;
+  object-fit: cover;
+}
+.carousel {
+  height: 100vh;
+  width: 100%;
+  overflow:hidden;
+}
+.carousel .carousel-inner {
+  height:100%;   
+  overflow: hidden;
+
+  object-fit: cover;
 }
