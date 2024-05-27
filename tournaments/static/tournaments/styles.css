@@ -92,15 +92,15 @@ a:active {
   position: absolute;
   top: 0;
   height: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
 
-  object-fit: cover;
+  /* object-fit: cover; */
   /* object-position: 50% 70%; */
 }
 .picture{
   overflow: hidden;
-  object-position: 50% 50%;
-  object-fit: cover;
+  object-position: 50% 70%;
+  object-fit: co;
 }
 .carousel {
   height: 100vh;
