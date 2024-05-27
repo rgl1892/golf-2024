@@ -92,10 +92,10 @@ a:active {
   position: absolute;
   top: 0;
   height: 100%;
-  /* overflow: hidden; */
+  overflow: hidden;
 
-  /* object-fit: cover; */
-  /* object-position: 50% 70%; */
+  object-fit: cover;
+  object-position: 50% 70%;
 }
 .picture{
   overflow: hidden;
