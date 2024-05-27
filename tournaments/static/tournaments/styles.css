@@ -100,7 +100,7 @@ a:active {
 .picture{
   overflow: hidden;
   object-position: 50% 70%;
-  object-fit: co;
+  object-fit: cover;
 }
 .carousel {
   height: 100vh;
