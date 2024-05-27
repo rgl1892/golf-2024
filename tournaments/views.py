@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Tournament, Holiday, GolfRound, Score, Player, Hole, Handicap, Course,Resort,Video,ProTip
+from .models import Tournament, Holiday, GolfRound, Score, Player, Hole, Handicap, Course,Resort,Video,ProTip,CarouselImage
 from django.views.generic import View
 from django.http import HttpResponse
 from django.db import IntegrityError
@@ -103,7 +103,7 @@ class Home(View):
         scores_2 = [1 if x != None else 0 for x in scores] 
         through = round(sum(scores_2)/(len(scores_2)/18))
         
-        
+        images = CarouselImage.objects.all()
         # for x in range(len(latest_scores)):
         #     print(latest_scores[x].strokes)
         
@@ -123,6 +123,7 @@ class Home(View):
             'latest_round':latest_round,
             'latest_scores':latest_scores,
             'through':through,
+            'images':images,
             }
         return render(request, self.template_name, context)
 

@@ -108,3 +108,8 @@ class Score(models.Model):
     def __str__(self):
         return f"{self.player} {self.hole} Score {self.golf_round}"
     
+class CarouselImage(models.Model):
+    image = models.ImageField()
+
+    
+    
