@@ -92,9 +92,9 @@ a:active {
   /* left: 50%; */
   /* margin-left: -200px; */
   position: absolute;
-  height: 50%;
+  height: 100%;
   overflow: hidden;
   width:100%;
   object-fit: cover;
-  object-position: 50% 70%;
+  /* object-position: 50% 70%; */
 }
