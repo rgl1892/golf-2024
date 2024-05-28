@@ -19,3 +19,5 @@ id,course_name,tee,slope_rating,course_rating,resort_id,slug
 18,"Pine Ridge",Yellow,123,68.7,4,pine-ridge-yellow
 19,Hersham,White,113,65.6,4,hersham-white
 20,Hersham,Yellow,111,64.6,4,hersham-yellow
+21,Silvermere,White,127,71.9,4,silvermere-white
+22,Silvermere,Yellow,120,70.1,4,silvermere-yellow
