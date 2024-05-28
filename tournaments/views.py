@@ -103,7 +103,7 @@ class Home(View):
         scores_2 = [1 if x != None else 0 for x in scores] 
         through = round(sum(scores_2)/(len(scores_2)/18))
         
-        images = CarouselImage.objects.all()
+        images = CarouselImage.objects.all().order_by('?')
         # for x in range(len(latest_scores)):
         #     print(latest_scores[x].strokes)
         
