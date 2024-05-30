@@ -12,7 +12,7 @@
   <div class="carousel-inner">
     {% for image in images %}
     <div class="carousel-item {% if forloop.counter == 1 %}active{%else%}{%endif%}">
-      <img src="{{image.image.url}}" class="d-block w-100 min-vh-100 picture" alt="..." style="object-position: 50% 70%;">
+      <img src="{{image.image.url}}" class="d-block w-100 min-vh-100 picture" alt="...">
     </div>
     {% endfor %}
   </div>
