@@ -3,12 +3,12 @@
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
   --bs-body-line-height: 1.5;
-  --bs-body-color: #F4D35E;
+  --bs-body-color: #f4d35e;
   /* --bs-body-color: white; */
   /* --bs-body-color: #247116; */
   --bs-body-color-rgb: 33, 37, 41;
   /* --bs-body-bg: #247116; */
-  --bs-body-bg: forestgreen;
+  --bs-body-bg: #228b22;
   
   /* --bs-body-bg: black; */
   /* --bs-body-bg: #5E7FF4; */
@@ -81,11 +81,14 @@ a:link {
 a:visited { 
   text-decoration: none; 
 } 
-a:hover { 
+/* a:hover { 
   text-decoration: none; 
-} 
+}  */
 a:active { 
   text-decoration: none; 
+}
+a {
+  color: #1A1B41;
 }
 
 .pic-holder{

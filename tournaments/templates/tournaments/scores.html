@@ -90,7 +90,7 @@
         </tr>
         {% for player in player_scores %}
         <tr class="table align-middle">
-            <th scope="row" style="position: sticky;">{{player.0.player.first_name}}</th>
+            <th scope="row" style="position: sticky;"><a title='Stats' href={% url 'stats_page' player=player.0.player.slug %}>{{player.0.player.first_name}}</a></th>
             {% for score in player %}
             
             {% if score.strokes == None %}
