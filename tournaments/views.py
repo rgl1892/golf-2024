@@ -104,6 +104,7 @@ class Home(View):
         through = round(sum(scores_2)/(len(scores_2)/18))
         
         images = CarouselImage.objects.all().order_by('?')[:4]
+        last_rounds = GolfRound.objects.order_by('id').reverse()[1:5]
         # for x in range(len(latest_scores)):
         #     print(latest_scores[x].strokes)
         
@@ -124,6 +125,7 @@ class Home(View):
             'latest_scores':latest_scores,
             'through':through,
             'images':images,
+            'last_rounds':last_rounds
             }
         return render(request, self.template_name, context)
 
