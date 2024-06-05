@@ -348,7 +348,9 @@ class ScoresView(View):
                               sum([score.strokes if score.strokes != None else 0 for score in scores.filter(player=player['player_id'])]),
                               sum([score.strokes - score.hole.par if score.strokes != None else 0 for score in scores.filter(player=player['player_id'])]),
                               sum([score.stableford_score if score.stableford_score != None else 0 for score in scores.filter(player=player['player_id'])]),
-                                float(handicap_index)
+                              float(handicap_index),
+                              sum([score.strokes if (score.strokes != None) and (score.hole.hole_number <= 9) else 0 for score in scores.filter(player=player['player_id'])]),
+                              sum([score.strokes if (score.strokes != None) and (score.hole.hole_number > 9) else 0 for score in scores.filter(player=player['player_id'])]),
                 ])
 
         hole_numbers = [x for x in range(1, 19)]
@@ -439,7 +441,9 @@ class ScoresView(View):
                               sum([score.strokes if score.strokes != None else 0 for score in scores.filter(player=player['player_id'])]),
                               sum([score.strokes - score.hole.par if score.strokes != None else 0 for score in scores.filter(player=player['player_id'])]),
                               sum([score.stableford_score if score.stableford_score != None else 0 for score in scores.filter(player=player['player_id'])]),
-                                float(handicap_index)
+                                float(handicap_index),
+                              sum([score.strokes if (score.strokes != None) and (score.hole.hole_number <= 9) else 0 for score in scores.filter(player=player['player_id'])]),
+                              sum([score.strokes if (score.strokes != None) and (score.hole.hole_number > 9) else 0 for score in scores.filter(player=player['player_id'])])
                 ])
 
         context = {
@@ -649,12 +653,12 @@ class StatsPage(View):
         scores = Score.objects.filter(player=player)
         rounds = round(len(scores)/18)
 
-        pars_birdies = [len([score.strokes for score in scores if score.strokes - score.hole.par == -2]),
-                        len([score.strokes for score in scores if score.strokes - score.hole.par == -1]),
-                        len([score.strokes for score in scores if score.strokes - score.hole.par == 0]),
-                        len([score.strokes for score in scores if score.strokes - score.hole.par == 1]),
-                        len([score.strokes for score in scores if score.strokes - score.hole.par == 2]),
-                        len([score.strokes for score in scores if score.strokes - score.hole.par > 2])
+        pars_birdies = [len([score.strokes for score in scores if score.strokes != None and score.strokes - score.hole.par == -2]),
+                        len([score.strokes for score in scores if score.strokes != None and score.strokes - score.hole.par == -1]),
+                        len([score.strokes for score in scores if score.strokes != None and score.strokes - score.hole.par == 0]),
+                        len([score.strokes for score in scores if score.strokes != None and score.strokes - score.hole.par == 1]),
+                        len([score.strokes for score in scores if score.strokes != None and score.strokes - score.hole.par == 2]),
+                        len([score.strokes for score in scores if score.strokes != None and score.strokes - score.hole.par > 2])
                         ]
         try:
             per_round = list(map(lambda x :round(x/rounds,2),pars_birdies))
@@ -670,8 +674,8 @@ class StatsPage(View):
         holidays = Holiday.objects.all()
         golf_rounds = scores.values_list('golf_round').distinct()
         player_rounds = [GolfRound.objects.filter(id=choice[0]).get() for choice in golf_rounds]
-        player_totals = [sum([score.strokes for score in choice.score_set.filter(player=player)]) for choice in player_rounds]
-        player_stab_totals = [sum([score.stableford_score for score in choice.score_set.filter(player=player)]) for choice in player_rounds]
+        player_totals = [sum([score.strokes for score in choice.score_set.filter(player=player) if score.strokes != None]) for choice in player_rounds]
+        player_stab_totals = [sum([score.stableford_score for score in choice.score_set.filter(player=player) if score.strokes != None]) for choice in player_rounds]
 
 
 
