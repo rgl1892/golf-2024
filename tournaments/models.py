@@ -48,6 +48,8 @@ class GolfRound(models.Model):
     def __str__(self):
         return f"{self.holiday} {self.round_number}"
     
+
+# TODO change the handicap to round based instead of holiday based
 class Handicap(models.Model):
     handicap_index = models.DecimalField(decimal_places=1,max_digits=3)
     player = models.ForeignKey(Player,on_delete=models.CASCADE)
