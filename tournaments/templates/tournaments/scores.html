@@ -35,10 +35,7 @@
                     <th>To Par</th>
                     <th>Stableford</th>
                     <th>Index</th>
-                    <th>Out</th>
-                    <th>In</th>
-                    <th>Out(P)</th>
-                    <th>In(P)</th>
+                    
                 </tr> 
                 {% for person in handicaps %}
                 <tr>
@@ -48,16 +45,39 @@
                     <td>{{person.3}}</td>
                     <td>{{person.4}}</td>
                     <td>{{person.5}}</td>
+                    
+                </tr>
+                {% endfor %}   
+            </table>
+        </div>
+    
+    <div class="col">
+        <div class="table table-responsive-xxl">
+            <table class="table table-hover">
+                <tr>
+                    <th></th>
+                    <th>Out</th>
+                    <th>In</th>
+                    <th>Out To Par</th>
+                    <th>In To Par</th>
+                    <th>Points Out</th>
+                    <th>Points In</th>
+                </tr> 
+                {% for person in handicaps %}
+                <tr>
+                    <th>{{person.1}}</th>
                     <td>{{person.6}}</td>
                     <td>{{person.7}}</td>
                     <td>{{person.8}}</td>
                     <td>{{person.9}}</td>
+                    <td>{{person.10}}</td>
+                    <td>{{person.11}}</td>
                 </tr>
                 {% endfor %}   
             </table>
         </div>
     </div>
-    
+</div>
         
     
 </div>

@@ -353,6 +353,8 @@ class ScoresView(View):
                               sum([score.strokes if (score.strokes != None) and (score.hole.hole_number > 9) else 0 for score in scores.filter(player=player['player_id'])]),
                               sum([score.strokes - score.hole.par if (score.strokes != None) and (score.hole.hole_number <= 9) else 0 for score in scores.filter(player=player['player_id'])]),
                               sum([score.strokes - score.hole.par if (score.strokes != None) and (score.hole.hole_number > 9) else 0 for score in scores.filter(player=player['player_id'])]),
+                              sum([score.stableford_score if (score.strokes != None) and (score.hole.hole_number <= 9) else 0 for score in scores.filter(player=player['player_id'])]),
+                              sum([score.stableford_score if (score.strokes != None) and (score.hole.hole_number > 9) else 0 for score in scores.filter(player=player['player_id'])]),
                 ])
 
         hole_numbers = [x for x in range(1, 19)]
@@ -448,6 +450,8 @@ class ScoresView(View):
                               sum([score.strokes if (score.strokes != None) and (score.hole.hole_number > 9) else 0 for score in scores.filter(player=player['player_id'])]),
                               sum([score.strokes - score.hole.par if (score.strokes != None) and (score.hole.hole_number <= 9) else 0 for score in scores.filter(player=player['player_id'])]),
                               sum([score.strokes - score.hole.par if (score.strokes != None) and (score.hole.hole_number > 9) else 0 for score in scores.filter(player=player['player_id'])]),
+                              sum([score.stableford_score if (score.strokes != None) and (score.hole.hole_number <= 9) else 0 for score in scores.filter(player=player['player_id'])]),
+                              sum([score.stableford_score if (score.strokes != None) and (score.hole.hole_number > 9) else 0 for score in scores.filter(player=player['player_id'])]),
                 ])
 
         context = {
