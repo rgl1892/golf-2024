@@ -108,20 +108,20 @@
 <div class="table table-responsive-xxl">
     <table class="table table-hover">
         <tr>
-            <th scope="col" style="position: sticky;">Hole</th>
+            <th scope="col" style="position: sticky;" class="frozen">Hole</th>
             {% for hole in player_scores.0 %}
             <th scope="col">{{hole.hole.hole_number}}<sub>{{hole.hole.yards}}</sub></th>
             {% endfor %}
         </tr>
         <tr>
-            <th scope="col" style="position: sticky;">Par<sub>S.I.</sub></th>
+            <th scope="col" style="position: sticky;" class="frozen">Par<sub>S.I.</sub></th>
             {% for hole in player_scores.0 %}
             <th scope="col">{{hole.hole.par}}<sub>{{hole.hole.stroke_index}}</sub></th>
             {% endfor %}
         </tr>
         {% for player in player_scores %}
         <tr class="table align-middle">
-            <th scope="row" style="position: sticky;"><a title='Stats' href={% url 'stats_page' player=player.0.player.slug %}>{{player.0.player.first_name}}</a></th>
+            <th scope="row" style="position: sticky;" class="frozen"><a title='Stats' href={% url 'stats_page' player=player.0.player.slug %}>{{player.0.player.first_name}}</a></th>
             {% for score in player %}
             
             {% if score.strokes == None %}
