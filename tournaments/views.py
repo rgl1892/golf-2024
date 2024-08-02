@@ -319,6 +319,7 @@ class ScoresView(View):
         selected_round = GolfRound.objects.filter(
             round_number=selected_round, holiday=holiday_filter).get()
         scores = Score.objects.filter(golf_round=selected_round)
+        print(scores)
         players = scores.order_by('player__first_name').values(
             'player_id').distinct()
 
