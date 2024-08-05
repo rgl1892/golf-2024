@@ -95,16 +95,19 @@ class Home(View):
     template_name = 'tournaments/home.html'
 
     def get(self, request):
-        tournaments = Tournament.objects.all()
+        tournaments = Tournament.objects.all().values()
         vids = Video.objects.all()
         latest_round = GolfRound.objects.last()
-        latest_scores = Score.objects.filter(golf_round=latest_round)
-        scores =   [score.strokes for score in latest_scores]
+        latest_scores = Score.objects.filter(golf_round=latest_round).values()
+
+        scores = [score['strokes'] for score in latest_scores]
+        # scores = [score.strokes for score in latest_scores]
         scores_2 = [1 if x != None else 0 for x in scores] 
         through = round(sum(scores_2)/(len(scores_2)/18))
         
         images = CarouselImage.objects.all().order_by('?')[:4]
-        last_rounds = GolfRound.objects.order_by('id').reverse()[1:5]
+        last_rounds = GolfRound.objects.order_by('id').reverse().select_related().values('id','score__hole__course__course_name','score__hole__course__tee')[1:5]
+        print(last_rounds)
         # for x in range(len(latest_scores)):
         #     print(latest_scores[x].strokes)
         

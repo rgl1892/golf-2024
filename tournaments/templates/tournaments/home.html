@@ -39,8 +39,10 @@
     <a class="list-group-item list-group-item-action  px-3 py-1" ><h3>Latest Rounds</h3></a>
     <a class="list-group-item list-group-item-action  px-3 py-1" href="{% url 'scores' tournament=latest_round.holiday.tournament.slug holiday=latest_round.holiday.slug selected_round=latest_round.round_number %}">{{latest_round.score_set.all.0.hole.course}} : Thru {{through}}</a>
     {% for rounds in last_rounds %}
-    <a class="list-group-item list-group-item-action px-3 py-1" href="{% url 'scores' tournament=rounds.holiday.tournament.slug holiday=rounds.holiday.slug selected_round=rounds.round_number %}"
-    >{{rounds.score_set.all.0.hole.course.course_name}} : {{rounds.score_set.all.0.hole.course.slope_rating}}, {{rounds.score_set.all.0.hole.course.course_rating}}</a>
+
+    <a class="list-group-item list-group-item-action px-3 py-1" href="#"
+    {% comment %} <a class="list-group-item list-group-item-action px-3 py-1" href="{% url 'scores' tournament=rounds.holiday.tournament.slug holiday=rounds.holiday.slug selected_round=rounds.round_number %}" {% endcomment %}
+    >{{rounds.score__hole__course__course_name}} : {{rounds.score_set.all.0.hole.course.slope_rating}}, {{rounds.score_set.all.0.hole.course.course_rating}}</a>
     {% endfor %}
   </ul>
   
