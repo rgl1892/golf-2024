@@ -125,7 +125,7 @@ function plot_stable(dataset,name,div_id) {
                 .attr("fill", "var(--bs-body-color)")
                 .attr('stroke','grey')
                 .append("svg:title")
-                    .text(d => `${d.strokes} points`);
+                    .text(d => `${d.stableford_score} points`);
 
     svg.selectAll('bar')
                 .data(dataset
@@ -136,7 +136,7 @@ function plot_stable(dataset,name,div_id) {
                     .attr("x", d => x(d.hole.hole_number) - bar_width/2)
                     .attr('y', d => y(0) )
                     .attr("width", bar_width)
-                    .attr("height", d => y(0)- y(-d.stableford_score))
+                    .attr("height", d => y(0)- y(-d.strokes))
                     .attr("fill", "var(--bs-body-color)")
                     .attr('stroke','grey')
                     .append("svg:title")
@@ -154,5 +154,6 @@ plot_stable(data.slice(start+(18*1),end+(18*1)),data.slice(start+(18*1),end+(18*
 plot(data.slice(start+(18*2),end+(18*2)),data.slice(start+(18*2),end+(18*2))[0]['player']['first_name'],'player-3');
 plot_stable(data.slice(start+(18*2),end+(18*2)),data.slice(start+(18*2),end+(18*2))[0]['player']['first_name'],'player-3');
 
-plot_stable(data.slice(start+(18*3),end+(18*3)),data.slice(start+(18*3),end+(18*3))[0]['player']['first_name'],'player-4');
 plot(data.slice(start+(18*3),end+(18*3)),data.slice(start+(18*3),end+(18*3))[0]['player']['first_name'],'player-4');
+plot_stable(data.slice(start+(18*3),end+(18*3)),data.slice(start+(18*3),end+(18*3))[0]['player']['first_name'],'player-4');
+

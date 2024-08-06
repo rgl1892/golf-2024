@@ -26,7 +26,7 @@
   <ul class="list-group m-3">
     <a class="list-group-item list-group-item-action px-3 py-1" ><h3>Tournaments</h3></a>
     {% for tournament in tournaments %}
-    <a class="list-group-item list-group-item-action px-3 py-1" href="{% url 'tournament' tournament.slug %}">{{tournament}}</a>
+    <a class="list-group-item list-group-item-action px-3 py-1" href="{% url 'tournament' tournament.slug %}">{{tournament.name}}</a>
     {% endfor %}
   </ul>
   
@@ -40,9 +40,8 @@
     <a class="list-group-item list-group-item-action  px-3 py-1" href="{% url 'scores' tournament=latest_round.holiday.tournament.slug holiday=latest_round.holiday.slug selected_round=latest_round.round_number %}">{{latest_round.score_set.all.0.hole.course}} : Thru {{through}}</a>
     {% for rounds in last_rounds %}
 
-    <a class="list-group-item list-group-item-action px-3 py-1" href="#"
-    {% comment %} <a class="list-group-item list-group-item-action px-3 py-1" href="{% url 'scores' tournament=rounds.holiday.tournament.slug holiday=rounds.holiday.slug selected_round=rounds.round_number %}" {% endcomment %}
-    >{{rounds.score__hole__course__course_name}} : {{rounds.score_set.all.0.hole.course.slope_rating}}, {{rounds.score_set.all.0.hole.course.course_rating}}</a>
+    <a class="list-group-item list-group-item-action px-3 py-1" href="{% url 'scores' tournament=rounds.holiday__tournament__slug holiday=rounds.holiday__slug selected_round=rounds.round_number %}"
+    >{{rounds.score__hole__course__course_name}} : {{rounds.score__hole__course__slope_rating}}, {{rounds.score__hole__course__course_rating}}</a>
     {% endfor %}
   </ul>
   

@@ -121,7 +121,8 @@
         </tr>
         {% for player in player_scores %}
         <tr class="table align-middle">
-            <th scope="row" style="position: sticky;" class="frozen"><a title='Stats' href={% url 'stats_page' player=player.0.player.slug %}>{{player.0.player.first_name}}</a></th>
+            {% comment %} <th scope="row" style="position: sticky;" class="frozen"><a title='Stats' href={% url 'stats_page' player=player.0.player.slug %}>{{player.0.player.first_name}}</a></th> {% endcomment %}
+            <th scope="row" style="position: sticky;" class="frozen"><a title='Stats' href="#">{{player.0.player.first_name}}</a></th>
             {% for score in player %}
             
             {% if score.strokes == None %}
@@ -144,7 +145,8 @@
             
             {% for hole in player_scores.0 %}
             <td>
-                <a class='btn' href={% url 'edit_scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number hole=hole.hole.id %}>
+                {% comment %} <a class='btn' href={% url 'edit_scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number hole=hole.hole.id %}> {% endcomment %}
+                    <a class='btn' href="#">
                     Edit
                 </a>
             </td>
@@ -154,21 +156,23 @@
         {% endif %}
     </table>
 </div>
+
+
 <div class="row">
     <div class="col-sm-12 col-lg-6 player-1" id="player-1">
-        <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
+         <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round}},"holiday_id":{{player_scores.0.0.golf_round__holiday}}}</script>
         <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
     </div>
     <div class="col-sm-12 col-lg-6 player-2" id="player-2">
-        <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
+         <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round}},"holiday_id":{{player_scores.0.0.golf_round__holiday}}}</script>
         <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
     </div>
     <div class="col-sm-12 col-lg-6 player-3" id="player-3">
-        <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
+        <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round}},"holiday_id":{{player_scores.0.0.golf_round__holiday}}}</script>
         <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
     </div>
     <div class="col-sm-12 col-lg-6 player-4" id="player-4">
-        <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
+         <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round}},"holiday_id":{{player_scores.0.0.golf_round__holiday}}}</script>
         <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
     </div>
 </div>
