@@ -33,7 +33,7 @@
             <div class="col-6 col-lg-1">
                 <div class="edit-score edit-score-name">{{score.player.first_name}}:</div>
             </div>
-            <div class="col">
+            <div class="col-12 col-lg-8">
                 <div class="input-group mb-3">
 
                     <input type="number" pattern="[0-9]*" inputmode="numeric" name="{{score.player.id}}" value={% if score.strokes == None %} "" {% else %}

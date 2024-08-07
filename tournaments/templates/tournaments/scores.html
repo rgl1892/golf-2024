@@ -20,8 +20,8 @@
     <h3>Round {{player_scores.0.0.golf_round.round_number}}</h3>
 </a>
 <h3>{{player_scores.0.0.hole.course}}</h3>
-<h5>Slope : {{player_scores.0.0.hole.course.slope_rating}}</h3>
-    <h5>Course : {{player_scores.0.0.hole.course.course_rating}}</h3>
+<h5>Slope : {{player_scores.0.0.hole__course__slope_rating}}</h3>
+    <h5>Course : {{player_scores.0.0.hole__course__course_rating}}</h3>
         <h5>Par : {{total_par}}</h3>
 
     </div>
@@ -110,19 +110,19 @@
         <tr>
             <th scope="col" style="position: sticky;" class="frozen">Hole</th>
             {% for hole in player_scores.0 %}
-            <th scope="col">{{hole.hole.hole_number}}<sub>{{hole.hole.yards}}</sub></th>
+            <th scope="col">{{hole.hole__hole_number}}<sub>{{hole.hole__yards}}</sub></th>
             {% endfor %}
         </tr>
         <tr>
             <th scope="col" style="position: sticky;" class="frozen">Par<sub>S.I.</sub></th>
             {% for hole in player_scores.0 %}
-            <th scope="col">{{hole.hole.par}}<sub>{{hole.hole.stroke_index}}</sub></th>
+            <th scope="col">{{hole.hole__par}}<sub>{{hole.hole__stroke_index}}</sub></th>
             {% endfor %}
         </tr>
         {% for player in player_scores %}
         <tr class="table align-middle">
-            {% comment %} <th scope="row" style="position: sticky;" class="frozen"><a title='Stats' href={% url 'stats_page' player=player.0.player.slug %}>{{player.0.player.first_name}}</a></th> {% endcomment %}
-            <th scope="row" style="position: sticky;" class="frozen"><a title='Stats' href="#">{{player.0.player.first_name}}</a></th>
+            <th scope="row" style="position: sticky;" class="frozen"><a title='Stats' href={% url 'stats_page' player=player.0.player__slug %}>{{player.0.player__first_name}}</a></th>
+
             {% for score in player %}
             
             {% if score.strokes == None %}
@@ -145,8 +145,8 @@
             
             {% for hole in player_scores.0 %}
             <td>
-                {% comment %} <a class='btn' href={% url 'edit_scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number hole=hole.hole.id %}> {% endcomment %}
-                    <a class='btn' href="#">
+                <a class='btn' href={% url 'edit_scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number hole=hole.hole_id %}>
+
                     Edit
                 </a>
             </td>
