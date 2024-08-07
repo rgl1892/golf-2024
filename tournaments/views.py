@@ -353,7 +353,6 @@ class ScoresView(View):
                 ])
 
         hole_numbers = [x for x in range(1, 19)]
-        print(scores[0:18])
         player_scores = [scores[x*18:x*18 + 18] for x in range(len(players))]
             
         # player_scores = 
@@ -440,7 +439,20 @@ class ScoresView(View):
             
             player_name = Player.objects.filter(
                 id=player['player_id']).values('first_name')[0]['first_name']
+        scores = Score.objects.filter(golf_round=selected_round).select_related().values('strokes','stableford_score','player_id','player__first_name','player__slug',
+                                                                                         'hole__hole_number','hole_id','hole__par','hole__stroke_index','hole__yards',
+                                                                                         'hole__course__course_name','hole__course__tee',
+                                                                                         'golf_round','golf_round__holiday','hole__course__slope_rating',
+                                                                                         'hole__course__course_rating','sandy').order_by('player__first_name')
+        player_scores = [scores[x*18:x*18 + 18] for x in range(len(players))]
+        for player in players:
+            handicap_index = Handicap.objects.filter(id=scores.filter(player=player['player_id'],
+                                                                      hole=request.POST['hole']).values('handicap_id')[0]['handicap_id']).values()[0]['handicap_index']
 
+            playing_handicap = round(
+                ((slope_rating/113)*float(handicap_index) + float(course_rating) - total_par)*0.95)
+            player_name = Player.objects.filter(
+                id=player['player_id']).values('first_name')[0]['first_name']
             handicaps.append([playing_handicap, 
                               player_name, 
                               sum([score['strokes'] if score['strokes'] != None else 0 for score in scores if score['player_id'] == player['player_id']]),
@@ -454,7 +466,7 @@ class ScoresView(View):
                               sum([score['stableford_score'] if (score['strokes'] != None) and (score['hole__hole_number'] <= 9) else 0 for score in scores if score['player_id'] == player['player_id']]),
                               sum([score['stableford_score'] if (score['strokes'] != None) and (score['hole__hole_number'] > 9) else 0 for score in scores if score['player_id'] == player['player_id']]),
                 ])
-
+        
         context = {
             'holiday': holiday_filter,
             'selected_round': selected_round,
