@@ -312,6 +312,7 @@ class ScoresView(View):
             round_number=selected_round, holiday=holiday_filter).get()
         scores = Score.objects.filter(golf_round=selected_round).select_related().values('strokes','stableford_score','player_id','player__first_name','player__slug',
                                                                                          'hole__hole_number','hole_id','hole__par','hole__stroke_index','hole__yards',
+                                                                                         'hole__course__course_name','hole__course__tee',
                                                                                          'golf_round','golf_round__holiday','hole__course__slope_rating',
                                                                                          'hole__course__course_rating','sandy').order_by('player__first_name')
         players = scores.order_by('player__first_name').values(
@@ -378,7 +379,9 @@ class ScoresView(View):
             slug=holiday, tournament=selected_tournament).get()
         selected_round = GolfRound.objects.filter(
             round_number=selected_round, holiday=holiday_filter).get()
-        scores = Score.objects.filter(golf_round=selected_round).select_related().values('strokes','stableford_score','player_id','player__first_name','player__slug','hole__hole_number','hole_id','hole__par',
+        scores = Score.objects.filter(golf_round=selected_round).select_related().values('strokes','stableford_score','player_id','player__first_name','player__slug',
+                                                                                         'hole__hole_number','hole_id','hole__par','hole__stroke_index','hole__yards',
+                                                                                         'hole__course__course_name','hole__course__tee',
                                                                                          'golf_round','golf_round__holiday','hole__course__slope_rating',
                                                                                          'hole__course__course_rating','sandy').order_by('player__first_name')
         

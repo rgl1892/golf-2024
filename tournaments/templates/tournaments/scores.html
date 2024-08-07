@@ -1,6 +1,6 @@
 {% extends 'tournaments/base.html' %}
 
-{% block title %}{{player_scores.0.0.hole.course}}{% endblock %}
+{% block title %}{{player_scores.0.0.hole__course__course_name}}{% endblock %}
 {% block content %}
 {% load static %}
 <script src="{% static 'tournaments/js/d3.v7.js' %}" ></script>
@@ -14,7 +14,7 @@
 
 
 <a class="navbar-brand" href="{% url 'rounds' tournament=tournament holiday=holiday.slug%}">
-    <h2>{{player_scores.0.0.golf_round.holiday}}</h2>
+    <h2>{{player_scores.0.0.hole__course__course_name}}  ({{player_scores.0.0.hole__course__tee}} tees)</h2>
 </a>
 <a class="navbar-brand" href="{% url 'scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number %}">
     <h3>Round {{player_scores.0.0.golf_round.round_number}}</h3>
