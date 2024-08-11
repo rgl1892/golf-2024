@@ -105,6 +105,8 @@ class Score(models.Model):
     sandy = models.BooleanField(default=False)
     handicap = models.ForeignKey(Handicap,on_delete=models.CASCADE,blank=True,null=True)
     highlight_link = models.ManyToManyField(Video,blank=True)
+    match_play_result = models.IntegerField(blank=True,null=True)
+    team = models.CharField(blank=True,null=True,max_length=20)
     
 
     def __str__(self):
@@ -112,6 +114,8 @@ class Score(models.Model):
     
 class CarouselImage(models.Model):
     image = models.ImageField()
+    
+
 
     
     

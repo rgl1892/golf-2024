@@ -12,6 +12,8 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files import File as DjangoFile
 
+from .view_funcs import test
+
 from PIL import Image
 import math
 import numpy as np
@@ -95,6 +97,7 @@ class Home(View):
     template_name = 'tournaments/home.html'
 
     def get(self, request):
+        test.test()
         tournaments = Tournament.objects.all().values()
         vids = Video.objects.all()
         latest_round = GolfRound.objects.last()
@@ -302,9 +305,14 @@ class ScoresView(View):
         '-6': 8,
         '-7': 9
     }
+        
+    
+    def get_match_play():
+        return 0
+        
 
     def get(self, request, tournament, holiday, selected_round):
-
+        #get context
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
         holiday_filter = Holiday.objects.filter(
             slug=holiday, tournament=selected_tournament).get()
@@ -327,7 +335,10 @@ class ScoresView(View):
 
         holes = Hole.objects.filter(course=Course.objects.filter(hole=scores.values()[0]['hole_id']).last()).values()
         total_par = sum([hole['par'] for hole in holes])
-
+        
+        
+        # calculate total shots etc  for each player
+        
         handicaps = []
         for player in players:
             handicap_index = Handicap.objects.filter(id=scores.filter(player=player['player_id'],
