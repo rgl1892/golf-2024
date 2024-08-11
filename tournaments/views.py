@@ -322,7 +322,11 @@ class ScoresView(View):
                                                                                          'hole__hole_number','hole_id','hole__par','hole__stroke_index','hole__yards',
                                                                                          'hole__course__course_name','hole__course__tee',
                                                                                          'golf_round','golf_round__holiday','hole__course__slope_rating',
-                                                                                         'hole__course__course_rating','sandy').order_by('player__first_name')
+                                                                                         'hole__course__course_rating','sandy','highlight_link','highlight_link__id').order_by('player__first_name')
+        for score in scores:
+            if score['highlight_link']:
+                print(score)
+        
         players = scores.order_by('player__first_name').values(
             'player_id').distinct()
 
@@ -393,8 +397,8 @@ class ScoresView(View):
                                                                                          'hole__hole_number','hole_id','hole__par','hole__stroke_index','hole__yards',
                                                                                          'hole__course__course_name','hole__course__tee',
                                                                                          'golf_round','golf_round__holiday','hole__course__slope_rating',
-                                                                                         'hole__course__course_rating','sandy').order_by('player__first_name')
-        
+                                                                                         'hole__course__course_rating','sandy','highlight_link').order_by('player__first_name')
+        print(scores)
         players = scores.order_by('player__first_name').values(
             'player_id').distinct()
         hole_numbers = [x for x in range(1, 19)]
