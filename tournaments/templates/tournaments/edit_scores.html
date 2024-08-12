@@ -2,7 +2,9 @@
 
 {% block content %}
 
-<h1>Hole {{hole.0.hole_number}}</h1>
+<h1>Hole {{scores.0.hole__hole_number}}</h1>
+
+
 
 <body onload="ckload()">
     
@@ -10,11 +12,11 @@
 
 <div class="row">
     <div class="edit-score-details">
-        {% for score in player_scores.0 %}
-        {% if score.hole.hole_number == hole.0.hole_number %}
-        {{score.hole.yards}} yards <br>Par {{score.hole.par}} <br>S.I. {{score.hole.stroke_index}}
-        {% endif %}
-        {% endfor %}
+
+
+        {{scores.0.hole__yards}} yards <br>Par {{scores.0.hole__par}} <br>S.I. {{scores.0.hole__stroke_index}}
+
+
     </div>
 </div>
 
@@ -24,24 +26,24 @@
         method="post">
 
         {% csrf_token %}
-        <input type="text" value="{{hole.0.id}}" name="hole" hidden>
-        {% for player in player_scores %}
-        {% for score in player %}
-        {% if score.hole.hole_number == hole.0.hole_number %}
+        <input type="text" value="{{scores.0.hole_id}}" name="hole" hidden>
+        {% for player in scores %}
+      
+        {% comment %} {% for score in player %} {% endcomment %}
 
         <div class="row">
             <div class="col-6 col-lg-1">
-                <div class="edit-score edit-score-name">{{score.player.first_name}}:</div>
+                <div class="edit-score edit-score-name">{{player.player__first_name}}:</div>
             </div>
             <div class="col-12 col-lg-8">
                 <div class="input-group mb-3">
 
-                    <input type="number" pattern="[0-9]*" inputmode="numeric" name="{{score.player.id}}" value={% if score.strokes == None %} "" {% else %}
-                        {{score.strokes}} {% endif %} {{score.strokes}} id="{{player.0}}_handicap"
+                    <input type="number" pattern="[0-9]*" inputmode="numeric" name="{{player.player_id}}" value={% if player.strokes == None %} "" {% else %}
+                        {{player.strokes}} {% endif %} {{player.strokes}} id="{{player.0}}_handicap"
                         class="input-group-text">
                     <div class="input-group-text input-group-text-check">
-                        <input type="checkbox" class="form-check-input m-2" id="{{score.player}}_sandy"
-                            value="{{score.player.id}}" name="sandy" onclick="ckChange(this)" {% if score.sandy %}checked{% endif %}>
+                        <input type="checkbox" class="form-check-input m-2" id="{{player.player__first_name}}_sandy"
+                            value="{{player.player_id}}" name="sandy" onclick="ckChange(this)" {% if player.sandy %}checked{% endif %}>
                         <label for="{{player.0}}" class="form-check-label">Sandy</label>
                         <script>
                             
@@ -88,9 +90,8 @@
 
             </div>
         </div>
-        {% endif %}
 
-        {% endfor %}
+        {% comment %} {% endfor %} {% endcomment %}
         {% endfor %}
         <div class="d-grid col-2">
             <button type="submit" class="btn btn-outline-warning">Submit</button>

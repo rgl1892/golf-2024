@@ -12,7 +12,7 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files import File as DjangoFile
 
-from .view_funcs import test
+from .view_funcs import handicap_table
 
 from PIL import Image
 import math
@@ -97,7 +97,6 @@ class Home(View):
     template_name = 'tournaments/home.html'
 
     def get(self, request):
-        test.test()
         tournaments = Tournament.objects.all().values()
         vids = Video.objects.all()
         latest_round = GolfRound.objects.last()
@@ -312,187 +311,62 @@ class ScoresView(View):
         
 
     def get(self, request, tournament, holiday, selected_round):
-        #get context
-        selected_tournament = Tournament.objects.filter(slug=tournament).get()
-        holiday_filter = Holiday.objects.filter(
-            slug=holiday, tournament=selected_tournament).get()
-        selected_round = GolfRound.objects.filter(
-            round_number=selected_round, holiday=holiday_filter).get()
-        scores = Score.objects.filter(golf_round=selected_round).select_related().values('strokes','stableford_score','player_id','player__first_name','player__slug',
-                                                                                         'hole__hole_number','hole_id','hole__par','hole__stroke_index','hole__yards',
-                                                                                         'hole__course__course_name','hole__course__tee',
-                                                                                         'golf_round','golf_round__holiday','hole__course__slope_rating',
-                                                                                         'hole__course__course_rating','sandy','highlight_link','highlight_link__id').order_by('player__first_name')
-        for score in scores:
-            if score['highlight_link']:
-                print(score)
         
-        players = scores.order_by('player__first_name').values(
-            'player_id').distinct()
-
-        selected_course = Course.objects.filter(
-            hole=scores.values()[0]['hole_id']).values()[0]
-        slope_rating = selected_course['slope_rating']
-        course_rating = selected_course['course_rating']
-    
-        rounds = GolfRound.objects.filter(holiday=holiday_filter)
-
-        holes = Hole.objects.filter(course=Course.objects.filter(hole=scores.values()[0]['hole_id']).last()).values()
-        total_par = sum([hole['par'] for hole in holes])
+        context = handicap_table.get_scores_context(tournament,holiday,selected_round)
         
-        
-        # calculate total shots etc  for each player
-        
-        handicaps = []
-        for player in players:
-            handicap_index = Handicap.objects.filter(id=scores.filter(player=player['player_id'],
-                                                                      hole=scores.values()[0]['hole_id']).values('handicap_id')[0]['handicap_id']).values()[0]['handicap_index']
-            playing_handicap = round(
-                ((slope_rating/113)*float(handicap_index) + float(course_rating) - total_par)*0.95)
-            player_name = Player.objects.filter(
-                id=player['player_id']).values('first_name')[0]['first_name']
-
-
-            handicaps.append([playing_handicap, 
-                              player_name, 
-                              sum([score['strokes'] if score['strokes'] != None else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              sum([score['strokes'] - score['hole__par'] if score['strokes'] != None else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              sum([score['stableford_score'] if score['stableford_score'] != None else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              float(handicap_index),
-                              sum([score['strokes'] if (score['strokes'] != None) and (score['hole__hole_number'] <= 9) else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              sum([score['strokes'] if (score['strokes'] != None) and (score['hole__hole_number'] > 9) else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              sum([score['strokes'] - score['hole__par'] if (score['strokes'] != None) and (score['hole__hole_number'] <= 9) else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              sum([score['strokes'] - score['hole__par'] if (score['strokes'] != None) and (score['hole__hole_number'] > 9) else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              sum([score['stableford_score'] if (score['strokes'] != None) and (score['hole__hole_number'] <= 9) else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              sum([score['stableford_score'] if (score['strokes'] != None) and (score['hole__hole_number'] > 9) else 0 for score in scores if score['player_id'] == player['player_id']]),
-                ])
-
-        hole_numbers = [x for x in range(1, 19)]
-        player_scores = [scores[x*18:x*18 + 18] for x in range(len(players))]
-            
-        # player_scores = 
-
-        context = {
-            'holiday': holiday_filter,
-            'selected_round': selected_round,
-            'tournament': tournament,
-            'scores': scores,
-            "players": players,
-            "hole_numbers": hole_numbers,
-            "player_scores": player_scores,
-            "handicaps": handicaps,
-            "rounds":rounds,
-            "total_par":total_par,
-        }
 
         return render(request, self.template_name, context)
 
     def post(self, request, tournament, holiday, selected_round):
-        selected_tournament = Tournament.objects.filter(slug=tournament).get()
-        holiday_filter = Holiday.objects.filter(
-            slug=holiday, tournament=selected_tournament).get()
-        selected_round = GolfRound.objects.filter(
-            round_number=selected_round, holiday=holiday_filter).get()
-        scores = Score.objects.filter(golf_round=selected_round).select_related().values('strokes','stableford_score','player_id','player__first_name','player__slug',
-                                                                                         'hole__hole_number','hole_id','hole__par','hole__stroke_index','hole__yards',
-                                                                                         'hole__course__course_name','hole__course__tee',
-                                                                                         'golf_round','golf_round__holiday','hole__course__slope_rating',
-                                                                                         'hole__course__course_rating','sandy','highlight_link').order_by('player__first_name')
-        print(scores)
-        players = scores.order_by('player__first_name').values(
-            'player_id').distinct()
-        hole_numbers = [x for x in range(1, 19)]
-        player_scores = [scores[x*18:x*18 + 18] for x in range(len(players))]
-        course = Course.objects.filter(id=Hole.objects.filter(
-            id=request.POST['hole']).values()[0]['course_id'])
 
-        # Get data on the course to calculate stableford points
-        slope_rating = course.values()[0]['slope_rating']
-        course_rating = course.values()[0]['course_rating']
-        hole_played = Hole.objects.filter(id=request.POST['hole']).values()[0]
-        holes = Hole.objects.filter(course=Course.objects.filter(hole=scores.values()[0]['hole_id']).last())
-        total_par = sum([hole.par for hole in holes])
-        handicaps = []
-
-        for player in players:
-            scores.filter(player=player['player_id'], hole=request.POST['hole']).update(
-                strokes=request.POST[f"{player['player_id']}"])
-            handicap_index = Handicap.objects.filter(id=scores.filter(player=player['player_id'],
-                                                                      hole=request.POST['hole']).values('handicap_id')[0]['handicap_id']).values()[0]['handicap_index']
-
-            playing_handicap = round(
-                ((slope_rating/113)*float(handicap_index) + float(course_rating) - total_par)*0.95)
-
-            take_off_score = math.floor(playing_handicap/18)
-            si_change = playing_handicap % 18
-            shots = scores.filter(player=player['player_id'], hole=request.POST['hole']).values(
-                'strokes')[0]['strokes']
-            stroke_index = hole_played['stroke_index']
-            par = hole_played['par']
-
-            if stroke_index <= si_change:
-                si_take_off = 1
-            else:
-                si_take_off = 0
-            final_shots = shots - take_off_score - si_take_off - par
-            try:
-                points = self.stableford_lookup[f'{final_shots}']
-            except:
-                points = 0
-
-            try:
-                if int(request.POST['sandy']) == int(player['player_id']):
-                    scores.filter(player=player['player_id'], hole=request.POST['hole']).update(
-                stableford_score=points,sandy=1)
-                else:
-                    scores.filter(player=player['player_id'], hole=request.POST['hole']).update(
-                stableford_score=points,sandy=0)
-                
-            except:
-                scores.filter(player=player['player_id'], hole=request.POST['hole']).update(
-                stableford_score=points,sandy=0)
-            
-            player_name = Player.objects.filter(
-                id=player['player_id']).values('first_name')[0]['first_name']
-        scores = Score.objects.filter(golf_round=selected_round).select_related().values('strokes','stableford_score','player_id','player__first_name','player__slug',
-                                                                                         'hole__hole_number','hole_id','hole__par','hole__stroke_index','hole__yards',
-                                                                                         'hole__course__course_name','hole__course__tee',
-                                                                                         'golf_round','golf_round__holiday','hole__course__slope_rating',
-                                                                                         'hole__course__course_rating','sandy').order_by('player__first_name')
-        player_scores = [scores[x*18:x*18 + 18] for x in range(len(players))]
-        for player in players:
-            handicap_index = Handicap.objects.filter(id=scores.filter(player=player['player_id'],
-                                                                      hole=request.POST['hole']).values('handicap_id')[0]['handicap_id']).values()[0]['handicap_index']
-
-            playing_handicap = round(
-                ((slope_rating/113)*float(handicap_index) + float(course_rating) - total_par)*0.95)
-            player_name = Player.objects.filter(
-                id=player['player_id']).values('first_name')[0]['first_name']
-            handicaps.append([playing_handicap, 
-                              player_name, 
-                              sum([score['strokes'] if score['strokes'] != None else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              sum([score['strokes'] - score['hole__par'] if score['strokes'] != None else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              sum([score['stableford_score'] if score['stableford_score'] != None else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              float(handicap_index),
-                              sum([score['strokes'] if (score['strokes'] != None) and (score['hole__hole_number'] <= 9) else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              sum([score['strokes'] if (score['strokes'] != None) and (score['hole__hole_number'] > 9) else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              sum([score['strokes'] - score['hole__par'] if (score['strokes'] != None) and (score['hole__hole_number'] <= 9) else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              sum([score['strokes'] - score['hole__par'] if (score['strokes'] != None) and (score['hole__hole_number'] > 9) else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              sum([score['stableford_score'] if (score['strokes'] != None) and (score['hole__hole_number'] <= 9) else 0 for score in scores if score['player_id'] == player['player_id']]),
-                              sum([score['stableford_score'] if (score['strokes'] != None) and (score['hole__hole_number'] > 9) else 0 for score in scores if score['player_id'] == player['player_id']]),
-                ])
+        # set up post details
+        request_items = request.POST.copy()
+        hole = request_items['hole']
+        try:
+            sandy = request_items['sandy']
+            del request_items['sandy'] 
+        except:
+            sandy = ''
+        del request_items['csrfmiddlewaretoken'] 
+        del request_items['hole'] 
         
-        context = {
-            'holiday': holiday_filter,
-            'selected_round': selected_round,
-            'tournament': tournament,
-            'scores': scores,
-            "players": players,
-            "hole_numbers": hole_numbers,
-            "player_scores": player_scores,
-            'handicaps': handicaps,
-            "total_par":total_par,
-        }
+        # set up course details for stableford calc
+
+        course = Course.objects.filter(hole__id=hole).values().get()
+        holiday_item = Holiday.objects.filter(slug=holiday).values().get()['id']
+        holes = Hole.objects.filter(course=course['id']).values()
+        hole_details = Hole.objects.filter(id=hole).values().get()
+        total_par = sum([hole['par'] for hole in holes])
+        
+        for player_id, strokes in request_items.items():
+            if strokes:
+                handicap_index = Handicap.objects.filter(player=player_id,holiday_id=holiday_item).values().get()['handicap_index']
+
+                # calculate stableford score
+                
+                playing_handicap = float(handicap_index) * (course['slope_rating']/113) + float(course['course_rating'] - total_par)
+                rounded = round(playing_handicap)
+                
+                extra_shots = math.floor(playing_handicap/18)
+                if hole_details['stroke_index'] <= playing_handicap % 18:
+                    si_change = 1
+                else:
+                    si_change = 0
+
+                final_shots = int(strokes) - extra_shots - si_change - hole_details['par']
+                try:
+                    points = int(self.stableford_lookup[f"{final_shots}"])
+                except:
+                    points = 0
+                if player_id == sandy:
+                    Score.objects.filter(player=player_id,hole=hole,golf_round__round_number=selected_round,golf_round__holiday__slug=holiday).update(stableford_score=points,strokes=strokes,sandy=True)
+                else:
+                    Score.objects.filter(player=player_id,hole=hole,golf_round__round_number=selected_round,golf_round__holiday__slug=holiday).update(stableford_score=points,strokes=strokes,sandy=False)
+
+            else:
+                Score.objects.filter(player=player_id,hole=hole,golf_round__round_number=selected_round,golf_round__holiday__slug=holiday).update(stableford_score=None,strokes=None)
+                        
+        context = handicap_table.get_scores_context(tournament,holiday,selected_round)
         return render(request, self.template_name, context)
 
 
@@ -502,28 +376,22 @@ class EditScoresView(View):
     def get(self, request, tournament, holiday, selected_round, hole):
 
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
-        holiday_filter = Holiday.objects.filter(
-            slug=holiday, tournament=selected_tournament).get()
-        selected_round = GolfRound.objects.filter(
-            round_number=selected_round, holiday=holiday_filter).get()
-        scores = Score.objects.filter(golf_round=selected_round)
-        players = scores.order_by('player__first_name').values(
-            'player_id').distinct()
 
-        hole_numbers = [x for x in range(1, 19)]
-        player_scores = [scores.filter(
-            player=players[x]['player_id']) for x in range(len(players))]
-        selected_hole = Hole.objects.filter(id=hole)
+        holiday_filter = Holiday.objects.filter(slug=holiday, tournament=selected_tournament).get()
 
+        selected_round = GolfRound.objects.filter(round_number=selected_round, holiday=holiday_filter).get()
+
+        scores = Score.objects.filter(golf_round=selected_round,hole=hole).order_by('player__first_name').select_related().values(
+            'id', 'player_id', 'hole_id', 'golf_round_id', 'strokes', 'stableford_score', 'sandy','player_id',
+            'handicap_id', 'match_play_result', 'team','player__first_name','hole__yards','hole__par','hole__stroke_index',
+            'hole__hole_number'
+              )
+        
         context = {
             'holiday': holiday_filter,
             'selected_round': selected_round,
             'tournament': tournament,
             'scores': scores,
-            "players": players,
-            "hole_numbers": hole_numbers,
-            "player_scores": player_scores,
-            "hole": selected_hole,
         }
 
         return render(request, self.template_name, context)
@@ -642,7 +510,7 @@ def uploadHighlight(request):
             vidcap = cv2.VideoCapture(fr'{settings.MEDIA_ROOT}/{request.FILES["file"]}')            
             success,image = vidcap.read()
             cv2.imwrite(fr'{settings.MEDIA_ROOT}/{str(request.FILES["file"])[:-4]}.jpg',image)
-            f = DjangoFile(open(fr'{settings.MEDIA_ROOT}/{str(request.FILES["file"])[:-4]}.jpg','rb'))
+            # f = DjangoFile(open(fr'{settings.MEDIA_ROOT}/{str(request.FILES["file"])[:-4]}.jpg','rb'))
             Video.objects.create(title=request.POST['title'],file=request.FILES['file'],thumbnail=f'{str(request.FILES["file"])[:-4]}.jpg')
                        
             

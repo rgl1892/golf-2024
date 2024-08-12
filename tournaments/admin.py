@@ -17,6 +17,9 @@ class CourseAdmin(admin.ModelAdmin):
 
 class PlayerAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug":['first_name',"last_name"]}
+
+class HoleAdmin(admin.ModelAdmin):
+    list_display = ['id','course','hole_number']
     
     
 admin.site.register(Player,PlayerAdmin)
@@ -25,7 +28,7 @@ admin.site.register(Course,CourseAdmin)
 admin.site.register(GolfRound)
 admin.site.register(Resort)
 admin.site.register(Score)
-admin.site.register(Hole)
+admin.site.register(Hole,HoleAdmin)
 admin.site.register(Handicap)
 admin.site.register(Tournament,TournamentAdmin)
 admin.site.register(Video)

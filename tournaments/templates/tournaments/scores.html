@@ -147,7 +147,7 @@
             <td>
                 <a class='btn' href={% url 'edit_scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number hole=hole.hole_id %}>
 
-                    Edit
+                    Edit {{hole.hole_id}}
                 </a>
             </td>
             {% endfor %}
