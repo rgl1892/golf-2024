@@ -1,179 +1,221 @@
-{% extends 'tournaments/base.html' %}
-
-{% block title %}{{player_scores.0.0.hole__course__course_name}}{% endblock %}
-{% block content %}
+{% extends 'tournaments/base.html' %} 
+{% block title%}{{player_scores.0.0.hole__course__course_name}}{% endblock %} 
+{% block content%} 
 {% load static %}
-<script src="{% static 'tournaments/js/d3.v7.js' %}" ></script>
-<script id="hello-data" type="application/json">{"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script>
+<script src="{% static 'tournaments/js/d3.v7.js' %}"></script>
+<script id="hello-data" type="application/json">
+  {"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}
+</script>
 
 <a class="navbar-brand" href="{% url 'tournament' tournament=tournament %}"></a>
 <h1>Scores</h1>
-</a>
 <div class="row">
-    <div class="col">
-
-
-<a class="navbar-brand" href="{% url 'rounds' tournament=tournament holiday=holiday.slug%}">
-    <h2>{{player_scores.0.0.hole__course__course_name}}  ({{player_scores.0.0.hole__course__tee}} tees)</h2>
-</a>
-<a class="navbar-brand" href="{% url 'scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number %}">
-    <h3>Round {{player_scores.0.0.golf_round.round_number}}</h3>
-</a>
-<h3>{{player_scores.0.0.hole.course}}</h3>
-<h5>Slope : {{player_scores.0.0.hole__course__slope_rating}}</h3>
-    <h5>Course : {{player_scores.0.0.hole__course__course_rating}}</h3>
-        <h5>Par : {{total_par}}</h3>
-
-    </div>
-    <div class="col">
-        <div class="table table-responsive-xxl">
-            <table class="table table-hover">
-                <tr>
-                    <th></th>
-                    <th>Handicap</th>
-                    <th>Shots</th>
-                    <th>To Par</th>
-                    <th>Stableford</th>
-                    <th>Index</th>
-                    
-                </tr> 
-                {% for person in handicaps %}
-                <tr>
-                    <th>{{person.1}}</th>
-                    <td>{{person.0}}</td>
-                    <td>{{person.2}}</td>
-                    <td>{{person.3}}</td>
-                    <td>{{person.4}}</td>
-                    <td>{{person.5}}</td>
-                    
-                </tr>
-                {% endfor %}   
-            </table>
-        </div>
-    
-    <div class="col">
-        <div class="table table-responsive-xxl">
-            <table class="table table-hover">
-                <tr>
-                    <th></th>
-                    <th>Out</th>
-                    <th>In</th>
-                    <th>Out To Par</th>
-                    <th>In To Par</th>
-                    <th>Points Out</th>
-                    <th>Points In</th>
-                </tr> 
-                {% for person in handicaps %}
-                <tr>
-                    <th>{{person.1}}</th>
-                    <td>{{person.6}}</td>
-                    <td>{{person.7}}</td>
-                    <td>{{person.8}}</td>
-                    <td>{{person.9}}</td>
-                    <td>{{person.10}}</td>
-                    <td>{{person.11}}</td>
-                </tr>
-                {% endfor %}   
-            </table>
-        </div>
-    </div>
-</div>
-        
-    
-</div>
-
-
-
-<div class="row">
-    <div class="col">
-        {% if selected_round.round_number == rounds.first.round_number %} 
-        
-        {% else %}
-        <a class="navbar-brand" href="{% url 'scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number|add:"-1" %}">Previous</a>
-        {% endif %}
-    </div>
-    <div class="col d-flex justify-content-end">    
-        {% if selected_round.round_number == rounds.last.round_number %}
-        
-        {% else %}
-        <a class="navbar-brand" href="{% url 'scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number|add:"1" %}">Next</a>
-        {% endif %}
-        
-    </div>
-</div>
-
-
-
-
-<div class="table table-responsive-xxl">
-    <table class="table table-hover">
+  <div class="col">
+    <a
+      class="navbar-brand"
+      href="{% url 'rounds' tournament=tournament holiday=holiday.slug%}"
+    >
+      <h2>
+        {{player_scores.0.0.hole__course__course_name}}
+        ({{player_scores.0.0.hole__course__tee}} tees)
+      </h2>
+    </a>
+    <a
+      class="navbar-brand"
+      href="{% url 'scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number %}"
+    >
+      <h3>Round {{player_scores.0.0.golf_round.round_number}}</h3>
+    </a>
+    <h3>{{player_scores.0.0.hole.course}}</h3>
+    <h5>Slope : {{player_scores.0.0.hole__course__slope_rating}}</h5>
+    <h5>Course : {{player_scores.0.0.hole__course__course_rating}}</h5>
+    <h5>Par : {{total_par}}</h5>
+  </div>
+  <div class="col-12 col-lg-6">Hi There</div>
+  <div class="col-12 col-lg-6">
+    <div class="table table-responsive-xxl">
+      <table class="table table-hover">
         <tr>
-            <th scope="col" style="position: sticky;" class="frozen">Hole</th>
-            {% for hole in player_scores.0 %}
-            <th scope="col">{{hole.hole__hole_number}}<sub>{{hole.hole__yards}}</sub></th>
-            {% endfor %}
+          <th></th>
+          <th>Handicap</th>
+          <th>Shots</th>
+          <th>To Par</th>
+          <th>Stableford</th>
+          <th>Index</th>
         </tr>
+        {% for person in handicaps %}
         <tr>
-            <th scope="col" style="position: sticky;" class="frozen">Par<sub>S.I.</sub></th>
-            {% for hole in player_scores.0 %}
-            <th scope="col">{{hole.hole__par}}<sub>{{hole.hole__stroke_index}}</sub></th>
-            {% endfor %}
-        </tr>
-        {% for player in player_scores %}
-        <tr class="table align-middle">
-            <th scope="row" style="position: sticky;" class="frozen"><a title='Stats' href={% url 'stats_page' player=player.0.player__slug %}>{{player.0.player__first_name}}</a></th>
-
-            {% for score in player %}
-            
-            {% if score.strokes == None %}
-            <td>
-                
-            </td>
-            {% else %}
-            
-                <td>{{score.strokes}}<sub>{{score.stableford_score}}</sub><span class="sandy" title="Sandy"{% if score.sandy %} {% else %} hidden {% endif %}></span>
-                    {% if score.highlight_link__id == None %} {% else %} <a class="navbar-brand" href="{% url 'highlight_view' highlight=score.highlight_link__id %}">Highlight</a> {% endif %}
-                
-            </td>
-            {% endif %}
-            {% endfor %}
+          <th>{{person.1}}</th>
+          <td>{{person.0}}</td>
+          <td>{{person.2}}</td>
+          <td>{{person.3}}</td>
+          <td>{{person.4}}</td>
+          <td>{{person.5}}</td>
         </tr>
         {% endfor %}
-        {% if user.is_superuser %}
-        <tr>
-            <th></th>
-            
-            {% for hole in player_scores.0 %}
-            <td>
-                <a class='btn' href={% url 'edit_scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number hole=hole.hole_id %}>
+      </table>
+    </div>
 
-                    Edit {{hole.hole_id}}
-                </a>
-            </td>
-            {% endfor %}
-            
-        </tr>
-        {% endif %}
-    </table>
+    <div class="col">
+      <div class="table table-responsive-xxl">
+        <table class="table table-hover">
+          <tr>
+            <th></th>
+            <th>Out</th>
+            <th>In</th>
+            <th>Out To Par</th>
+            <th>In To Par</th>
+            <th>Points Out</th>
+            <th>Points In</th>
+          </tr>
+          {% for person in handicaps %}
+          <tr>
+            <th>{{person.1}}</th>
+            <td>{{person.6}}</td>
+            <td>{{person.7}}</td>
+            <td>{{person.8}}</td>
+            <td>{{person.9}}</td>
+            <td>{{person.10}}</td>
+            <td>{{person.11}}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
+<div class="row">
+  <div class="col">
+    {% if selected_round.round_number == rounds.first.round_number %} {% else %}
+    <a
+      class="navbar-brand"
+      href="{% url 'scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number|add:'-1' %}"
+      >Previous</a
+    >
+    {% endif %}
+  </div>
+  <div class="col d-flex justify-content-end">
+    {% if selected_round.round_number == rounds.last.round_number %} {% else %}
+    <a
+      class="navbar-brand"
+      href="{% url 'scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number|add:'1' %}"
+      >Next</a
+    >
+    {% endif %}
+  </div>
+</div>
+
+<div class="table table-responsive-xxl">
+  <table class="table table-hover">
+    <tr>
+      <th scope="col" style="position: sticky" class="frozen">Hole</th>
+      {% for hole in player_scores.0 %}
+      <th scope="col">
+        {{hole.hole__hole_number}}<sub>{{hole.hole__yards}}</sub>
+      </th>
+      {% endfor %}
+    </tr>
+    <tr>
+      <th scope="col" style="position: sticky" class="frozen">
+        Par<sub>S.I.</sub>
+      </th>
+      {% for hole in player_scores.0 %}
+      <th scope="col">
+        {{hole.hole__par}}<sub>{{hole.hole__stroke_index}}</sub>
+      </th>
+      {% endfor %}
+    </tr>
+    {% for player in player_scores %}
+    <tr class="table align-middle">
+      <th scope="row" style="position: sticky" class="frozen">
+        <a
+          title="Stats"
+          href="{% url 'stats_page' player=player.0.player__slug %}"
+          >{{player.0.player__first_name}}</a
+        >
+      </th>
+
+      {% for score in player %} {% if score.strokes == None %}
+      <td></td>
+      {% else %}
+
+      <td>
+        {{score.strokes}}<sub>{{score.stableford_score}}</sub
+        ><span
+          class="sandy"
+          title="Sandy"
+          {% if  score.sandy  %}
+
+          {%  else %}
+          hidden
+          {%  endif %}
+        ></span>
+        {% if score.highlight_link__id == None %} {% else %}
+        <a
+          class="navbar-brand"
+          href="{% url 'highlight_view' highlight=score.highlight_link__id %}"
+          >Highlight</a
+        >
+        {% endif %}
+      </td>
+      {% endif %} {% endfor %}
+    </tr>
+    {% endfor %} {% if user.is_superuser %}
+    <tr>
+      <th></th>
+
+      {% for hole in player_scores.0 %}
+      <td>
+        <a
+          class="btn"
+          href="{% url 'edit_scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number hole=hole.hole_id %}"
+        >
+          Edit {{hole.hole_id}}
+        </a>
+      </td>
+      {% endfor %}
+    </tr>
+    {% endif %}
+  </table>
+</div>
 
 <div class="row">
-    <div class="col-sm-12 col-lg-6 player-1" id="player-1">
-         <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round}},"holiday_id":{{player_scores.0.0.golf_round__holiday}}}</script>
-        <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
-    </div>
-    <div class="col-sm-12 col-lg-6 player-2" id="player-2">
-         <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round}},"holiday_id":{{player_scores.0.0.golf_round__holiday}}}</script>
-        <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
-    </div>
-    <div class="col-sm-12 col-lg-6 player-3" id="player-3">
-        <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round}},"holiday_id":{{player_scores.0.0.golf_round__holiday}}}</script>
-        <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
-    </div>
-    <div class="col-sm-12 col-lg-6 player-4" id="player-4">
-         <script id="player" type="application/json">{"round_id": {{player_scores.0.0.golf_round}},"holiday_id":{{player_scores.0.0.golf_round__holiday}}}</script>
-        <script type="module" src="{% static 'tournaments/js/scores_graph.js' %}"></script>
-    </div>
+  <div class="col-sm-12 col-lg-6 player-1" id="player-1">
+    <script id="player" type="application/json">
+      {"round_id": {{player_scores.0.0.golf_round}},"holiday_id":{{player_scores.0.0.golf_round__holiday}}}
+    </script>
+    <script
+      type="module"
+      src="{% static 'tournaments/js/scores_graph.js' %}"
+    ></script>
+  </div>
+  <div class="col-sm-12 col-lg-6 player-2" id="player-2">
+    <script id="player" type="application/json">
+      {"round_id": {{player_scores.0.0.golf_round}},"holiday_id":{{player_scores.0.0.golf_round__holiday}}}
+    </script>
+    <script
+      type="module"
+      src="{% static 'tournaments/js/scores_graph.js' %}"
+    ></script>
+  </div>
+  <div class="col-sm-12 col-lg-6 player-3" id="player-3">
+    <script id="player" type="application/json">
+      {"round_id": {{player_scores.0.0.golf_round}},"holiday_id":{{player_scores.0.0.golf_round__holiday}}}
+    </script>
+    <script
+      type="module"
+      src="{% static 'tournaments/js/scores_graph.js' %}"
+    ></script>
+  </div>
+  <div class="col-sm-12 col-lg-6 player-4" id="player-4">
+    <script id="player" type="application/json">
+      {"round_id": {{player_scores.0.0.golf_round}},"holiday_id":{{player_scores.0.0.golf_round__holiday}}}
+    </script>
+    <script
+      type="module"
+      src="{% static 'tournaments/js/scores_graph.js' %}"
+    ></script>
+  </div>
 </div>
 {% endblock content %}
