@@ -305,10 +305,6 @@ class ScoresView(View):
         '-7': 9
     }
         
-    
-    def get_match_play():
-        return 0
-        
 
     def get(self, request, tournament, holiday, selected_round):
         
@@ -318,7 +314,7 @@ class ScoresView(View):
         return render(request, self.template_name, context)
 
     def post(self, request, tournament, holiday, selected_round):
-
+        
         # set up post details
         request_items = request.POST.copy()
         hole = request_items['hole']
@@ -367,6 +363,15 @@ class ScoresView(View):
                 Score.objects.filter(player=player_id,hole=hole,golf_round__round_number=selected_round,golf_round__holiday__slug=holiday).update(stableford_score=None,strokes=None)
                         
         context = handicap_table.get_scores_context(tournament,holiday,selected_round)
+        return render(request, self.template_name, context)
+
+class ScoresMatchPlayView(ScoresView):
+         
+    
+    def post(self, request, tournament, holiday, selected_round):
+        context = handicap_table.get_scores_context(tournament,holiday,selected_round)
+        
+
         return render(request, self.template_name, context)
 
 

@@ -31,7 +31,12 @@
     <h5>Course : {{player_scores.0.0.hole__course__course_rating}}</h5>
     <h5>Par : {{total_par}}</h5>
   </div>
-  <div class="col-12 col-lg-6">Hi There</div>
+  <div class="col-12 col-lg-6">
+    <form action="{% url 'scores_match' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number %}" method="post">
+      {% csrf_token %}
+      <button type="submit">Yep</button>
+    </form>
+  </div>
   <div class="col-12 col-lg-6">
     <div class="table table-responsive-xxl">
       <table class="table table-hover">
