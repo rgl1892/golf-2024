@@ -30,6 +30,7 @@ def get_scores_context(tournament,holiday,selected_round):
     # calculate total shots etc  for each player
     
     handicaps = []
+    names = []
     for player in players:
         handicap_index = Handicap.objects.filter(id=scores.filter(player=player['player_id'],
                                                                     hole=scores.values()[0]['hole_id']).values('handicap_id')[0]['handicap_id']).values()[0]['handicap_index']
@@ -37,7 +38,7 @@ def get_scores_context(tournament,holiday,selected_round):
             ((slope_rating/113)*float(handicap_index) + float(course_rating) - total_par))
         player_name = Player.objects.filter(
             id=player['player_id']).values('first_name')[0]['first_name']
-
+        names.append(player_name)
 
         handicaps.append([playing_handicap, 
                             player_name, 
@@ -55,7 +56,13 @@ def get_scores_context(tournament,holiday,selected_round):
 
     hole_numbers = [x for x in range(1, 19)]
     player_scores = [scores[x*18:x*18 + 18] for x in range(len(players))]
-    # player_scores = 
+    team_combos = [
+       [ f'{names[0]} & {names[1]} vs {names[2]} & {names[3]}',[players[0]['player_id'],players[1]['player_id'],players[2]['player_id'],players[3]['player_id']]],
+       [ f'{names[0]} & {names[2]} vs {names[1]} & {names[3]}',[players[0]['player_id'],players[2]['player_id'],players[1]['player_id'],players[3]['player_id']]],
+       [ f'{names[0]} & {names[3]} vs {names[2]} & {names[1]}',[players[0]['player_id'],players[3]['player_id'],players[2]['player_id'],players[1]['player_id']]],
+    ]
+    
+    
 
     context = {
         'holiday': holiday_filter,
@@ -68,5 +75,6 @@ def get_scores_context(tournament,holiday,selected_round):
         "handicaps": handicaps,
         "rounds":rounds,
         "total_par":total_par,
+        "team_combos":team_combos
     }
     return context

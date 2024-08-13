@@ -369,6 +369,8 @@ class ScoresMatchPlayView(ScoresView):
          
     
     def post(self, request, tournament, holiday, selected_round):
+        print(request.POST['team_choice'])
+
         context = handicap_table.get_scores_context(tournament,holiday,selected_round)
         
 

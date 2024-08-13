@@ -32,9 +32,30 @@
     <h5>Par : {{total_par}}</h5>
   </div>
   <div class="col-12 col-lg-6">
-    <form action="{% url 'scores_match' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number %}" method="post">
+    <form action="{% url 'match_play' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number %}" method="post">
       {% csrf_token %}
-      <button type="submit">Yep</button>
+      <div class="mb-3">
+        <label for="" class="form-label">Team</label>
+        <select
+            class="form-select form-select-lg"
+            name="team_choice"
+            id=""
+        >
+            <option selected>Select</option>
+            {% for combo in team_combos %}
+            <option value="{{combo.1}}">{{combo.0}}</option>
+            {% endfor %}
+
+        </select>
+      </div>
+      
+      <button
+        type="submit"
+        class="btn btn-warning"
+      >
+        Submit
+      </button>
+      
     </form>
   </div>
   <div class="col-12 col-lg-6">
@@ -60,8 +81,8 @@
         {% endfor %}
       </table>
     </div>
-
-    <div class="col">
+</div>
+    <div class="col-12 col-lg-6">
       <div class="table table-responsive-xxl">
         <table class="table table-hover">
           <tr>
@@ -88,7 +109,7 @@
       </div>
     </div>
   </div>
-</div>
+
 
 <div class="row">
   <div class="col">
