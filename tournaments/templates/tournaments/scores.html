@@ -33,7 +33,7 @@
   </div>
 
   <div class="col-12 col-lg-6">
-    {% if team_combos != None %}
+    {% if team_combos != None  and user.is_superuser %}
     <form action="{% url 'match_play' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number %}" method="post">
       {% csrf_token %}
       <div class="mb-3">
@@ -44,7 +44,7 @@
         id=""
         >
         {% if current_teams %}
-        <option selected>{{current_teams}}</option>
+        <option selected>{{current_teams.0}} vs {{current_teams.1}}</option>
         {% else %}
         <option selected>None Selected</option>
         {% endif %}
@@ -64,11 +64,14 @@
   </button>
   
 </form>
+{% endif %}
+{% if current_teams != None  %}
+<h2>{{current_teams.0}} vs {{current_teams.1}}</h2>
 <h3>
 {% if handicaps.0.12 > 0 %}
-Team 1 {{handicaps.0.12}} Up
+{{current_teams.0}} {{handicaps.0.12}} Up
 {% elif handicaps.0.12 < 0 %}
-Team 2 are {{handicaps.0.12|cut:"-"}} Up
+{{current_teams.1}} {{handicaps.0.12|cut:"-"}} Up
 {% else %}
 A/S
 {% endif %}
