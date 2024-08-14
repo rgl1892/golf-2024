@@ -71,7 +71,7 @@ def get_scores_context(tournament,holiday,selected_round):
             current_teams = None
     else:
         team_combos = None
-        
+        current_teams = None
         
     
     
