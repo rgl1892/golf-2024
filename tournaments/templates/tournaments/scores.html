@@ -24,40 +24,57 @@
       class="navbar-brand"
       href="{% url 'scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number %}"
     >
-      <h3>Round {{player_scores.0.0.golf_round.round_number}}</h3>
+      <h3>Round {{player_scores.0.0.golf_round__round_number}}</h3>
     </a>
     <h3>{{player_scores.0.0.hole.course}}</h3>
     <h5>Slope : {{player_scores.0.0.hole__course__slope_rating}}</h5>
     <h5>Course : {{player_scores.0.0.hole__course__course_rating}}</h5>
     <h5>Par : {{total_par}}</h5>
   </div>
+
   <div class="col-12 col-lg-6">
+    {% if team_combos != None %}
     <form action="{% url 'match_play' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number %}" method="post">
       {% csrf_token %}
       <div class="mb-3">
         <label for="" class="form-label">Team</label>
         <select
-            class="form-select form-select-lg"
-            name="team_choice"
-            id=""
+        class="form-select form-select-lg"
+        name="team_choice"
+        id=""
         >
-            <option selected>Select</option>
-            {% for combo in team_combos %}
-            <option value="{{combo.1}}">{{combo.0}}</option>
-            {% endfor %}
-
-        </select>
-      </div>
+        {% if current_teams %}
+        <option selected>{{current_teams}}</option>
+        {% else %}
+        <option selected>None Selected</option>
+        {% endif %}
+        {% for combo in team_combos %}
+        <option value="{{combo.1}}">{{combo.0}}</option>
+        {% endfor %}
+        
+      </select>
       
-      <button
-        type="submit"
-        class="btn btn-warning"
-      >
-        Submit
-      </button>
-      
-    </form>
-  </div>
+    </div>
+    
+    <button
+    type="submit"
+    class="btn btn-warning"
+    >
+    Submit
+  </button>
+  
+</form>
+<h3>
+{% if handicaps.0.12 > 0 %}
+Team 1 {{handicaps.0.12}} Up
+{% elif handicaps.0.12 < 0 %}
+Team 2 are {{handicaps.0.12|cut:"-"}} Up
+{% else %}
+A/S
+{% endif %}
+</h3>
+{% endif %}
+</div>
   <div class="col-12 col-lg-6">
     <div class="table table-responsive-xxl">
       <table class="table table-hover">
@@ -158,8 +175,11 @@
         <a
           title="Stats"
           href="{% url 'stats_page' player=player.0.player__slug %}"
-          >{{player.0.player__first_name}}</a
-        >
+          >{{player.0.player__first_name}}
+        </a>
+          {% if player.0.team %}
+          <sub>Team {{player.0.team}}</sub>
+          {% endif %}
       </th>
 
       {% for score in player %} {% if score.strokes == None %}
@@ -187,17 +207,33 @@
       </td>
       {% endif %} {% endfor %}
     </tr>
-    {% endfor %} {% if user.is_superuser %}
+    {% endfor %}
+    
+    {% if player_scores.0.0.match_play_result != None %}
     <tr>
-      <th></th>
+      <td></td>
+      {% for score in player_scores.0 %}
+      <td>
+        {% if score.match_play_result %}
+        {{score.match_play_result}}
+        {% elif score.match_play_result == 0 %}
+        1/2
+        {% endif %}
+      </td>
+      {% endfor %}
+    </tr>
+    {% endif %}
+    {% if user.is_superuser %}
+    <tr>
+      <th style="position: sticky" class="frozen"></th>
 
       {% for hole in player_scores.0 %}
       <td>
         <a
-          class="btn"
+          {% comment %} class="btn btn-bg-warning" {% endcomment %}
           href="{% url 'edit_scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number hole=hole.hole_id %}"
         >
-          Edit {{hole.hole_id}}
+          Edit
         </a>
       </td>
       {% endfor %}

@@ -11,6 +11,7 @@ from .forms import UploadFileForm,EditAuthForm,EditUserForm
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files import File as DjangoFile
+from django.db.models import Q
 
 from .view_funcs import handicap_table
 
@@ -19,6 +20,7 @@ import math
 import numpy as np
 import requests
 import cv2
+import json
 
 
 class TemplateView(View):
@@ -361,7 +363,22 @@ class ScoresView(View):
 
             else:
                 Score.objects.filter(player=player_id,hole=hole,golf_round__round_number=selected_round,golf_round__holiday__slug=holiday).update(stableford_score=None,strokes=None)
-                        
+        
+        scores_to_compare = Score.objects.filter(hole=hole,golf_round__round_number=selected_round,golf_round__holiday__slug=holiday).values()
+        high_1 = []
+        high_2 = []
+        if scores_to_compare[0]['team']:
+            for row in scores_to_compare: 
+                if row['team'] == '1':
+                    high_1.append(row['stableford_score'])
+                else:
+                    high_2.append(row['stableford_score'])
+            if max(high_1) > max(high_2):
+                scores_to_compare.update(match_play_result=1)
+            elif max(high_1) < max(high_2):
+                scores_to_compare.update(match_play_result=-1)
+            else:
+                scores_to_compare.update(match_play_result=-0)
         context = handicap_table.get_scores_context(tournament,holiday,selected_round)
         return render(request, self.template_name, context)
 
@@ -369,8 +386,18 @@ class ScoresMatchPlayView(ScoresView):
          
     
     def post(self, request, tournament, holiday, selected_round):
-        print(request.POST['team_choice'])
-        
+        players = json.loads(request.POST['team_choice'])
+        if request.POST['team_choice'] != 'Select':
+            query = Q(player=players[0])
+            query.add(Q(player=players[1]),Q.OR)
+            query.add(Q(golf_round__holiday__slug=holiday),Q.AND)
+            query.add(Q(golf_round__round_number=selected_round),Q.AND)
+            Score.objects.filter(query).update(team='1')
+            query_2 = Q(player=players[2])
+            query_2.add(Q(player=players[3]),Q.OR)
+            query_2.add(Q(golf_round__holiday__slug=holiday),Q.AND)
+            query_2.add(Q(golf_round__round_number=selected_round),Q.AND)
+            Score.objects.filter(query_2).update(team='2')
 
         context = handicap_table.get_scores_context(tournament,holiday,selected_round)
         
