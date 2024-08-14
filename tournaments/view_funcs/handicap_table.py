@@ -66,7 +66,7 @@ def get_scores_context(tournament,holiday,selected_round):
         check_current_teams = Score.objects.filter(golf_round=selected_round_send,hole__hole_number=1).values('team','player__first_name').order_by('team','player__first_name')
         
         if check_current_teams[0]['team']:
-            current_teams = f'{check_current_teams[0]['player__first_name']} & {check_current_teams[1]['player__first_name']} vs {check_current_teams[2]['player__first_name']} & {check_current_teams[3]['player__first_name']}'
+            current_teams = f"{check_current_teams[0]['player__first_name']} & {check_current_teams[1]['player__first_name']} vs {check_current_teams[2]['player__first_name']} & {check_current_teams[3]['player__first_name']}"
         else:
             current_teams = None
     else:
