@@ -342,8 +342,8 @@ class ScoresView(View):
 
                 # calculate stableford score
                 
-                playing_handicap = float(handicap_index) * (course['slope_rating']/113) + float(course['course_rating'] - total_par)
-                rounded = round(playing_handicap)
+                playing_handicap = round(float(handicap_index) * (course['slope_rating']/113) + float(course['course_rating'] - total_par))
+                
                 
                 extra_shots = math.floor(playing_handicap/18)
                 if hole_details['stroke_index'] <= playing_handicap % 18:
@@ -360,6 +360,8 @@ class ScoresView(View):
                     Score.objects.filter(player=player_id,hole=hole,golf_round__round_number=selected_round,golf_round__holiday__slug=holiday).update(stableford_score=points,strokes=strokes,sandy=True)
                 else:
                     Score.objects.filter(player=player_id,hole=hole,golf_round__round_number=selected_round,golf_round__holiday__slug=holiday).update(stableford_score=points,strokes=strokes,sandy=False)
+
+                # print(f'Strokes: {strokes}\t si_change: {si_change}\t Player: {player_id} \t Handi: {playing_handicap} \t Mod 18: {playing_handicap % 18}')
 
             else:
                 Score.objects.filter(player=player_id,hole=hole,golf_round__round_number=selected_round,golf_round__holiday__slug=holiday).update(stableford_score=None,strokes=None)
