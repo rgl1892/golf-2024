@@ -13,7 +13,7 @@ from django.core.files.base import ContentFile
 from django.core.files import File as DjangoFile
 from django.db.models import Q
 
-from .view_funcs import handicap_table
+from .view_funcs import handicap_table, stats
 
 from PIL import Image
 import math
@@ -44,41 +44,6 @@ def getWeather(lat,long):
    
     weather = requests.request("GET",f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={long}&current=temperature_2m,weather_code").json()
     return [weather,weather_codes[f"{weather['current']['weather_code']}"]]
-
-def getPlayerScore(golf_round,player):
-    scores = Score.objects.filter(player=player,golf_round=golf_round)
-    stableford = sum([score.stableford_score if score.stableford_score != None else 0 for score in scores])
-    return stableford
-
-def getPlayerStrokesFull(golf_round,player):
-    scores = Score.objects.filter(player=player,golf_round=golf_round)
-    strokes = [score.strokes if score.strokes != None else None for score in scores]
-    clean_strokes = [item for item in strokes if item != None]
-    if len(clean_strokes) == 18:
-        final = sum(clean_strokes)
-    else:
-        final = None
-    return final
-
-def getPlayerStrokes(golf_round,player):
-    scores = Score.objects.filter(player=player,golf_round=golf_round)
-    strokes = sum([score.strokes if score.strokes != None else 0 for score in scores])
-    return strokes
-
-def getPlayerToPar(golf_round,player):
-    scores = Score.objects.filter(player=player,golf_round=golf_round)
-    strokes = sum([score.strokes - score.hole.par if score.strokes != None else 0 for score in scores])
-    return strokes
-
-def getPlayerToParFull(golf_round,player):
-    scores = Score.objects.filter(player=player,golf_round=golf_round)
-    strokes = [score.strokes - score.hole.par if score.strokes != None else None for score in scores]
-    clean_strokes = [item for item in strokes if item != None]
-    if len(clean_strokes) == 18:
-        final = sum(clean_strokes)
-    else:
-        final = None
-    return final
 
 def addProTips(tips,chosen_course):
     
@@ -565,20 +530,21 @@ class PlayerStats(View):
 
     def get(self,request):
 
-        players = Player.objects.all()
+        players = Player.objects.select_related().values('id', 'first_name', 'last_name', 'handedness', 'championships', 'picture', 'info', 'slug','picture')
+        scores = Score.objects.values('strokes','stableford_score','hole__par','golf_round_id','player_id')
         player_scores=[]
         for player in players:
-            rounds = GolfRound.objects.all()
-            try:
-                max_score = max([getPlayerScore(player=player,golf_round=golf_round) for golf_round in rounds if getPlayerScore(player=player,golf_round=golf_round) > 0])
-                min_score_set_up = [getPlayerStrokesFull(player=player,golf_round=golf_round) for golf_round in rounds if getPlayerStrokes(player=player,golf_round=golf_round) >0]
-                min_score = min([item for item in min_score_set_up if item != None])
-                min_set_up = [getPlayerToParFull(player=player,golf_round=golf_round) for golf_round in rounds if getPlayerStrokes(player=player,golf_round=golf_round) >0]
-                min_to_par = min([item for item in min_set_up if item != None])
-            except:
-                max_score = ''
-                min_score = ''
-                min_to_par = ''
+            rounds = GolfRound.objects.values()
+            # try:
+            max_score = max([stats.getPlayerScore(player=player['id'],golf_round=golf_round['id'],scores=scores) for golf_round in rounds if stats.getPlayerScore(player=player['id'],golf_round=golf_round['id'],scores=scores) > 0])
+            min_score_set_up = [stats.getPlayerStrokesFull(player=player['id'],golf_round=golf_round['id'],scores=scores) for golf_round in rounds if stats.getPlayerStrokes(player=player['id'],golf_round=golf_round['id'],scores=scores) >0]
+            min_score = min([item for item in min_score_set_up if item != None])
+            min_set_up = [stats.getPlayerToParFull(player=player['id'],golf_round=golf_round['id'],scores=scores) for golf_round in rounds if stats.getPlayerStrokes(player=player['id'],golf_round=golf_round['id'],scores=scores) >0]
+            min_to_par = min([item for item in min_set_up if item != None])
+            # except:
+            #     max_score = ''
+            #     min_score = ''
+            #     min_to_par = ''
             player_scores.append([player,max_score,min_score,min_to_par])
             
         context = {'players':player_scores}
@@ -590,34 +556,41 @@ class StatsPage(View):
     template_name ='tournaments/player_stats/stats_page.html'
     def get(self,request,player):
         
-        player = Player.objects.filter(slug=player).get()
-        scores = Score.objects.filter(player=player)
+        player = Player.objects.filter(slug=player).values()[0]
+        scores = Score.objects.filter(player=player['id']).values('strokes','hole__par','stableford_score',
+                                                                  'golf_round_id','player_id','hole__par',
+                                                                  'hole__hole_number','golf_round__holiday__tournament__name',
+                                                                  'hole__course__course_name')
         rounds = round(len(scores)/18)
 
-        pars_birdies = [len([score.strokes for score in scores if score.strokes != None and score.strokes - score.hole.par == -2]),
-                        len([score.strokes for score in scores if score.strokes != None and score.strokes - score.hole.par == -1]),
-                        len([score.strokes for score in scores if score.strokes != None and score.strokes - score.hole.par == 0]),
-                        len([score.strokes for score in scores if score.strokes != None and score.strokes - score.hole.par == 1]),
-                        len([score.strokes for score in scores if score.strokes != None and score.strokes - score.hole.par == 2]),
-                        len([score.strokes for score in scores if score.strokes != None and score.strokes - score.hole.par > 2])
+
+
+        pars_birdies = [len([score['strokes'] for score in scores if score['strokes'] != None and score['strokes'] - score['hole__par'] == -2]),
+                        len([score['strokes'] for score in scores if score['strokes'] != None and score['strokes'] - score['hole__par'] == -1]),
+                        len([score['strokes'] for score in scores if score['strokes'] != None and score['strokes'] - score['hole__par'] == 0]),
+                        len([score['strokes'] for score in scores if score['strokes'] != None and score['strokes'] - score['hole__par'] == 1]),
+                        len([score['strokes'] for score in scores if score['strokes'] != None and score['strokes'] - score['hole__par'] == 2]),
+                        len([score['strokes'] for score in scores if score['strokes'] != None and score['strokes'] - score['hole__par'] > 2])
                         ]
         try:
             per_round = list(map(lambda x :round(x/rounds,2),pars_birdies))
         except:
             per_round = [pars_birdies]
         stable = [0,1,2,3,4,5,6]
-        stable_scores = [len([score.stableford_score for score in scores if score.stableford_score == stable_points]) for stable_points in stable]
+        stable_scores = [len([score['stableford_score'] for score in scores if score['stableford_score'] == stable_points]) for stable_points in stable]
         try:
             stable_per_round = list(map(lambda x :round(x/rounds,2),stable_scores))
         except:
             stable_per_round = stable_scores
         avg_score = [stable_per_round[x]*x for x in range(len(stable))]
         holidays = Holiday.objects.all()
-        golf_rounds = scores.values_list('golf_round').distinct()
-        player_rounds = [GolfRound.objects.filter(id=choice[0]).get() for choice in golf_rounds]
-        player_totals = [sum([score.strokes for score in choice.score_set.filter(player=player) if score.strokes != None]) for choice in player_rounds]
-        player_stab_totals = [sum([score.stableford_score for score in choice.score_set.filter(player=player) if score.strokes != None]) for choice in player_rounds]
+        golf_rounds = Score.objects.filter(player=player['id']).values('golf_round_id').distinct()
+        player_rounds = [[[score['strokes'],score['stableford_score'], score['hole__par'],score['hole__hole_number'],score['golf_round__holiday__tournament__name'],score['hole__course__course_name']] for score in scores if score['strokes'] != None and score['golf_round_id'] == choice['golf_round_id']] for choice in golf_rounds]
 
+        
+        player_totals = [sum([score['strokes'] for score in scores if score['strokes'] != None and score['golf_round_id'] == choice['golf_round_id']]) for choice in golf_rounds]
+        player_stab_totals = [sum([score['stableford_score'] for score in scores if score['strokes'] != None and score['golf_round_id'] == choice['golf_round_id']]) for choice in golf_rounds]
+        
 
 
 

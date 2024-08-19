@@ -11,7 +11,7 @@
 
     <div class="col-10 col-lg-6 p-2 m-2 d-flex" style="height:350px; width:350px;overflow:hidden;" >
     {% if player.picture %}
-        <img src="{{player.picture.url}}" class="mx-auto " alt="...">
+        <img src="../media/{{player.picture}}" class="mx-auto " alt="...">
     {% else %}
         <img src="{% static 'tournaments/pictures/superbock.png' %}" class="mx-auto h-100 " alt="...">  
     {% endif %}
@@ -109,9 +109,9 @@
                     aria-expanded="true"
                     aria-controls="collapseOne"
                 >
-                    {{round.holiday.tournament}} ---- {{player_stab_totals|slice:forloop.counter|last}} Points
+                    {{round.0.4}} ---- {{player_stab_totals|slice:forloop.counter|last}} Points
                     <br>
-                    Holiday {{round.holiday.holiday_number}} Round {{round.round_number}} {{round.score_set.all.0.hole.course}}
+                    {{round.0.5}}
                 </button>
             </h2>
             <div
@@ -137,16 +137,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for score in round.score_set.all %}
-                                {% if score.player == player %}
+                                {% for score in round %}
+
                                 <tr class="">
-                                    <td scope="row">{{score.hole.hole_number}}</td>
-                                    <td scope="row">{{score.hole.par}}</td>
-                                    <td scope="row">{{score.strokes}}</td>
-                                    <td scope="row">{{score.stableford_score}}</td>
+                                    <td scope="row">{{score.3}}</td>
+                                    <td scope="row">{{score.2}}</td>
+                                    <td scope="row">{{score.0}}</td>
+                                    <td scope="row">{{score.1}}</td>
                                     
                                 </tr>
-                                {% endif %}
+
                                 {% endfor %}
                             </tbody>
                         </table>
