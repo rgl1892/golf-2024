@@ -119,7 +119,7 @@ class TournamentView(View):
                 for golf_round in golf_rounds.filter(holiday=holiday).values():
                     top_scores.append(stats.getPlayerScore(golf_round=golf_round['id'],player=player['player_id'],scores=scores))
                 top_3 = sorted(top_scores)
-                data.append([f'{player['player__first_name']} {player['player__last_name']}',top_scores,sum(top_3[-3:])])
+                data.append([f"{player['player__first_name']} {player['player__last_name']}",top_scores,sum(top_3[-3:])])
             data.sort(key=lambda x : x[2],reverse=True)     
             holiday_set.append([player['holiday__slug'],data,player['holiday__resort__name'],player['holiday__resort__country']])
         
