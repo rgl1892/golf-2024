@@ -1,5 +1,4 @@
 {% extends 'tournaments/base.html' %} {% block content %}
-{{holiday_set}}
 <h1>{{selected_tournament}}</h1>
 <div class="container">
   <div class="row">
@@ -8,17 +7,21 @@
         {% for holiday in holiday_set %}
 
         <a class="list-group-item list-group-item-action "
-          href="{% url 'rounds' tournament=tournament holiday=holiday.0.slug %}"
+          href="{% url 'rounds' tournament=tournament holiday=holiday.0 %}"
           {% comment %} href="#" {% endcomment %}
           >
 
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="d-flex align-items-center me-2">{{holiday.0.resort}}</h5>
+          <div class="d-flex w-100 ">
+            <h5 class="d-flex align-items-center me-2">{{holiday.2}}</h5>
+            <h6 class="d-flex align-items-center me-2">{{holiday.3}}</h6>
             {% for player in holiday.1 %}
-              <small class="b-1">{{player.0.first_name}} {{player.0.last_name|first}}<br>Best : {{player.2}}</small>
-                <small class="b-1 d-none d-xl-block">{% for score in player.1 %}
+            <div class="ps-4">
+
+              <small class="b-1">{{player.0}}<br>Best : {{player.2}}</small>
+              <small class="b-1 d-none d-xl-block">{% for score in player.1 %}
                 {{score}}
                 {% endfor %} </small>
+              </div>
             {% endfor %}
           </div>
         </a>

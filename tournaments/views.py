@@ -105,47 +105,34 @@ class TournamentView(View):
             except:
                 return ""
     
-
-    def get(self, request, tournament):
+    def get_context(self, request, tournament):
+        selected_tournament = Tournament.objects.filter(slug=tournament).get()
         holidays = Holiday.objects.filter(tournament__slug=tournament)       
         scores = Score.objects.values()
         golf_rounds = GolfRound.objects.all()
-        handicaps = Handicap.objects.values('id','player__first_name','player__last_name','holiday_id')
 
         holiday_set = []
         for holiday in holidays:
             data = []
-            for player in Handicap.objects.filter(holiday=holiday).order_by('player__first_name'):
+            for player in Handicap.objects.filter(holiday=holiday).order_by('player__first_name').values('id','player__first_name','player__last_name','holiday_id','player_id','holiday__slug','holiday__resort__name','holiday__resort__country'):
                 top_scores = []
                 for golf_round in golf_rounds.filter(holiday=holiday).values():
-                    top_scores.append(stats.getPlayerScore(golf_round=golf_round['id'],player=player.player.id,scores=scores))
+                    top_scores.append(stats.getPlayerScore(golf_round=golf_round['id'],player=player['player_id'],scores=scores))
                 top_3 = sorted(top_scores)
-                data.append([player.player,top_scores,sum(top_3[-3:])])      
-            holiday_set.append([player.holiday,data])
+                data.append([f'{player['player__first_name']} {player['player__last_name']}',top_scores,sum(top_3[-3:])])
+            data.sort(key=lambda x : x[2],reverse=True)     
+            holiday_set.append([player['holiday__slug'],data,player['holiday__resort__name'],player['holiday__resort__country']])
         
-        holidays = Holiday.objects.filter(tournament__slug=tournament).values()
-        golf_rounds = GolfRound.objects.values()
-        
-        new_set = []
-        for holiday in holidays:
-            data = []
-            for player in handicaps:
-                top_scores = []
-                if player['holiday_id'] == holiday['id']:
-                    for golf_round in golf_rounds:
-                        if golf_round['holiday_id'] == holiday['id']:
-                            top_scores.append(stats.getPlayerScore(golf_round=golf_round['id'],player=player['id'],scores=scores))
-                top_3 = sorted(top_scores)
-                data.append([player['player__first_name'],top_scores,sum(top_3[-3:])])  
-            new_set.append([player['holiday_id'],data])
-        print(data)
-        print(golf_rounds[0])
-        print(holidays[0])
         
         context = {
+            'selected_tournament':selected_tournament,
             'holidays': holidays,
             'tournament': tournament,
             'holiday_set':holiday_set}
+        
+        return context
+    def get(self, request, tournament):
+        context = self.get_context(request, tournament)
 
         return render(request, self.template_name, context)
     
@@ -198,12 +185,16 @@ class RoundsView(View):
     template_name = "tournaments/rounds.html"
 
     def get(self, request, tournament, holiday):
+
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
-        selected_holiday = Holiday.objects.filter(
-            slug=holiday, tournament=selected_tournament)
+        selected_holiday = Holiday.objects.filter(slug=holiday, tournament__slug=tournament)
+        print(tournament)
+        print(holiday)
+        print(selected_holiday)
+
+
         holiday_filter = selected_holiday.get()
         rounds = GolfRound.objects.filter(holiday=holiday_filter)
-        rounds_id = rounds.values('id')
         resort = Resort.objects.filter(holiday=holiday_filter)
         courses = Course.objects.filter(resort=resort.get())
         players = Handicap.objects.filter(holiday=holiday_filter)
