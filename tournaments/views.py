@@ -336,7 +336,11 @@ class ScoresView(View):
         scores_to_compare = Score.objects.filter(hole=hole,golf_round__round_number=selected_round,golf_round__holiday__slug=holiday).values()
         high_1 = []
         high_2 = []
-        if scores_to_compare[0]['team']:
+        compare_test = 0
+        for score in scores_to_compare:
+            if score['strokes']:
+                compare_test += 1
+        if compare_test == 4:
             for row in scores_to_compare: 
                 if row['team'] == '1':
                     high_1.append(row['stableford_score'])
@@ -347,7 +351,9 @@ class ScoresView(View):
             elif max(high_1) < max(high_2):
                 scores_to_compare.update(match_play_result=-1)
             else:
-                scores_to_compare.update(match_play_result=-0)
+                scores_to_compare.update(match_play_result=0)
+        else:
+            scores_to_compare.update(match_play_result=None)
         context = handicap_table.get_scores_context(tournament,holiday,selected_round)
         return render(request, self.template_name, context)
 

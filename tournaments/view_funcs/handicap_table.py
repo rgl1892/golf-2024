@@ -73,6 +73,17 @@ def get_scores_context(tournament,holiday,selected_round):
         team_combos = None
         current_teams = None
         
+    if current_teams:
+        
+        team1 = Score.objects.filter(golf_round=selected_round_send,team=1).select_related().values('strokes','stableford_score','player_id','team','hole__hole_number')
+        team2 = Score.objects.filter(golf_round=selected_round_send,team=2).select_related().values('strokes','stableford_score','player_id','team','hole__hole_number')
+        team1_points = [{'hole':hole,'points_1':max([score['stableford_score'] if (score['hole__hole_number'] == hole and score['strokes'] != None) else 0 for score in team1 ])} for hole in hole_numbers]
+        team2_points = [{'hole':hole,'points_2':max([score['stableford_score'] if (score['hole__hole_number'] == hole and score['strokes'] != None) else 0 for score in team2 ])} for hole in hole_numbers]
+        team1_total = sum(item['points_1'] for item in team1_points)
+        team2_total = sum(item['points_2'] for item in team2_points)
+        match_play = [[{**u, **v} for u, v in zip(team1_points,team2_points)],team1_total,team2_total]
+    else:
+        match_play = None
     
     
 
@@ -89,5 +100,6 @@ def get_scores_context(tournament,holiday,selected_round):
         "total_par":total_par,
         "team_combos":team_combos,
         "current_teams":current_teams,
+        'match_play':match_play,
     }
     return context

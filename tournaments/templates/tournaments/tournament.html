@@ -12,17 +12,20 @@
           >
 
           <div class="d-flex w-100 ">
-            <h5 class="d-flex align-items-center me-2">{{holiday.2}}</h5>
+            <h5 class="d-flex align-items-center me-2">{{holiday.2}}</h5><br>
             <h6 class="d-flex align-items-center me-2">{{holiday.3}}</h6>
-            {% for player in holiday.1 %}
-            <div class="ps-4">
+            <div class="d-flex">
 
-              <small class="b-1">{{player.0}}<br>Best : {{player.2}}</small>
-              <small class="b-1 d-none d-xl-block">{% for score in player.1 %}
-                {{score}}
-                {% endfor %} </small>
+              {% for player in holiday.1 %}
+              <div class="ps-4 ">
+                
+                <small class="b-1">{{player.0}}<br>Best : {{player.2}}</small>
+                <small class="b-1 d-none d-xl-block">{% for score in player.1 %}
+                  {{score}}
+                  {% endfor %} </small>
+                </div>
+                {% endfor %}
               </div>
-            {% endfor %}
           </div>
         </a>
         {% endfor %}

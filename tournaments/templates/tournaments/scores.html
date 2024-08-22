@@ -226,6 +226,7 @@ A/S
       {% endfor %}
     </tr>
     {% endif %}
+
     {% if user.is_superuser %}
     <tr>
       <th style="position: sticky" class="frozen"></th>
@@ -244,7 +245,42 @@ A/S
     {% endif %}
   </table>
 </div>
-
+{% if match_play %}
+<div class="table table-responsive-xxl">
+  <table class="table table-hover">
+    <tr>
+      <th style="position: sticky" class="frozen">
+        Hole
+      </th>
+      {% for hole in match_play.0 %}
+      <td>
+        {{hole.hole}}
+      </td>
+      {% endfor %}
+    </tr>
+    <tr>
+      <th style="position: sticky" class="frozen">
+        Team 1 {{match_play.1}}
+      </h>
+      {% for hole in match_play.0 %}
+      <td>
+        {{hole.points_1}}
+      </td>
+      {% endfor %}
+    </tr>
+    <tr>
+      <th style="position: sticky" class="frozen">
+        Team 2 {{match_play.2}}
+      </th>
+      {% for hole in match_play.0 %}
+      <td>
+        {{hole.points_2}}
+      </td>
+      {% endfor %}
+    </tr>
+  </table>
+</div>
+{% endif %}
 <div class="row">
   <div class="col-sm-12 col-lg-6 player-1" id="player-1">
     <script id="player" type="application/json">
