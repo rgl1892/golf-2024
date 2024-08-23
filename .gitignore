@@ -5,4 +5,4 @@ sqlite3.exe
 new_course.csv
 new_holes.csv
 media
-dev.settings.py
+dev_settings.py
