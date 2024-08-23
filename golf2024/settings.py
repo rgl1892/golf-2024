@@ -29,7 +29,7 @@ try:
     from .dev_settings import dev_hosts
     ALLOWED_HOSTS = dev_hosts
 except:
-    ALLOWED_HOSTS = ['thesuperbock.co.uk',]
+    ALLOWED_HOSTS = ['www.thesuperbock.co.uk','thesuperbock.co.uk']
 
 INTERNAL_IPS = [
     "127.0.0.1"
