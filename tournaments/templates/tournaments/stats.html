@@ -7,7 +7,7 @@
 <script src="{% static 'tournaments/js/d3.v7.js' %}" ></script>
 {% comment %} <script id="hello-data" type="application/json">{"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}</script> {% endcomment %}
 
-<script type="module" src="{% static 'tournaments/js/stats2.js' %}"></script>
+<!-- <script type="module" src="{% static 'tournaments/js/stats2.js' %}"></script> -->
 
 
 <div class="row">
@@ -19,7 +19,7 @@
         >
             <option value="" selected>All</option>
             {% for player in players %}
-            <option value="{{player.id}}">{{player}}</option>
+            <option value="{{player.id}}">{{player.first_name}} {{player.last_name}}</option>
             {% endfor %}
             
         </select>
@@ -32,7 +32,7 @@
         >
             <option value="" selected>All</option>
             {% for holiday in holidays %}
-            <option value="{{holiday.id}}">{{holiday}}</option>
+            <option value="{{holiday.id}}">{{holiday.tournament__name}} {{holiday.holiday_number}} - {{holiday.resort__name}}</option>
             {% endfor %}
             
         </select>
@@ -55,6 +55,13 @@
         </div>
         
     
+</div>
+<div class="row">
+    <div class="col">
+        <div class="par_stats">
+            <script type="module" src="{% static 'tournaments/js/par_avg.js' %}"></script>
+        </div>
+    </div>
 </div>
 
 

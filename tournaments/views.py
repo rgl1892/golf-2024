@@ -411,8 +411,8 @@ class StatsView(View):
     template_name ='tournaments/stats.html'
     def get(self,request):
         stats = [2]
-        players = Player.objects.all()
-        holidays = Holiday.objects.all()
+        players = Player.objects.values('id','first_name','last_name')
+        holidays = Holiday.objects.values('id','resort__name','tournament__name','holiday_number')
         context = {
             'stats':stats,
             'players':players,
