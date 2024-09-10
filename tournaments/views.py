@@ -75,7 +75,28 @@ class Home(View):
         
         images = CarouselImage.objects.all().order_by('?')[:4]
         last_rounds = GolfRound.objects.order_by('id').reverse().select_related().values('id','score__hole__course__course_name','score__hole__course__tee','score__hole__course__slope_rating','score__hole__course__course_rating','holiday__tournament__slug','holiday__slug','round_number').distinct()[1:5]
-        
+        try:
+            holiday = Holiday.objects.filter(slug='2-3').get()
+            players= Handicap.objects.filter(holiday=holiday).values()
+            rounds = GolfRound.objects.filter(holiday=holiday).values()
+            scores = Score.objects.filter(golf_round__holiday=holiday).values()
+            # print(scores)
+            for_table = []
+            player_data = []
+            for player in players:
+                
+                for item in rounds:
+                    stableford = []
+                    for score in scores:
+                        if score['strokes'] and score['handicap_id'] == player['id']:
+                            stableford.append(score['strokes'])
+                player_data.append(sum(stableford))
+                for_table.append(player_data)
+            print(for_table)
+            
+        except:
+            holiday = 'Not yet'
+        # holiday = 'Not yet'
         # for index,vid in enumerate(vids):
         #     vidcap = cv2.VideoCapture(fr'C:\Users\User\Documents\golf\golf-2024\{vid.file.url}')
         #     success,image = vidcap.read()
@@ -89,7 +110,8 @@ class Home(View):
             'latest_scores':latest_scores,
             'through':through,
             'images':images,
-            'last_rounds':last_rounds
+            'last_rounds':last_rounds,
+            'holiday':holiday,
             }
         return render(request, self.template_name, context)
 
@@ -107,27 +129,33 @@ class TournamentView(View):
     
     def get_context(self, request, tournament):
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
-        holidays = Holiday.objects.filter(tournament__slug=tournament)       
+        holidays = Holiday.objects.filter(tournament__slug=tournament).values('id','slug','resort__name','resort__country')
         scores = Score.objects.values()
         golf_rounds = GolfRound.objects.all()
 
         holiday_set = []
         for holiday in holidays:
+            
             data = []
-            for player in Handicap.objects.filter(holiday=holiday).order_by('player__first_name').values('id','player__first_name','player__last_name','holiday_id','player_id','holiday__slug','holiday__resort__name','holiday__resort__country'):
+            for player in Handicap.objects.filter(holiday=holiday['id']).order_by('player__first_name').values('id','player__first_name','player__last_name','holiday_id','player_id','holiday__slug','holiday__resort__name','holiday__resort__country'):
                 top_scores = []
-                for golf_round in golf_rounds.filter(holiday=holiday).values():
+                for golf_round in golf_rounds.filter(holiday=holiday['id']).values():
                     top_scores.append(stats.getPlayerScore(golf_round=golf_round['id'],player=player['player_id'],scores=scores))
                 top_3 = sorted(top_scores)
                 data.append([f"{player['player__first_name']} {player['player__last_name']}",top_scores,sum(top_3[-3:])])
             data.sort(key=lambda x : x[2],reverse=True)     
-            holiday_set.append([player['holiday__slug'],data,player['holiday__resort__name'],player['holiday__resort__country']])
+            holiday_set.append([holiday['slug'],data,holiday['resort__name'],holiday['resort__country']])
+        players = Player.objects.values()
+        player_list = [Handicap.objects.filter(player=player['id']).values('handicap_index','player__first_name','player__last_name','player__id').last() if Handicap.objects.filter(player=player['id']).values('handicap_index','player__first_name','player__last_name').last() else player for player in players]
+        resorts = Resort.objects.all()
         
         
         context = {
             'selected_tournament':selected_tournament,
             'holidays': holidays,
             'tournament': tournament,
+            'players':player_list,
+            'resorts':resorts,
             'holiday_set':holiday_set}
         
         return context
@@ -137,43 +165,33 @@ class TournamentView(View):
         return render(request, self.template_name, context)
     
     def post(self, request, tournament):
+        print(tournament)
         
-        selected_tournament = Tournament.objects.filter(slug=tournament).get()
-        holidays = Holiday.objects.filter(tournament=selected_tournament)
+        selected_tournament = Tournament.objects.filter(slug=tournament)
+        selected_resort = Resort.objects.filter(id=request.POST.get('resort'))
         try:
-            holiday_number = holidays.order_by('holiday_number').values_list('holiday_number').last()[0] + 1
+            holiday_number = Holiday.objects.filter(tournament__slug=tournament).order_by('holiday_number').values().last()['holiday_number'] + 1
         except:
             holiday_number = 1
-        Holiday.objects.create(resort=Resort.objects.filter(id=request.POST['resort'])[0],tournament=selected_tournament,holiday_number=holiday_number,slug=f"{request.POST['resort']}-{holiday_number}")
-        new_hol = holidays.order_by('holiday_number').last()
+        try:
+            Holiday.objects.create(resort=selected_resort.get(),tournament=selected_tournament.get(),holiday_number=holiday_number,slug=f"{request.POST.get('resort')}-{holiday_number}")
+            
+            new_holiday = Holiday.objects.last()
+            
+            for key in request.POST:
+                
+                if len(request.POST.getlist(key)) == 2:
+                    
+                    player = Player.objects.filter(id=request.POST.getlist(key)[0]).get()
+                    Handicap.objects.create(player=player,handicap_index=request.POST.getlist(key)[1],holiday=new_holiday)
+            error = ''
+        except:
+            error = 'Error creating player or handicaps'
+            
+        context = self.get_context(request, tournament)
+        context['error'] = error
 
-        for element in request.POST:
-            if len(request.POST.getlist(element)) == 2:
-                player = Player.objects.filter(id=request.POST.getlist(element)[0]).get()
-                Handicap.objects.create(player=player,handicap_index=request.POST.getlist(element)[1],holiday=new_hol)
-        scores = Score.objects.values()
-        resorts = Resort.objects.all()
-        players = Player.objects.all()
-        player_list = [[player, self.catch(player)] for player in players]
-        rounds = GolfRound.objects.all()
-        holiday_set = []
-        for holiday in holidays:
-            data = []
-            for player in Handicap.objects.filter(holiday=holiday).order_by('player__first_name'):
-                top_scores = []
-                for golf_round in rounds.filter(holiday=holiday):
-                    top_scores.append(stats.getPlayerScore(golf_round,player.player,scores=scores))
-                top_3 = sorted(top_scores)
-                data.append([player.player,top_scores,sum(top_3[-3:])])      
-            holiday_set.append([player.holiday,data])
-
-        context = {
-            'holidays': holidays,
-            'tournament': tournament,
-            'selected_tournament': selected_tournament,
-            'resorts':resorts,
-            'players':player_list,
-            'holiday_set':holiday_set}
+        
 
         return render(request, self.template_name, context)
 
@@ -332,28 +350,30 @@ class ScoresView(View):
 
             else:
                 Score.objects.filter(player=player_id,hole=hole,golf_round__round_number=selected_round,golf_round__holiday__slug=holiday).update(stableford_score=None,strokes=None)
-        
-        scores_to_compare = Score.objects.filter(hole=hole,golf_round__round_number=selected_round,golf_round__holiday__slug=holiday).values()
-        high_1 = []
-        high_2 = []
-        compare_test = 0
-        for score in scores_to_compare:
-            if score['strokes']:
-                compare_test += 1
-        if compare_test == 4:
-            for row in scores_to_compare: 
-                if row['team'] == '1':
-                    high_1.append(row['stableford_score'])
+        try:
+            scores_to_compare = Score.objects.filter(hole=hole,golf_round__round_number=selected_round,golf_round__holiday__slug=holiday).values()
+            high_1 = []
+            high_2 = []
+            compare_test = 0
+            for score in scores_to_compare:
+                if score['strokes']:
+                    compare_test += 1
+            if compare_test == 4:
+                for row in scores_to_compare: 
+                    if row['team'] == '1':
+                        high_1.append(row['stableford_score'])
+                    else:
+                        high_2.append(row['stableford_score'])
+                if max(high_1) > max(high_2):
+                    scores_to_compare.update(match_play_result=1)
+                elif max(high_1) < max(high_2):
+                    scores_to_compare.update(match_play_result=-1)
                 else:
-                    high_2.append(row['stableford_score'])
-            if max(high_1) > max(high_2):
-                scores_to_compare.update(match_play_result=1)
-            elif max(high_1) < max(high_2):
-                scores_to_compare.update(match_play_result=-1)
+                    scores_to_compare.update(match_play_result=0)
             else:
-                scores_to_compare.update(match_play_result=0)
-        else:
-            scores_to_compare.update(match_play_result=None)
+                scores_to_compare.update(match_play_result=None)
+        except:
+            scores_to_compare = 0 
         context = handicap_table.get_scores_context(tournament,holiday,selected_round)
         return render(request, self.template_name, context)
 

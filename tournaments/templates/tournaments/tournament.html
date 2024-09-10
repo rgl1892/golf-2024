@@ -1,5 +1,6 @@
 {% extends 'tournaments/base.html' %} {% block content %}
 <h1>{{selected_tournament}}</h1>
+{{error}}
 <div class="container">
   <div class="row">
     <div class="col">
@@ -68,12 +69,12 @@
 
                   <div class="input-group mb-3">
                     <div class="input-group-text">
-                      <input type="checkbox" class="form-check-input m-2" id="{{player.0}}" value="{{player.0.id}}"
+                      <input type="checkbox" class="form-check-input m-2" id="{{player.0}}" value="{{player.player__id}}"
                         name="selected_{{forloop.counter}}" onclick="ckChange(this)">
-                      <label for="{{player.0}}" class="form-check-label">{{player.0}}</label>
+                      <label for="{{player.player__first_name}}{{player.first_name}}" class="form-check-label">{{player.player__first_name}}{{player.first_name}}</label>
                     </div>
-                    <input type="text" name="selected_{{forloop.counter}}" value="{{player.1}}"
-                      id="{{player.0}}_handicap" class="input-group-text">
+                    <input type="text" name="selected_{{forloop.counter}}" value="{{player.handicap_index}}"
+                      id="{{player.player__first_name}}{{player.first_name}}_handicap" class="input-group-text">
 
 
                   </div>
