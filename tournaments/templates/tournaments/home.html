@@ -47,16 +47,14 @@
         </tr>
       </thead>
       <tbody>
+        {% for player in lst %}
         <tr class="">
-          <td scope="row">R1C1</td>
-          <td>R1C2</td>
-          <td>R1C2</td>
+          <td scope="row">{{player.0}}</td>
+          <td>{{player.2}}</td>
+          <td>{% for score in player.1 %}{{score}} {% endfor %}</td>
         </tr>
-        <tr class="">
-          <td scope="row">Item</td>
-          <td>Item</td>
-          <td>Item</td>
-        </tr>
+        {% endfor %}
+        
       </tbody>
     </table>
   </div>

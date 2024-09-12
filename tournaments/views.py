@@ -77,25 +77,36 @@ class Home(View):
         last_rounds = GolfRound.objects.order_by('id').reverse().select_related().values('id','score__hole__course__course_name','score__hole__course__tee','score__hole__course__slope_rating','score__hole__course__course_rating','holiday__tournament__slug','holiday__slug','round_number').distinct()[1:5]
         try:
             holiday = Holiday.objects.filter(slug='2-3').get()
-            players= Handicap.objects.filter(holiday=holiday).values()
+            players= Handicap.objects.filter(holiday=holiday).values('id','player__first_name')
             rounds = GolfRound.objects.filter(holiday=holiday).values()
             scores = Score.objects.filter(golf_round__holiday=holiday).values()
-            # print(scores)
-            for_table = []
-            player_data = []
+
+            
+            total_set = []
             for player in players:
-                
+                round_set = []
                 for item in rounds:
-                    stableford = []
+                    score_set = []
                     for score in scores:
-                        if score['strokes'] and score['handicap_id'] == player['id']:
-                            stableford.append(score['strokes'])
-                player_data.append(sum(stableford))
-                for_table.append(player_data)
-            print(for_table)
+                        if score['golf_round_id'] == item['id'] and player['id'] == score['handicap_id'] and score['strokes']:
+                            score_set.append(score['stableford_score'])
+                    round_set.append(sum(score_set))
+                test_length = len(round_set)
+                if test_length <= 2:
+                    total = sum(round_set)
+                elif test_length == 3:
+                    total = sum(sorted(round_set)[-2:])
+                else:
+                    last = round_set[-1]
+                    first = round_set[:-1]
+                    total = sum(sorted(first)[-2:]) + last
+            
+                total_set.append([player['player__first_name'],round_set,total])
+            lst = sorted(total_set,key=lambda x :x[2],reverse=True)
             
         except:
             holiday = 'Not yet'
+            lst = []
         # holiday = 'Not yet'
         # for index,vid in enumerate(vids):
         #     vidcap = cv2.VideoCapture(fr'C:\Users\User\Documents\golf\golf-2024\{vid.file.url}')
@@ -112,6 +123,7 @@ class Home(View):
             'images':images,
             'last_rounds':last_rounds,
             'holiday':holiday,
+            'lst':lst
             }
         return render(request, self.template_name, context)
 
