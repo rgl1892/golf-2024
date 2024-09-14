@@ -42,8 +42,11 @@
       <thead>
         <tr>
           <th scope="col">Player</th>
-          <th scope="col">Sum of Best Stableford</th>
+          <th scope="col">Points</th>
           <th scope="col">All Scores</th>
+          <th scope="col">To Par</th>
+          <th scope="col">Total Strokes</th>
+
         </tr>
       </thead>
       <tbody>
@@ -52,6 +55,8 @@
           <td scope="row">{{player.0}}</td>
           <td>{{player.2}}</td>
           <td>{% for score in player.1 %}{{score}} {% endfor %}</td>
+          <td>{{player.5}}</td>
+          <td>{{player.6}}</td>
         </tr>
         {% endfor %}
         

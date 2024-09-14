@@ -75,21 +75,38 @@ class Home(View):
         
         images = CarouselImage.objects.all().order_by('?')[:4]
         last_rounds = GolfRound.objects.order_by('id').reverse().select_related().values('id','score__hole__course__course_name','score__hole__course__tee','score__hole__course__slope_rating','score__hole__course__course_rating','holiday__tournament__slug','holiday__slug','round_number').distinct()[1:5]
+        
+        holiday = Holiday.objects.filter(slug='2-3').get()
+        scores = Score.objects.filter(golf_round__holiday=holiday).values('golf_round_id','strokes','stableford_score','hole__par')
+        
         try:
             holiday = Holiday.objects.filter(slug='2-3').get()
             players= Handicap.objects.filter(holiday=holiday).values('id','player__first_name')
             rounds = GolfRound.objects.filter(holiday=holiday).values()
-            scores = Score.objects.filter(golf_round__holiday=holiday).values()
+            scores = Score.objects.filter(golf_round__holiday=holiday).values('golf_round_id','strokes','stableford_score','hole__par','handicap_id')
 
             
             total_set = []
             for player in players:
+                birdies = 0
+                eagles = 0
+                strokes = 0
+                to_par_total = 0
                 round_set = []
                 for item in rounds:
                     score_set = []
+                    
                     for score in scores:
                         if score['golf_round_id'] == item['id'] and player['id'] == score['handicap_id'] and score['strokes']:
                             score_set.append(score['stableford_score'])
+                            to_par = score['strokes']-score['hole__par']
+                            if to_par == -2:
+                                eagles += 1
+                            if to_par == -1:
+                                birdies += 1
+                            strokes += score['strokes']
+                            to_par_total += score['strokes']-score['hole__par']
+                            
                     round_set.append(sum(score_set))
                 test_length = len(round_set)
                 if test_length <= 2:
@@ -101,7 +118,7 @@ class Home(View):
                     first = round_set[:-1]
                     total = sum(sorted(first)[-2:]) + last
             
-                total_set.append([player['player__first_name'],round_set,total])
+                total_set.append([player['player__first_name'],round_set,total,birdies,eagles,to_par_total,strokes])
             lst = sorted(total_set,key=lambda x :x[2],reverse=True)
             
         except:
