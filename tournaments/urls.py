@@ -7,6 +7,7 @@ from django.conf import settings
 urlpatterns = [
     path('',views.Home.as_view(),name='homepage' ),
     path('stats',views.StatsView.as_view(),name='stats'),
+    path('course_stats',views.CourseStats.as_view(),name='course_stats'),
     path('player_stats',views.PlayerStats.as_view(),name='player_stats'),
     path('player_stats/<slug:player>',views.StatsPage.as_view(),name='stats_page'),
     path('login',views.logInUser,name='login'),

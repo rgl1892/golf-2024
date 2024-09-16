@@ -748,3 +748,15 @@ class HoleView(View):
             'course':course.id
         }
         return render(request,self.template_name,context)
+    
+class CourseStats(View):
+
+    template_name = 'tournaments/course_stats/course_stats.html'
+
+    def get(self,request):
+
+        courses = Course.objects.values()
+        context = {
+            'courses':courses
+            }
+        return render(request,self.template_name,context)
