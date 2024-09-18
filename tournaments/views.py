@@ -754,9 +754,11 @@ class CourseStats(View):
     template_name = 'tournaments/course_stats/course_stats.html'
 
     def get(self,request):
-
-        courses = Course.objects.values()
+        courses = Score.objects.values('hole__course__id','hole__course__course_name','hole__course__tee').distinct()
+        players = Player.objects.values()
         context = {
-            'courses':courses
+            'courses':courses,
+            'rounds':[1,2,3,4,5],
+            'players':players
             }
         return render(request,self.template_name,context)

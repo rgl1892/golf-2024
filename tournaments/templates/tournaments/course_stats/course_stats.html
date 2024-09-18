@@ -1,23 +1,62 @@
 {% extends "tournaments/base.html" %}
 
 {% block content %}
+{% load static %}
+<script src="{% static 'tournaments/js/d3.v7.js' %}" ></script>
 
+<script type="module" src="{% static 'tournaments/js/course_stats.js' %}"></script>
 
-<div class="mb-3">
-    <label for="" class="form-label">City</label>
-    <select
-        class="form-select form-select-lg"
-        name=""
-        id=""
-    >
-        <option selected>Select one</option>
-        {% for course in courses %}
-        <option value="{{course.id}}">{{course.course_name}} : {{course.tee}}</option>
-        {% endfor %}
-    </select>
+<div class="row">
+
+    <div class="mb-3 col">
+        <label for="" class="form-label">Course</label>
+        <select
+            class="form-select form-select-lg"
+            name=""
+            id="course_select"
+            >
+            <option value="" selected>Select one</option>
+            {% for course in courses %}
+            <option value="{{course.hole__course__id}}">{{course.hole__course__course_name}} : {{course.hole__course__tee}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3 col">
+        <label for="" class="form-label">Round</label>
+        <select
+            class="form-select form-select-lg"
+            name=""
+            id="round_select"
+            >
+            <option value="" selected>Select one</option>
+            {% for course in rounds %}
+            <option value="{{course}}">{{course}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3 col">
+        <label for="" class="form-label">Players</label>
+        <select
+            class="form-select form-select-lg"
+            name=""
+            id="player_select"
+            >
+            <option value="" selected>Select one</option>
+            {% for player in players %}
+            <option value="{{player.id}}">{{player.first_name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12" id="chart-1">Avg Stableford</div>        
+    <div class="col-12" id="chart-2">Avg to Par</div>
+    <div class="col-12" id="chart-3">All Stableford</div>
+    <div class="col-12" id="chart-4">All to Par</div>
+    
 </div>
 
-
-
-
+    
+    
+    
 {% endblock content %}
