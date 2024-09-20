@@ -22,6 +22,19 @@
         </select>
     </div>
     <div class="mb-3 col">
+        <label for="" class="form-label">Holiday</label>
+        <select
+            class="form-select form-select-lg"
+            name=""
+            id="holiday_select"
+            >
+            <option value="" selected>Select one</option>
+            {% for holiday in holidays %}
+            <option value="{{holiday.id}}">{{holiday.resort__name}} : {{holiday.holiday_number}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3 col">
         <label for="" class="form-label">Round</label>
         <select
             class="form-select form-select-lg"
@@ -53,6 +66,9 @@
     <div class="col-12" id="chart-2">Avg to Par</div>
     <div class="col-12" id="chart-3">All Stableford</div>
     <div class="col-12" id="chart-4">All to Par</div>
+    <div class="col-12" id="chart-5">Stableford Distribution</div>
+    <div class="col-12" id="chart-6">To Par Distribution</div>
+    <div class="col-12" id="chart-7">Shots Distribution</div>
     
 </div>
 

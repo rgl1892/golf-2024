@@ -169,7 +169,7 @@ class TournamentView(View):
             for player in Handicap.objects.filter(holiday=holiday['id']).order_by('player__first_name').values('id','player__first_name','player__last_name','holiday_id','player_id','holiday__slug','holiday__resort__name','holiday__resort__country'):
                 top_scores = []
                 for golf_round in golf_rounds.filter(holiday=holiday['id']).values():
-                    top_scores.append(stats.getPlayerScore(golf_round=golf_round['id'],player=player['player_id'],scores=scores))
+                    top_scores.append(stats.getPlayerScore(golf_round=golf_round,player=player['player_id'],scores=scores))
                 top_3 = sorted(top_scores)
                 data.append([f"{player['player__first_name']} {player['player__last_name']}",top_scores,sum(top_3[-3:])])
             data.sort(key=lambda x : x[2],reverse=True)     
@@ -235,9 +235,6 @@ class RoundsView(View):
 
         selected_tournament = Tournament.objects.filter(slug=tournament).get()
         selected_holiday = Holiday.objects.filter(slug=holiday, tournament__slug=tournament)
-        print(tournament)
-        print(holiday)
-        print(selected_holiday)
 
 
         holiday_filter = selected_holiday.get()
@@ -250,10 +247,10 @@ class RoundsView(View):
         
         data = []
         scores = Score.objects.values()
-        for player in Handicap.objects.filter(holiday=selected_holiday.get()).order_by('player__first_name'):
+        for player in Handicap.objects.filter(holiday=selected_holiday.get()).order_by('player__first_name').values('player_id','player__first_name','player__handedness','handicap_index','player__championships'):
             top_scores = []
-            for golf_round in rounds.filter(holiday=selected_holiday.get()):
-                top_scores.append([golf_round.round_number,stats.getPlayerScore(golf_round,player.player,scores=scores),stats.getPlayerStrokes(golf_round,player.player,scores=scores)])
+            for golf_round in rounds.filter(holiday=selected_holiday.get()).values():
+                top_scores.append([golf_round['round_number'],stats.getPlayerScore(golf_round,player['player_id'],scores=scores),stats.getPlayerStrokes(golf_round,player['player_id'],scores=scores)])
    
             data.append([player,top_scores])      
             
@@ -593,10 +590,10 @@ class PlayerStats(View):
         for player in players:
             rounds = GolfRound.objects.values()
             # try:
-            max_score = max([stats.getPlayerScore(player=player['id'],golf_round=golf_round['id'],scores=scores) for golf_round in rounds if stats.getPlayerScore(player=player['id'],golf_round=golf_round['id'],scores=scores) > 0])
-            min_score_set_up = [stats.getPlayerStrokesFull(player=player['id'],golf_round=golf_round['id'],scores=scores) for golf_round in rounds if stats.getPlayerStrokes(player=player['id'],golf_round=golf_round['id'],scores=scores) >0]
+            max_score = max([stats.getPlayerScore(player=player['id'],golf_round=golf_round,scores=scores) for golf_round in rounds if stats.getPlayerScore(player=player['id'],golf_round=golf_round,scores=scores) > 0])
+            min_score_set_up = [stats.getPlayerStrokesFull(player=player['id'],golf_round=golf_round,scores=scores) for golf_round in rounds if stats.getPlayerStrokes(player=player['id'],golf_round=golf_round,scores=scores) >0]
             min_score = min([item for item in min_score_set_up if item != None])
-            min_set_up = [stats.getPlayerToParFull(player=player['id'],golf_round=golf_round['id'],scores=scores) for golf_round in rounds if stats.getPlayerStrokes(player=player['id'],golf_round=golf_round['id'],scores=scores) >0]
+            min_set_up = [stats.getPlayerToParFull(player=player['id'],golf_round=golf_round,scores=scores) for golf_round in rounds if stats.getPlayerStrokes(player=player['id'],golf_round=golf_round,scores=scores) >0]
             min_to_par = min([item for item in min_set_up if item != None])
             # except:
             #     max_score = ''
@@ -756,9 +753,11 @@ class CourseStats(View):
     def get(self,request):
         courses = Score.objects.values('hole__course__id','hole__course__course_name','hole__course__tee').distinct()
         players = Player.objects.values()
+        holidays = Holiday.objects.values('id','resort__name','holiday_number')
         context = {
             'courses':courses,
             'rounds':[1,2,3,4,5],
-            'players':players
+            'players':players,
+            'holidays':holidays
             }
         return render(request,self.template_name,context)
