@@ -4,12 +4,14 @@ async function full_plot(id) {
     var course = document.getElementById('course_select').value;
     var round = document.getElementById('round_select').value;
     var player = document.getElementById('player_select').value;
-    var dataset = await d3.json(`/api/scores?hole__course=${course}&player=${player}&golf_round__round_number=${round}`);
+    var holiday = document.getElementById('holiday_select').value;
+    var dataset = await d3.json(`/api/scores?hole__course=${course}&player=${player}&golf_round__round_number=${round}&golf_round__holiday=${holiday}`);
     var data = d3.group(dataset, (d) => d.hole.hole_number);
     var stable_data = d3.map(data,d => [d[0],d3.mean(d[1],i => i.stableford_score)]);
     var strokes_data = d3.map(data,d => [d[0],d3.mean(d[1],i => i.strokes - i.hole.par)]);
-    var all_data = d3.map(dataset, d => d.stableford_score)
-    var all_par_data = d3.map(dataset, d => d.strokes - d.hole.par)
+    var all_data = d3.map(dataset, d => d.stableford_score);
+    var all_par_data = d3.map(dataset, d => d.strokes - d.hole.par);
+    var all_shots_data = d3.map(dataset, d => d.strokes);
 
     
 
@@ -17,6 +19,9 @@ async function full_plot(id) {
     sub_plot(strokes_data,2)
     all_plot(all_data,3)
     all_plot(all_par_data,4)
+    all_plot(all_data.sort(d3.descending),5)
+    all_plot(all_par_data.sort(d3.descending),6)
+    all_plot(all_shots_data.sort(d3.descending),7)
 
 }
 function sub_plot(data,id){
@@ -88,7 +93,7 @@ function all_plot(data,id){
     var max_y = d3.max(data);
     var min_y = d3.min(data);
 
-    var bar_width = width/(data.length - 2);
+    var bar_width = width/(data.length);
 
 
     var x = d3.scaleLinear()
@@ -96,7 +101,7 @@ function all_plot(data,id){
         .range([0,width]);
 
     var y = d3.scaleLinear()
-        .domain([min_y,max_y])
+        .domain([min_y<=0?min_y:0,max_y])
         .range([height,0]);
     
     svg.append('g')
@@ -119,6 +124,7 @@ function all_plot(data,id){
             .attr("height", d => d >= 0 ? y(0)- y(d): y(d)-y(0))
             .attr("fill", "var(--bs-body-color)")
             .attr('stroke','grey')
+            .attr('stroke-width',0.01)
             .append("svg:title")
             .text((d, i) => `${d}`);
         
@@ -129,3 +135,4 @@ function all_plot(data,id){
 document.getElementById('course_select').addEventListener('change', full_plot);
 document.getElementById('round_select').addEventListener('change', full_plot);
 document.getElementById('player_select').addEventListener('change', full_plot);
+document.getElementById('holiday_select').addEventListener('change', full_plot);
