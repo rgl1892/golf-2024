@@ -114,7 +114,12 @@ function all_plot(data,id){
         .attr('transform',`translate(${0},${0})`)
         .call(d3.axisLeft(y).ticks(max_y+Math.abs(min_y)));
 
-        svg.selectAll('bar')
+    var mouseover = function (d){
+            d3.select('this');
+            console.log(d);
+        }
+    
+    svg.selectAll('bar')
         .data(data)
         .enter()
         .append('rect')
@@ -126,9 +131,12 @@ function all_plot(data,id){
             .attr('stroke','grey')
             .attr('stroke-width',0.01)
             .append("svg:title")
-            .text((d, i) => `${d}`);
-        
+            .text((d, i) => `${d}`)
+            .on("mouseover",mouseover);
+
+      
 }
+
 
 
 
