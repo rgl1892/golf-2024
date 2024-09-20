@@ -4,7 +4,7 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <ul class="list-group">
+      <ul class="list-group col-12">
         {% for holiday in holiday_set %}
 
         <a class="list-group-item list-group-item-action "
@@ -12,16 +12,18 @@
           {% comment %} href="#" {% endcomment %}
           >
 
-          <div class="d-flex w-100 ">
-            <h5 class="d-flex align-items-center me-2">{{holiday.2}}</h5><br>
-            <h6 class="d-flex align-items-center me-2">{{holiday.3}}</h6>
-            <div class="d-flex">
+          <div class="d-flex justify-content-start align-items-center">
+            <h5 class="p-2">{{holiday.2}}</h5><br>
+            <h6 class="p-2">{{holiday.3}}</h6>
+            <div class="p-2 d-flex">
 
               {% for player in holiday.1 %}
-              <div class="ps-4 ">
+              <div class="d-inline-flex p-2 flex-column justify-content-center">
                 
-                <small class="b-1">{{player.0}}<br>Best : {{player.2}}</small>
-                <small class="b-1 d-none d-xl-block">{% for score in player.1 %}
+                <small class="">{{player.0}}</small>
+                <small class="">Best : {{player.2}}</small>
+                <small class="d-none d-lg-block">
+                  {% for score in player.1 %}
                   {{score}}
                   {% endfor %} </small>
                 </div>
