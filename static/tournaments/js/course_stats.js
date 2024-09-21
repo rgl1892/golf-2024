@@ -12,7 +12,7 @@ async function full_plot(id) {
     var all_data = d3.map(dataset, d => d.stableford_score);
     var all_par_data = d3.map(dataset, d => d.strokes - d.hole.par);
     var all_shots_data = d3.map(dataset, d => d.strokes);
-
+    
     
 
     sub_plot(stable_data,1)
@@ -24,6 +24,9 @@ async function full_plot(id) {
     all_plot(all_shots_data.sort(d3.descending),7)
 
 }
+
+var colour = '#0FA3B1';
+
 function sub_plot(data,id){
     const holes = [...Array(18).keys()].map(x => x+1);
     var margin = { top: 40, right: 40, bottom: 40, left: 40 },
@@ -59,7 +62,36 @@ function sub_plot(data,id){
         .attr('transform',`translate(${0},${0})`)
         .call(d3.axisLeft(y).ticks(max_y));
 
-        svg.selectAll('bar')
+    var tooltip = d3.select(`#chart-${id}`)
+        .append('div')
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "white")
+        .style("border", "solid")
+        .style("border-width", "2px")
+        .style("border-radius", "5px")
+        .style("padding", "5px")
+        .style("position", "absolute");
+
+    var mouseover = function (mouse,d){
+        d3.select(this)
+            .attr('fill',colour)
+            tooltip.style("opacity", 1);
+    };
+
+    var mousemove = function (mouse,d){
+        tooltip.html( Math.round(d[1]*100)/100)
+        .style("left", `${mouse["layerX"] + 20}px`)
+        .style("top", `${mouse["layerY"] - 20}px`);
+        };
+    
+    var mouseout = function(mouse,d){
+        d3.select(this)
+            .attr("fill", "var(--bs-body-color)")
+            tooltip.style("opacity", 0);
+    };
+
+    svg.selectAll('bar')
         .data(data)
         .enter()
         .append('rect')
@@ -69,8 +101,9 @@ function sub_plot(data,id){
             .attr("height", d => d[1] >0 ? y(0)- y(d[1]) : y(d[1])-y(0))
             .attr("fill", "var(--bs-body-color)")
             .attr('stroke','grey')
-            .append("svg:title")
-            .text((d, i) => `${d[1]}`);
+            .on("mouseover",mouseover)
+            .on("mousemove",mousemove)
+            .on('mouseout',mouseout)
 }
 
 function all_plot(data,id){
@@ -114,7 +147,38 @@ function all_plot(data,id){
         .attr('transform',`translate(${0},${0})`)
         .call(d3.axisLeft(y).ticks(max_y+Math.abs(min_y)));
 
-        svg.selectAll('bar')
+    var tooltip = d3.select(`#chart-${id}`)
+                .append('div')
+                .style("opacity", 0)
+                .attr("class", "tooltip")
+                .style("background-color", "white")
+                .style("border", "solid")
+                .style("border-width", "2px")
+                .style("border-radius", "5px")
+                .style("padding", "5px")
+                .style("position", "absolute");
+
+    var mouseover = function (mouse,d){
+        d3.select(this)
+            .attr('fill',colour)
+            .attr('stroke-width',1)
+            tooltip.style("opacity", 1);
+    };
+
+    var mousemove = function (mouse,d){
+        tooltip.html( d)
+        .style("left", `${mouse["layerX"] + 20}px`)
+        .style("top", `${mouse["layerY"] - 20}px`);
+        };
+    
+    var mouseout = function(mouse,d){
+        d3.select(this)
+            .attr("fill", "var(--bs-body-color)")
+            .attr('stroke-width',0.01);
+            tooltip.style("opacity", 0);
+    };
+    
+    svg.selectAll('bar')
         .data(data)
         .enter()
         .append('rect')
@@ -125,10 +189,15 @@ function all_plot(data,id){
             .attr("fill", "var(--bs-body-color)")
             .attr('stroke','grey')
             .attr('stroke-width',0.01)
-            .append("svg:title")
-            .text((d, i) => `${d}`);
-        
+            .on("mouseover",mouseover)
+            .on("mousemove",mousemove)
+            .on('mouseout',mouseout)
+            
+            ;
+
+      
 }
+
 
 
 
