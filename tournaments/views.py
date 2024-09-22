@@ -323,7 +323,7 @@ class ScoresView(View):
         
         context = handicap_table.get_scores_context(tournament,holiday,selected_round)
         
-
+        
         return render(request, self.template_name, context)
 
     def post(self, request, tournament, holiday, selected_round):
@@ -761,3 +761,34 @@ class CourseStats(View):
             'holidays':holidays
             }
         return render(request,self.template_name,context)
+
+class SillyStats(View):
+
+    template_name = 'tournaments/course_stats/silly_stats.html'
+    
+    def get(self,request):
+        context = {}
+        return render(request,self.template_name,context)
+    
+class ScoresTestView(View):
+    template_name = 'tournaments/scores_test.html'
+    stableford_lookup = {
+        '2': 0,
+        '1': 1,
+        '0': 2,
+        '-1': 3,
+        '-2': 4,
+        '-3': 5,
+        '-4': 6,
+        '-5': 7,
+        '-6': 8,
+        '-7': 9
+    }
+        
+
+    def get(self, request, tournament, holiday, selected_round):
+        
+        context = handicap_table.get_scores_context(tournament,holiday,selected_round)
+        
+
+        return render(request, self.template_name, context)

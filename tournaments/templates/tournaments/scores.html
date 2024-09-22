@@ -2,6 +2,7 @@
 {% block title%}{{player_scores.0.0.hole__course__course_name}}{% endblock %} 
 {% block content%} 
 {% load static %}
+{% load mathfilters %}
 <script src="{% static 'tournaments/js/d3.v7.js' %}"></script>
 <script id="hello-data" type="application/json">
   {"round_id": {{player_scores.0.0.golf_round.id}},"holiday_id":{{player_scores.0.0.golf_round.holiday.id}}}
@@ -190,8 +191,90 @@ A/S
       {% else %}
 
       <td>
-        {{score.strokes}}<sub>{{score.stableford_score}}</sub
-        ><span
+        {% if score.strokes|sub:score.hole__par == -2 %}
+        <svg height="30" width="30">
+          <circle cx="15" cy="15" r="12" stroke="var(--bs-body-color)" fill="var(--bs-body-color)"></circle>
+          
+          <text x="15" y="16" 
+          fill="green" 
+          text-anchor="middle" 
+          alignment-baseline="middle"
+          >{{score.strokes}}
+          {% comment %} <sub>{{score.stableford_score}}</sub> {% endcomment %}
+        </text>
+        </svg >
+        {% elif score.stableford_score > 4 %}
+        <svg height="30" width="30">
+          <circle cx="15" cy="15" r="14" stroke="var(--bs-body-color)" fill="None"></circle>
+          <circle cx="15" cy="15" r="12" stroke="var(--bs-body-color)" fill="None"></circle>
+          <circle cx="15" cy="15" r="10" stroke="var(--bs-body-color)" fill="None"></circle>
+          <text x="15" y="16" 
+          fill="var(--bs-body-color)" 
+          text-anchor="middle" 
+          alignment-baseline="middle"
+          >{{score.strokes}}
+          {% comment %} <sub>{{score.stableford_score}}</sub> {% endcomment %}
+        </text>
+        </svg >
+        {% elif score.stableford_score == 4 %}
+        <svg height="30" width="30">
+          <circle cx="15" cy="15" r="12" stroke="var(--bs-body-color)" fill="None"></circle>
+          <circle cx="15" cy="15" r="10" stroke="var(--bs-body-color)" fill="None"></circle>
+          <text x="15" y="16" 
+          fill="var(--bs-body-color)" 
+          text-anchor="middle" 
+          alignment-baseline="middle"
+          >{{score.strokes}}
+          {% comment %} <sub>{{score.stableford_score}}</sub> {% endcomment %}
+        </text>
+        </svg >
+        {% elif score.stableford_score == 3 %}
+        <svg height="30" width="30">
+          <circle cx="15" cy="15" r="12" stroke="var(--bs-body-color)" fill="None"></circle>
+          <text x="15" y="16" 
+          fill="var(--bs-body-color)" 
+          text-anchor="middle" 
+          alignment-baseline="middle"
+          >{{score.strokes}}
+          {% comment %} <sub>{{score.stableford_score}}</sub> {% endcomment %}
+        </text>
+        </svg >
+        {% elif score.stableford_score == 1 %}
+        <svg height="30" width="30">
+          <rect x="3" y="3" height="24" width="24" stroke="var(--bs-body-color)" fill="None"></rect>
+          <text x="15" y="16" 
+          fill="var(--bs-body-color)" 
+          text-anchor="middle" 
+          alignment-baseline="middle"
+          >{{score.strokes}}
+          {% comment %} <sub>{{score.stableford_score}}</sub> {% endcomment %}
+        </text>
+        </svg >
+        {% elif score.stableford_score < 1 %}
+        <svg height="30" width="30">
+          <rect x="3" y="3" height="24" width="24" stroke="var(--bs-body-color)" fill="None"></rect>
+          <rect x="5" y="5" height="20" width="20" stroke="var(--bs-body-color)" fill="None"></rect>
+          <text x="15" y="16" 
+          fill="var(--bs-body-color)" 
+          text-anchor="middle" 
+          alignment-baseline="middle"
+          >{{score.strokes}}
+          {% comment %} <sub>{{score.stableford_score}}</sub> {% endcomment %}
+        </text>
+        </svg >
+        {% else %}
+        <svg height="30" width="30">
+          <text x="15" y="16" 
+          fill="var(--bs-body-color)" 
+          text-anchor="middle" 
+          alignment-baseline="middle"
+          >{{score.strokes}}
+          {% comment %} <sub>{{score.stableford_score}}</sub> {% endcomment %}
+        </text>
+        </svg >
+        {% endif %}
+        
+{% comment %} <span
           class="sandy"
           title="Sandy"
           {% if  score.sandy  %}
@@ -199,13 +282,13 @@ A/S
           {%  else %}
           hidden
           {%  endif %}
-        ></span>
+        ></span> {% endcomment %}
         {% if score.highlight_link__id == None %} {% else %}
-        <a
+        {% comment %} <a
           class="navbar-brand"
           href="{% url 'highlight_view' highlight=score.highlight_link__id %}"
           >Highlight</a
-        >
+        > {% endcomment %}
         {% endif %}
       </td>
       {% endif %} {% endfor %}

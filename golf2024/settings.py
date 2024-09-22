@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'django_filters',
     'django.contrib.admindocs',
     'debug_toolbar',
+    'mathfilters',
 ]
 
 MIDDLEWARE = [

@@ -10,6 +10,7 @@ async function full_plot(id) {
     var stable_data = d3.map(data,d => [d[0],d3.mean(d[1],i => i.stableford_score)]);
     var strokes_data = d3.map(data,d => [d[0],d3.mean(d[1],i => i.strokes - i.hole.par)]);
     var all_data = d3.map(dataset, d => d.stableford_score);
+    // all_data = all_data.sort(d3.descending,d => d.hole.hole_number)
     var all_par_data = d3.map(dataset, d => d.strokes - d.hole.par);
     var all_shots_data = d3.map(dataset, d => d.strokes);
     

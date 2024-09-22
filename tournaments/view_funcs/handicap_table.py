@@ -11,7 +11,7 @@ def get_scores_context(tournament,holiday,selected_round):
                                                                                         'hole__hole_number','hole_id','hole__par','hole__stroke_index','hole__yards',
                                                                                         'hole__course__course_name','hole__course__tee','golf_round__round_number',
                                                                                         'golf_round','golf_round__holiday','hole__course__slope_rating','match_play_result',
-                                                                                        'hole__course__course_rating','sandy','highlight_link','highlight_link__id').order_by('player__first_name')
+                                                                                        'hole__course__course_rating','sandy').order_by('player__first_name').distinct()
        
     players = scores.order_by('player__first_name').values(
         'player_id').distinct()
@@ -102,4 +102,5 @@ def get_scores_context(tournament,holiday,selected_round):
         "current_teams":current_teams,
         'match_play':match_play,
     }
+
     return context
