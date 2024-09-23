@@ -152,8 +152,33 @@ A/S
     {% endif %}
   </div>
 </div>
+<div class="row p-3">
+  <button
+    type="button"
+    class="btn btn-warning"
+    onclick="cycleView()"
+  >
+    Change Table view
+  </button>
+  
+</div>
+<script type="text/javascript">
+  function cycleView(){
+    var circles = document.getElementById('circle_view');
+    var points = document.getElementById('score_view');
+    if (circles.getAttribute('hidden') == ''){
+      circles.removeAttribute('hidden');
+      points.setAttribute('hidden','');
+    }
+    else{
+      points.removeAttribute('hidden');
+      circles.setAttribute('hidden','');
+    }
+    
+  }
+</script>
 
-<div class="table table-responsive-xxl">
+<div class="table table-responsive-xxl" id='circle_view'>
   <table class="table table-hover">
     <tr>
       <th scope="col" style="position: sticky" class="frozen">Hole</th>
@@ -328,6 +353,95 @@ A/S
     {% endif %}
   </table>
 </div>
+
+<div class="table table-responsive-xxl" id='score_view' hidden>
+  <table class="table table-hover">
+    <tr>
+      <th scope="col" style="position: sticky" class="frozen">Hole</th>
+      {% for hole in player_scores.0 %}
+      <th scope="col">
+        {{hole.hole__hole_number}}<sub>{{hole.hole__yards}}</sub>
+      </th>
+      {% endfor %}
+    </tr>
+    <tr>
+      <th scope="col" style="position: sticky" class="frozen">
+        Par<sub>S.I.</sub>
+      </th>
+      {% for hole in player_scores.0 %}
+      <th scope="col">
+        {{hole.hole__par}}<sub>{{hole.hole__stroke_index}}</sub>
+      </th>
+      {% endfor %}
+    </tr>
+    {% for player in player_scores %}
+    <tr class="table align-middle">
+      <th scope="row" style="position: sticky" class="frozen">
+        <a
+          title="Stats"
+          href="{% url 'stats_page' player=player.0.player__slug %}"
+          >{{player.0.player__first_name}}
+        </a>
+          {% if player.0.team %}
+          <sub>Team {{player.0.team}}</sub>
+          {% endif %}
+      </th>
+
+      {% for score in player %} {% if score.strokes == None %}
+      <td></td>
+      {% else %}
+
+      <td>
+        {{score.strokes}} <sub>{{score.stableford_score}}</sub>
+        <span
+          class="sandy"
+          title="Sandy"
+          {% if  score.sandy  %}
+
+          {%  else %}
+          hidden
+          {%  endif %}
+        ></span>
+
+      </td>
+      {% endif %} {% endfor %}
+    </tr>
+    {% endfor %}
+    
+    {% if player_scores.0.0.match_play_result != None %}
+    <tr>
+      <td></td>
+      {% for score in player_scores.0 %}
+      <td>
+        {% if score.match_play_result %}
+        {{score.match_play_result}}
+        {% elif score.match_play_result == 0 %}
+        1/2
+        {% endif %}
+      </td>
+      {% endfor %}
+    </tr>
+    {% endif %}
+
+    {% if user.is_superuser %}
+    <tr>
+      <th style="position: sticky" class="frozen"></th>
+
+      {% for hole in player_scores.0 %}
+      <td>
+        <a
+          {% comment %} class="btn btn-bg-warning" {% endcomment %}
+          href="{% url 'edit_scores' tournament=tournament holiday=holiday.slug selected_round=selected_round.round_number hole=hole.hole_id %}"
+        >
+          Edit
+        </a>
+      </td>
+      {% endfor %}
+    </tr>
+    {% endif %}
+  </table>
+</div>
+
 {% if match_play %}
 <div class="table table-responsive-xxl">
   <table class="table table-hover">
@@ -362,6 +476,7 @@ A/S
       {% endfor %}
     </tr>
   </table>
+  
 </div>
 {% endif %}
 <div class="row">

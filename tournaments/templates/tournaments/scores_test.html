@@ -2,7 +2,12 @@
 {% load mathfilters %}
 {% block title%}{{player_scores.0.0.hole__course__course_name}}{% endblock %} 
 {% block content%} 
-{% for row in player_scores %}
+<div 
+id = 'stuff'
+hidden
+>
+
+    {% for row in player_scores %}
     {% for score in row %}
     {% if score.strokes|sub:score.hole__par == -1 %}
     <svg height="30" width="30">
@@ -24,10 +29,28 @@
         alignment-baseline="middle"
         >{{score.strokes}}</text>
     </svg>
-
+    
     {% endif %}
-
+    
     {% endfor %}
     <br>
-{% endfor %}
-{% endblock content %}
+    {% endfor %}
+</div>
+
+<button
+    type="button"
+    class="btn btn-primary"
+    onclick="swapView()"
+>
+    Button
+</button>
+<script type="text/javascript">
+    function swapView(){
+        var stuff = document.getElementById('stuff');
+        console.log(stuff.getAttribute('hidden'));
+        stuff.removeAttribute('hidden')
+
+    }
+</script>
+
+    {% endblock content %}

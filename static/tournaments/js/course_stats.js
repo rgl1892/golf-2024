@@ -1,4 +1,4 @@
-
+var chart_height = 300;
 
 async function full_plot(id) {
     var course = document.getElementById('course_select').value;
@@ -10,9 +10,9 @@ async function full_plot(id) {
     var stable_data = d3.map(data,d => [d[0],d3.mean(d[1],i => i.stableford_score)]);
     var strokes_data = d3.map(data,d => [d[0],d3.mean(d[1],i => i.strokes - i.hole.par)]);
     var all_data = d3.map(dataset, d => d.stableford_score);
+    // all_data = all_data.sort(d3.descending,d => d.hole.hole_number)
     var all_par_data = d3.map(dataset, d => d.strokes - d.hole.par);
-    var all_shots_data = d3.map(dataset, d => d.strokes);
-    
+    var all_shots_data = d3.map(dataset, d => d.strokes);  
     
 
     sub_plot(stable_data,1)
@@ -31,7 +31,7 @@ function sub_plot(data,id){
     const holes = [...Array(18).keys()].map(x => x+1);
     var margin = { top: 40, right: 40, bottom: 40, left: 40 },
         width = document.getElementById(`chart-${id}`).offsetWidth - margin.left - margin.right,
-        height = 200 - margin.top - margin.bottom;
+        height = chart_height - margin.top - margin.bottom;
     var bar_width = width/20;
 
 
@@ -42,7 +42,8 @@ function sub_plot(data,id){
         .attr('height', height + margin.top + margin.bottom)
         .attr('id', `svg-${id}`)
       .append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+        ;
     var max_y = Math.ceil(d3.max(data,d=>d[1]))
     var x = d3.scaleLinear()
         .domain([0,19])
@@ -54,11 +55,15 @@ function sub_plot(data,id){
     
     svg.append('g')
         .attr('class','axis')
+        .style('font-family',"var(--bs-body-font-family)")
+        .style('font-size','20px')
         .attr('transform',`translate(${0},${height})`)
-        .call(d3.axisBottom(x)) ;
+        .call(d3.axisBottom(x).tickValues(holes)) ;
 
     svg.append('g')
         .attr('class','axis')
+        .style('font-family',"var(--bs-body-font-family)")
+        .style('font-size','20px')
         .attr('transform',`translate(${0},${0})`)
         .call(d3.axisLeft(y).ticks(max_y));
 
@@ -67,7 +72,9 @@ function sub_plot(data,id){
         .style("opacity", 0)
         .attr("class", "tooltip")
         .style("background-color", "white")
+        .style("color", "black")
         .style("border", "solid")
+        .style("border-color", "black")
         .style("border-width", "2px")
         .style("border-radius", "5px")
         .style("padding", "5px")
@@ -107,10 +114,10 @@ function sub_plot(data,id){
 }
 
 function all_plot(data,id){
-    const holes = [...Array(18).keys()].map(x => x+1);
+    const ticks = [...Array(20).keys()].map(x => (x+1)*Math.ceil(data.length/20));
     var margin = { top: 40, right: 40, bottom: 40, left: 40 },
         width = document.getElementById(`chart-${id}`).offsetWidth - margin.left - margin.right,
-        height = 200 - margin.top - margin.bottom;
+        height = chart_height - margin.top - margin.bottom;
     
 
 
@@ -139,11 +146,15 @@ function all_plot(data,id){
     
     svg.append('g')
         .attr('class','axis')
+        .style('font-family',"var(--bs-body-font-family)")
+        .style('font-size','20px')
         .attr('transform',`translate(${0},${height*(max_y/(-min_y+max_y))})`)
-        .call(d3.axisBottom(x)) ;
+        .call(d3.axisBottom(x).tickValues(ticks)) ;
 
     svg.append('g')
-        .attr('class','axis')
+        .attr('class','axis').
+        style('font-family',"var(--bs-body-font-family)")
+        .style('font-size','20px')
         .attr('transform',`translate(${0},${0})`)
         .call(d3.axisLeft(y).ticks(max_y+Math.abs(min_y)));
 
@@ -153,6 +164,7 @@ function all_plot(data,id){
                 .attr("class", "tooltip")
                 .style("background-color", "white")
                 .style("border", "solid")
+                .style("border-color", "black")
                 .style("border-width", "2px")
                 .style("border-radius", "5px")
                 .style("padding", "5px")
