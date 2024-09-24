@@ -153,45 +153,62 @@ A/S
   </div>
 </div>
 <div class="row p-3">
-  <button
+  <div class="col-12 col-lg-4 mt-1 mb-1">
+    <button
     id="click_button"
     type="button"
-    class="btn btn-warning"
-    onclick="cycleView()"
-    value="View Stableford"
-  >
-  View Stableford
+    class="btn btn-warning col-12"
+    onclick="view_stable()"
+    >
+    View Stableford
   </button>
-  
+</div>
+<div class="col-12 col-lg-4 mt-1 mb-1">
+  <button
+  id="click_button"
+  type="button"
+  class="btn btn-warning col-12"
+  onclick="view_to_par()"
+  >
+  View To Par
+  </button>
+</div>
+<div class="col-12 col-lg-4 mt-1 mb-1">
+  <button
+  id="click_button"
+  type="button"
+  class="btn btn-warning col-12"
+  onclick="view_to_handi()"
+  >
+  View To Handicap
+</button>
+</div>
+
 </div>
 <script type="text/javascript">
-  function cycleView(){
-    var circles = document.getElementsByName('circle_view');
-    var points = document.getElementsByName('points_view');
-    var pars = document.getElementsByName('par_view');
-    var button = document.getElementById('click_button');
-    console.log(Array.from(circles)[0].getAttribute('hidden'),Array.from(points)[0].getAttribute('hidden'),Array.from(pars)[0].getAttribute('hidden'))
-    
-    if (Array.from(circles)[0].getAttribute('hidden') == null){
-      Array.from(points).map(d=>d.removeAttribute('hidden','not'));
-      Array.from(pars).map(d=>d.setAttribute('hidden',''));
-      Array.from(circles).map(d=>d.setAttribute('hidden',''));
-      button.innerHTML = 'View to Par';
-    }
-    else if (Array.from(points)[0].getAttribute('hidden')  == null){
-      Array.from(pars).map(d=>d.removeAttribute('hidden'));
-      Array.from(points).map(d=>d.setAttribute('hidden',''));
-      Array.from(circles).map(d=>d.setAttribute('hidden',''));
-      button.innerHTML = 'View to Handicap';
-    }
-    else{
-      Array.from(circles).map(d=>d.removeAttribute('hidden'));
-      Array.from(pars).map(d=>d.setAttribute('hidden',''));
-      Array.from(points).map(d=>d.setAttribute('hidden',''));
-      button.innerHTML = 'View Stableford';
-    }
- 
-    
+
+  var circles = document.getElementsByName('circle_view');
+  var points = document.getElementsByName('points_view');
+  var pars = document.getElementsByName('par_view');
+  var button = document.getElementById('click_button');
+
+  function view_stable(){
+    Array.from(points).map(d=>d.removeAttribute('hidden','not'));
+    Array.from(pars).map(d=>d.setAttribute('hidden',''));
+    Array.from(circles).map(d=>d.setAttribute('hidden',''));
+
+  }
+  function view_to_handi(){
+    Array.from(circles).map(d=>d.removeAttribute('hidden','not'));
+    Array.from(pars).map(d=>d.setAttribute('hidden',''));
+    Array.from(points).map(d=>d.setAttribute('hidden',''));
+
+  }
+  function view_to_par(){
+    Array.from(pars).map(d=>d.removeAttribute('hidden','not'));
+    Array.from(points).map(d=>d.setAttribute('hidden',''));
+    Array.from(circles).map(d=>d.setAttribute('hidden',''));
+
   }
 </script>
 
