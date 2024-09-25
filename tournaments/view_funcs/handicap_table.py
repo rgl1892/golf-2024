@@ -87,7 +87,8 @@ def get_scores_context(tournament,holiday,selected_round):
         match_play = None
     circle = ''
     for x in range(50):
-        circle += f'<circle cx="{random.randint(2,28)}" cy="{random.randint(2,28)}" r="1" fill="rgb(194, 178, 128)"></circle>'
+        circle += f'''<circle cx="{random.randint(2,28)}" cy="{random.randint(2,28)}" r="1" fill="rgba(194, 178, 128,0.7)"></circle>
+                        <circle cx="{random.randint(2,28)}" cy="{random.randint(2,28)}" r="1" fill="rgba(0, 0, 0,0.4)"></circle>'''
 
     context = {
         'holiday': holiday_filter,
