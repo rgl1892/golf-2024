@@ -8,14 +8,15 @@ def get_scores_context(tournament,holiday,selected_round):
     selected_round_send = GolfRound.objects.filter(
         round_number=selected_round, holiday=holiday_filter).get()
    
-    scores = Score.objects.filter(golf_round=selected_round_send).select_related().values('strokes','stableford_score','player_id','player__first_name','player__slug','team',
+    scores = Score.objects.filter(golf_round=selected_round_send).select_related().values('id','strokes','stableford_score','player_id','player__first_name','player__slug','team',
                                                                                         'hole__hole_number','hole_id','hole__par','hole__stroke_index','hole__yards',
                                                                                         'hole__course__course_name','hole__course__tee','golf_round__round_number',
                                                                                         'golf_round','golf_round__holiday','hole__course__slope_rating','match_play_result',
-                                                                                        'hole__course__course_rating','sandy').order_by('player__first_name').distinct()
-       
+                                                                                        'hole__course__course_rating','sandy','highlight_link').order_by('player__first_name').distinct()
+    
     players = scores.order_by('player__first_name').values(
         'player_id').distinct()
+    
 
     selected_course = Course.objects.filter(
         hole=scores.values()[0]['hole_id']).values()[0]
@@ -57,7 +58,8 @@ def get_scores_context(tournament,holiday,selected_round):
             ])
 
     hole_numbers = [x for x in range(1, 19)]
-    player_scores = [scores[x*18:x*18 + 18] for x in range(len(players))]
+    
+
     if len(players) == 4:
         team_combos = [
                 [ f'{names[0]} & {names[1]} vs {names[2]} & {names[3]}',[players[0]['player_id'],players[1]['player_id'],players[2]['player_id'],players[3]['player_id']]],
@@ -89,6 +91,16 @@ def get_scores_context(tournament,holiday,selected_round):
     for x in range(50):
         circle += f'''<circle cx="{random.randint(2,28)}" cy="{random.randint(2,28)}" r="1" fill="rgba(194, 178, 128,0.7)"></circle>
                         <circle cx="{random.randint(2,28)}" cy="{random.randint(2,28)}" r="1" fill="rgba(0, 0, 0,0.4)"></circle>'''
+
+    new_scores = []
+    for x in range(len(scores)-1):
+        if scores[x]['id'] != scores[x+1]['id']:
+            new_scores.append(scores[x])
+    new_scores.append(scores[x+1])
+            
+    scores = new_scores 
+    
+    player_scores = [scores[x*18:x*18 + 18] for x in range(len(players))]
 
     context = {
         'holiday': holiday_filter,

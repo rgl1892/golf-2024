@@ -6,7 +6,9 @@
 
     {% for row in player_scores %}
     {% for score in row %}
-   {{score.strokes}} <br>
+    {% if score.highlight_link != None %}
+    <a href="{% url 'highlight_view' highlight=score.highlight_link%}">{{score.highlight_link}}</a> <br>
+    {% endif %}
     
     {% endfor %}
     <br>

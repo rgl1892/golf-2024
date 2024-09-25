@@ -266,6 +266,15 @@ A/S
           font-size="12"
           >{{score.stableford_score}}
         </text>
+        {% if score.highlight_link != None %}
+        <a href="{% url 'highlight_view' highlight=score.highlight_link%}">
+          <text x="0" y="0" 
+          fill="var(--bs-body-color)" 
+          {% comment %} text-anchor="middle"  {% endcomment %}
+          alignment-baseline="middle"
+          font-size="12"
+          >khjlasdfjhk</a>
+        {% endif %}
 
         </svg >
 
