@@ -322,7 +322,7 @@ class ScoresView(View):
     def get(self, request, tournament, holiday, selected_round):
         
         context = handicap_table.get_scores_context(tournament,holiday,selected_round)
-        
+
         
         return render(request, self.template_name, context)
 

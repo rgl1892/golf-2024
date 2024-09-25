@@ -1,4 +1,5 @@
 from ..models import Tournament, Holiday, GolfRound, Score, Player, Hole, Handicap, Course,Resort,Video,ProTip,CarouselImage
+import random
 
 def get_scores_context(tournament,holiday,selected_round):
     selected_tournament = Tournament.objects.filter(slug=tournament).get()
@@ -84,8 +85,9 @@ def get_scores_context(tournament,holiday,selected_round):
         match_play = [[{**u, **v} for u, v in zip(team1_points,team2_points)],team1_total,team2_total]
     else:
         match_play = None
-    
-    
+    circle = ''
+    for x in range(50):
+        circle += f'<circle cx="{random.randint(2,28)}" cy="{random.randint(2,28)}" r="1" fill="rgb(194, 178, 128)"></circle>'
 
     context = {
         'holiday': holiday_filter,
@@ -101,6 +103,7 @@ def get_scores_context(tournament,holiday,selected_round):
         "team_combos":team_combos,
         "current_teams":current_teams,
         'match_play':match_play,
+        'circle':circle,
     }
 
     return context

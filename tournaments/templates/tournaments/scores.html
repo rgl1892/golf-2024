@@ -249,21 +249,33 @@ A/S
       <td></td>
       {% else %}
       <td name="points_view" hidden>
-        {{score.strokes}} <sub>{{score.stableford_score}}</sub>
-        <span
-          class="sandy"
-          title="Sandy"
-          {% if  score.sandy  %}
+        <svg height="30" width="30">
+          {% if score.sandy %}
+          {{circle|safe}}
+          {% endif %}
+          <text x="15" y="16" 
+          fill="var(--bs-body-color)" 
+          text-anchor="middle" 
+          alignment-baseline="middle"
+          >{{score.strokes}}
+        </text>
+        <text x="25" y="25" 
+          fill="var(--bs-body-color)" 
+          text-anchor="middle" 
+          alignment-baseline="middle"
+          font-size="12"
+          >{{score.stableford_score}}
+        </text>
 
-          {%  else %}
-          hidden
-          {%  endif %}
-        ></span>
+        </svg >
 
       </td>
       <td name='circle_view' >
         {% if score.strokes|sub:score.hole__par == -2 %}
-        <svg height="30" width="30">
+        <svg height="30" width="30" >
+          {% if score.sandy %}
+          {{circle|safe}}
+          {% endif %}
           <circle cx="15" cy="15" r="12" stroke="var(--bs-body-color)" fill="var(--bs-body-color)"></circle>
           
           <text x="15" y="16" 
@@ -274,7 +286,10 @@ A/S
         </text>
         </svg >
         {% elif score.stableford_score > 4 %}
-        <svg height="30" width="30">
+        <svg height="30" width="30" >
+          {% if score.sandy %}
+          {{circle|safe}}
+          {% endif %}
           <circle cx="15" cy="15" r="14" stroke="var(--bs-body-color)" fill="None"></circle>
           <circle cx="15" cy="15" r="12" stroke="var(--bs-body-color)" fill="None"></circle>
           <circle cx="15" cy="15" r="10" stroke="var(--bs-body-color)" fill="None"></circle>
@@ -286,7 +301,10 @@ A/S
         </text>
         </svg >
         {% elif score.stableford_score == 4 %}
-        <svg height="30" width="30">
+        <svg height="30" width="30" >
+          {% if score.sandy %}
+          {{circle|safe}}
+          {% endif %}
           <circle cx="15" cy="15" r="12" stroke="var(--bs-body-color)" fill="None"></circle>
           <circle cx="15" cy="15" r="10" stroke="var(--bs-body-color)" fill="None"></circle>
           <text x="15" y="16" 
@@ -297,7 +315,10 @@ A/S
         </text>
         </svg >
         {% elif score.stableford_score == 3 %}
-        <svg height="30" width="30">
+        <svg height="30" width="30" >
+          {% if score.sandy %}
+          {{circle|safe}}
+          {% endif %}
           <circle cx="15" cy="15" r="12" stroke="var(--bs-body-color)" fill="None"></circle>
           <text x="15" y="16" 
           fill="var(--bs-body-color)" 
@@ -307,7 +328,10 @@ A/S
         </text>
         </svg >
         {% elif score.stableford_score == 1 %}
-        <svg height="30" width="30">
+        <svg height="30" width="30" >
+          {% if score.sandy %}
+          {{circle|safe}}
+          {% endif %}
           <rect x="3" y="3" height="24" width="24" stroke="var(--bs-body-color)" fill="None"></rect>
           <text x="15" y="16" 
           fill="var(--bs-body-color)" 
@@ -317,7 +341,10 @@ A/S
         </text>
         </svg >
         {% elif score.stableford_score < 1 %}
-        <svg height="30" width="30">
+        <svg height="30" width="30" >
+          {% if score.sandy %}
+          {{circle|safe}}
+          {% endif %}
           <rect x="3" y="3" height="24" width="24" stroke="var(--bs-body-color)" fill="None"></rect>
           <rect x="5" y="5" height="20" width="20" stroke="var(--bs-body-color)" fill="None"></rect>
           <text x="15" y="16" 
@@ -328,7 +355,10 @@ A/S
         </text>
         </svg >
         {% else %}
-        <svg height="30" width="30">
+        <svg height="30" width="30" >
+          {% if score.sandy %}
+          {{circle|safe}}
+          {% endif %}
           <text x="15" y="16" 
           fill="var(--bs-body-color)" 
           text-anchor="middle" 
@@ -341,7 +371,10 @@ A/S
       </td>
       <td name='par_view' hidden>
         {% if score.strokes|sub:score.hole__par == -2 %}
-        <svg height="30" width="30">
+        <svg height="30" width="30" >
+          {% if score.sandy %}
+          {{circle|safe}}
+          {% endif %}
           <circle cx="15" cy="15" r="12" stroke="var(--bs-body-color)" fill="var(--bs-body-color)"></circle>
           
           <text x="15" y="16" 
@@ -352,7 +385,10 @@ A/S
         </text>
         </svg >
         {% elif score.strokes|sub:score.hole__par == -1 %}
-        <svg height="30" width="30">
+        <svg height="30" width="30" >
+          {% if score.sandy %}
+          {{circle|safe}}
+          {% endif %}
           <circle cx="15" cy="15" r="12" stroke="var(--bs-body-color)" fill="None"></circle>
           <text x="15" y="16" 
           fill="var(--bs-body-color)" 
@@ -362,7 +398,10 @@ A/S
         </text>
         </svg >
         {% elif score.strokes|sub:score.hole__par == 0 %}
-        <svg height="30" width="30">
+        <svg height="30" width="30" >
+          {% if score.sandy %}
+          {{circle|safe}}
+          {% endif %}
           <text x="15" y="16" 
           fill="var(--bs-body-color)" 
           text-anchor="middle" 
@@ -371,7 +410,10 @@ A/S
         </text>
         </svg >
         {% elif score.strokes|sub:score.hole__par == 1 %}
-        <svg height="30" width="30">
+        <svg height="30" width="30" >
+          {% if score.sandy %}
+          {{circle|safe}}
+          {% endif %}
           <rect x="3" y="3" height="24" width="24" stroke="var(--bs-body-color)" fill="None"></rect>
           <text x="15" y="16" 
           fill="var(--bs-body-color)" 
@@ -381,7 +423,10 @@ A/S
         </text>
         </svg >
         {% elif score.strokes|sub:score.hole__par == 2 %}
-        <svg height="30" width="30">
+        <svg height="30" width="30" >
+          {% if score.sandy %}
+          {{circle|safe}}
+          {% endif %}
           <rect x="3" y="3" height="24" width="24" stroke="var(--bs-body-color)" fill="None"></rect>
           <rect x="5" y="5" height="20" width="20" stroke="var(--bs-body-color)" fill="None"></rect>
           <text x="15" y="16" 
@@ -392,7 +437,10 @@ A/S
         </text>
         </svg >
         {% elif score.strokes|sub:score.hole__par > 2 %}
-        <svg height="30" width="30">
+        <svg height="30" width="30" >
+          {% if score.sandy %}
+          {{circle|safe}}
+          {% endif %}
           <rect x="5" y="5" height="20" width="20" stroke="var(--bs-body-color)" fill="var(--bs-body-color)"></rect>
           <text x="15" y="16" 
           fill="green" 
@@ -402,7 +450,10 @@ A/S
         </text>
         </svg >
         {% else %}
-        <svg height="30" width="30">
+        <svg height="30" width="30" >
+          {% if score.sandy %}
+          {{circle|safe}}
+          {% endif %}
           <text x="15" y="16" 
           fill="var(--bs-body-color)" 
           text-anchor="middle" 
