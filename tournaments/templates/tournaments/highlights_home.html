@@ -8,23 +8,25 @@
 </div>
 <div class="row">
 
-    <div class="col-lg-6 col-12">
+    <div class="col-12">
         <h2>Highlights for holes</h2>
+        {% for player in highlights %}
+        <div class="d-flex flex-column">
 
-
-        {% for score in scores %}
-
-        {% for highlight in score.highlight_link.all %}
-
-        <a class="d-flex flex-column justify-content-center " href="{% url 'highlight_view' highlight=highlight.id %}">
-            <h4 class="mt-4 image-link">{{highlight}}</h4>
-            <h6 class="image-link">{{score.player}} on {{score.hole}}</h6>
-            <h6 class="image-link">{{score.hole.course.resort.country}}</h6>
-
-
-            <img class="thumbnail" src="{{highlight.thumbnail.url}}" alt="">
-        </a><br>
-        {% endfor %}
+            <h2>{{player.player}}</h2>
+            <div class="d-flex flex-wrap">
+            {% for highlight in player.clips %}
+                <div class="p-2 col-2 text-wrap text-break">
+                    
+                    <a href="{% url 'highlight_view' highlight=highlight.id %}">
+                        <img class="thumbnail" src="/media/{{highlight.file}}" alt="">
+                    </a>
+                    <h4>{{highlight.title}}</h4>
+                    
+                </div>
+                {% endfor %}
+            </div>
+        </div>
         {% endfor %}
     </div>
     <div class="col-lg-6 col-12">

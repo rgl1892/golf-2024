@@ -475,6 +475,9 @@ class HighlightsHome(View):
         scores = Score.objects.exclude(highlight_link__isnull=True)
         videos = Video.objects.all()
         vids =  [vid for vid in [score.highlight_link.all() for score in scores]] 
+
+        # Separate the videos by attached to hole or not.
+
         vid_list = []
         for x in vids:
             for y in x:
@@ -484,9 +487,21 @@ class HighlightsHome(View):
         
         unholed_vids = [vid for vid in videos if vid.id not in vid_list]
 
+        highlights = Score.objects.exclude(highlight_link__isnull=True).values(
+            'player__first_name','highlight_link','highlight_link__thumbnail','highlight_link__title')
+        players = []
+        [players.append(cell['player__first_name']) for cell in highlights if cell['player__first_name'] not in players]
+        highlight_reel = [{
+            'player':player,
+            'clips':[
+                {'file':row['highlight_link__thumbnail'],
+                 'id':row['highlight_link'],
+                 'title':row['highlight_link__title']
+                 } for row in highlights if row['player__first_name'] == player]} for player in players]
         context = {
             'scores':scores,
-            'other_vids':unholed_vids
+            'other_vids':unholed_vids,
+            'highlights':highlight_reel
         }
         return render(request, self.template_name, context)
     
