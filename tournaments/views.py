@@ -487,10 +487,12 @@ class HighlightsHome(View):
         
         unholed_vids = [vid for vid in videos if vid.id not in vid_list]
 
-        highlights = Score.objects.exclude(highlight_link__isnull=True).values(
+        highlights = Score.objects.exclude(highlight_link__isnull=True).order_by('player__first_name').values(
             'player__first_name','highlight_link','highlight_link__thumbnail','highlight_link__title')
         players = []
+
         [players.append(cell['player__first_name']) for cell in highlights if cell['player__first_name'] not in players]
+
         highlight_reel = [{
             'player':player,
             'clips':[

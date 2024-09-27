@@ -11,12 +11,12 @@
     <div class="col-12">
         <h2>Highlights for holes</h2>
         {% for player in highlights %}
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column row">
 
             <h2>{{player.player}}</h2>
-            <div class="d-flex flex-wrap">
+            <div class="d-flex flex-wrap col-12">
             {% for highlight in player.clips %}
-                <div class="p-2 col-2 text-wrap text-break">
+                <div class="p-2 col col-md-2 text-wrap text-break">
                     
                     <a href="{% url 'highlight_view' highlight=highlight.id %}">
                         <img class="thumbnail" src="/media/{{highlight.file}}" alt="">
