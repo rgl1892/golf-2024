@@ -249,7 +249,7 @@ A/S
       <td></td>
       {% else %}
       <td name="points_view" hidden>
-        <svg height="30" width="30">
+        <svg height="50" width="30">
           {% if score.sandy %}
           {{circle|safe}}
           {% endif %}
@@ -268,19 +268,19 @@ A/S
         </text>
         {% if score.highlight_link != None %}
         <a href="{% url 'highlight_view' highlight=score.highlight_link%}">
-          <text x="0" y="0" 
+          <text x="15" y="42" 
           fill="var(--bs-body-color)" 
-          {% comment %} text-anchor="middle"  {% endcomment %}
+          text-anchor="middle"
           alignment-baseline="middle"
           font-size="12"
-          >khjlasdfjhk</a>
+          >Clip</a>
         {% endif %}
 
         </svg >
 
       </td>
       <td name='circle_view' >
-        <svg height="30" width="30" >
+        <svg height="50" width="30" >
           {% if score.sandy %}
           {{circle|safe}}
           {% endif %}
@@ -316,10 +316,19 @@ A/S
           >{{score.strokes}}
           </text>
           {% endif %}
+          {% if score.highlight_link != None %}
+        <a href="{% url 'highlight_view' highlight=score.highlight_link%}">
+          <text x="15" y="42" 
+          fill="var(--bs-body-color)" 
+          text-anchor="middle"
+          alignment-baseline="middle"
+          font-size="12"
+          >Clip</a>
+        {% endif %}
         </svg >
       </td>
       <td name='par_view' hidden>
-        <svg height="30" width="30" >
+        <svg height="50" width="30" >
           {% if score.sandy %}
           {{circle|safe}}
           {% endif %}
@@ -343,6 +352,15 @@ A/S
           alignment-baseline="middle"
           >{{score.strokes}}
         </text>
+        {% if score.highlight_link != None %}
+        <a href="{% url 'highlight_view' highlight=score.highlight_link%}">
+          <text x="15" y="42" 
+          fill="var(--bs-body-color)" 
+          text-anchor="middle"
+          alignment-baseline="middle"
+          font-size="12"
+          >Clip</a>
+        {% endif %}
       </svg >
         
         
