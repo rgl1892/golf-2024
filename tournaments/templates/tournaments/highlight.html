@@ -11,13 +11,14 @@
 
 
 <h4>{{row.player}} - {{row.hole.course.course_name}} - Round {{row.golf_round.round_number}} - Ock {{row.golf_round.holiday.holiday_number}}</h4>
+<h4>{{row.strokes}} shots. Par {{row.hole.par}}. Hole {{row.hole.hole_number}}</h4>
 <video preload controls class="player" height="600vh">
     <source src="{{highlight.file.url}}" type="video/mp4" />
   </video>
 
   {% endfor %}
   {% endfor %}
-
+ 
   {% else %}
   
   {% for highlight in video %}

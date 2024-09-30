@@ -9,6 +9,9 @@ class Tournament(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+    
+    def speak(self):
+        return f"{self.name}"
 
 class Player(models.Model):
     first_name = models.CharField(max_length=20) 

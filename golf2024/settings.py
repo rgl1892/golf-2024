@@ -156,3 +156,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 
 }
+
+DEBUG_TOOLBAR_CONFIG = {
+    'IS_RUNNING_TESTS' :False
+}
