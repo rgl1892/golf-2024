@@ -16,7 +16,7 @@
                     aria-expanded="true"
                 aria-controls="collapse_{{course_set.0.id}}"
                 >
-                {{course_set.0.course_name}} - {{course_set.0.resort}}
+                {{course_set.0.course_name}} 
             </button>
         </h2>
         <div
@@ -40,8 +40,8 @@
                             <th scope="col">Slope Rating</th>
                             <th scope="col">Stroke Rating</th>
                             <th scope="col">Par</th>
-                            <th scope="col">Avg Strokes</th>
-                            <th scope="col">Avg Stbfrd</th>
+                            {% comment %} <th scope="col">Avg Strokes</th>
+                            <th scope="col">Avg Stbfrd</th> {% endcomment %}
                         </tr>
                     </thead>
                     <tbody>
@@ -62,7 +62,7 @@
                                     <td>{{course.slope_rating}}</td>
                                     <td>{{course.course_rating}}</td>
                                     <td>{{par|slice:forloop.parentloop.counter|last|slice:forloop.counter|last}}</td>
-                                    <td>
+                                    {% comment %} <td>
                                         {% if strokes|slice:forloop.parentloop.counter|last|slice:forloop.counter|last == None %}
                                         -
                                         {% else %}
@@ -76,7 +76,7 @@
                                         {{points|slice:forloop.parentloop.counter|last|slice:forloop.counter|last}}
                                         {% endif %}
                                         
-                                    </td>
+                                    </td> {% endcomment %}
                                     
                                     
                                 </tr>

@@ -685,19 +685,24 @@ class CoursesOverview(View):
 
     def get(self,request):
         
-        courses = Course.objects.all().order_by('resort__name')
-        course_names = list(dict.fromkeys([course.course_name for course in courses]))
-        courses_now = [Course.objects.filter(course_name=course_name) for course_name in course_names]
-        yards = [[sum([hole.yards for hole in tee_set.hole_set.all()]) for tee_set in resort] for resort in courses_now]
-        par = [[sum([hole.par for hole in tee_set.hole_set.all()]) for tee_set in resort] for resort in courses_now]
+        courses = Course.objects.order_by('resort__name').values()
+        course_names = list(dict.fromkeys([course['course_name'] for course in courses]))
+        courses_now = [Course.objects.filter(course_name=course_name).values() for course_name in course_names]
+        holes = Hole.objects.values()
+        scores = Score.objects.values('id','strokes','stableford_score','hole__course_id')
         
-        strokes = [[round(sum([np.average([0 if score.strokes == None else score.strokes for score in hole.score_set.all()]) for hole in tee_set.hole_set.all()]),2) for tee_set in resort] for resort in courses_now]
-        strokes = [np.where(np.isnan(x),None,x) for x in strokes] 
-        strokes = [np.where(x == 0,None,x) for x in strokes] 
-        points = [[round(sum([ np.average([0 if score.stableford_score == None else score.stableford_score for score in hole.score_set.all()]) for hole in tee_set.hole_set.all()]),2) for tee_set in resort] for resort in courses_now]
         
-        points = [np.where(np.isnan(x),None,x) for x in points] 
-        points = [np.where(x == 0,None,x) for x in points] 
+        yards = [[sum([hole['yards'] for hole in holes if hole['course_id'] == tees['id']]) for tees in indidual_course] for indidual_course in courses_now]    
+        par = [[sum([hole['par'] for hole in holes if hole['course_id'] == tees['id']]) for tees in indidual_course] for indidual_course in courses_now]
+        # print([[[hole['strokes'] for hole in scores if hole['hole__course_id'] == tees['id']]for tees in indidual_course] for indidual_course in courses_now])
+
+        # strokes = [[round(sum([np.average([0 if score.strokes == None else score.strokes for score in hole.score_set.all()]) for hole in tee_set.hole_set.all()]),2) for tee_set in resort] for resort in courses_now]
+        # strokes = [np.where(np.isnan(x),None,x) for x in strokes] 
+        # strokes = [np.where(x == 0,None,x) for x in strokes] 
+        # points = [[round(sum([ np.average([0 if score.stableford_score == None else score.stableford_score for score in hole.score_set.all()]) for hole in tee_set.hole_set.all()]),2) for tee_set in resort] for resort in courses_now]
+        
+        # points = [np.where(np.isnan(x),None,x) for x in points] 
+        # points = [np.where(x == 0,None,x) for x in points] 
         
         
         context = {
@@ -706,8 +711,8 @@ class CoursesOverview(View):
             'courses_now':courses_now,
             'yards':yards,
             'par':par,
-            'strokes':strokes,
-            'points':points
+        #     'strokes':strokes,
+        #     'points':points
         }
 
         return render(request,self.template_name,context)
