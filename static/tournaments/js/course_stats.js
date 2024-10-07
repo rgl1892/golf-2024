@@ -12,11 +12,12 @@ async function full_plot(id) {
     var all_data = d3.map(dataset, d => d.stableford_score);
     // all_data = all_data.sort(d3.descending,d => d.hole.hole_number)
     var all_par_data = d3.map(dataset, d => d.strokes - d.hole.par);
-    var all_shots_data = d3.map(dataset, d => d.strokes);  
-    
+    var all_shots_data = d3.map(dataset, d => d.strokes); 
+    var avg_distance_data = d3.map(data,d => [d[0],d3.mean(d[1],i => i.hole.yards/(i.hole.par-2))]);
 
     sub_plot(stable_data,1)
     sub_plot(strokes_data,2)
+    sub_plot(avg_distance_data,8,5)
     all_plot(all_data,3)
     all_plot(all_par_data,4)
     all_plot(all_data.sort(d3.descending),5)
@@ -27,9 +28,9 @@ async function full_plot(id) {
 
 var colour = '#0FA3B1';
 
-function sub_plot(data,id){
+function sub_plot(data,id,alt_tick){
     const holes = [...Array(18).keys()].map(x => x+1);
-    var margin = { top: 40, right: 40, bottom: 40, left: 40 },
+    var margin = { top: 40, right: 40, bottom: 40, left: 50 },
         width = document.getElementById(`chart-${id}`).offsetWidth - margin.left - margin.right,
         height = chart_height - margin.top - margin.bottom;
     var bar_width = width/20;
@@ -44,7 +45,7 @@ function sub_plot(data,id){
       .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
         ;
-    var max_y = Math.ceil(d3.max(data,d=>d[1]))
+    var max_y = Math.ceil(d3.max(data,d=>d[1])) == 1 ? d3.max(data,d=>d[1]) : Math.ceil(d3.max(data,d=>d[1]))
     var x = d3.scaleLinear()
         .domain([0,19])
         .range([0,width]);
@@ -65,7 +66,7 @@ function sub_plot(data,id){
         .style('font-family',"var(--bs-body-font-family)")
         .style('font-size','20px')
         .attr('transform',`translate(${0},${0})`)
-        .call(d3.axisLeft(y).ticks(max_y));
+        .call(d3.axisLeft(y).ticks(alt_tick?alt_tick: max_y));
 
     var tooltip = d3.select(`#chart-${id}`)
         .append('div')
@@ -209,6 +210,9 @@ function all_plot(data,id){
 
       
 }
+
+
+
 
 
 
