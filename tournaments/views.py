@@ -776,11 +776,13 @@ class CourseStats(View):
         courses = Score.objects.values('hole__course__id','hole__course__course_name','hole__course__tee').distinct()
         players = Player.objects.values()
         holidays = Holiday.objects.values('id','resort__name','holiday_number')
+        all_courses = Course.objects.values('id','course_name','tee')
         context = {
             'courses':courses,
             'rounds':[1,2,3,4,5],
             'players':players,
-            'holidays':holidays
+            'holidays':holidays,
+            'other_courses':all_courses
             }
         return render(request,self.template_name,context)
 

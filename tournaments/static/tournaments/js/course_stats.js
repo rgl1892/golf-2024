@@ -221,3 +221,4 @@ document.getElementById('course_select').addEventListener('change', full_plot);
 document.getElementById('round_select').addEventListener('change', full_plot);
 document.getElementById('player_select').addEventListener('change', full_plot);
 document.getElementById('holiday_select').addEventListener('change', full_plot);
+document.getElementById('all_course_select').addEventListener('change', full_plot);
