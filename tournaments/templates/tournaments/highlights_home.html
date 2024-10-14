@@ -3,13 +3,13 @@
 
 <div class="row">
     {% if user.is_superuser %}
-    <a href="{% url 'new_highlight' %}">New highlight</a>
+    <a href="{% url 'new_highlight' %}">New Ocktent</a>
     {% endif %}
 </div>
 <div class="row">
 
     <div class="col-12">
-        <h2>Highlights for holes</h2>
+        <h2>Ocktent for holes</h2>
         {% for player in highlights %}
         <div class="d-flex flex-column row">
 
@@ -30,7 +30,7 @@
         {% endfor %}
     </div>
     <div class="col-lg-6 col-12">
-        <h2>Other Highlights</h2>
+        <h2>More Ocktent</h2>
         {% for vid in other_vids%}
         <a href="{% url 'highlight_view' highlight=vid.id %}">
             <h4 class="mt-4 image-link">{{vid}}</h4>
